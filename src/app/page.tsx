@@ -376,48 +376,123 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Services Section - What I Can Offer */}
-      <section id="services" className="relative py-24 md:py-32 lg:py-40 px-6 md:px-12 lg:px-16 bg-white overflow-hidden">
-        <div className="max-w-7xl mx-auto">
-          {/* Section Heading */}
-          <div className="mb-16 md:mb-20 text-center">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#111] mb-4">
-              What I Can Offer
-            </h2>
-            <div className="w-24 h-1 bg-[#4D64FF] mx-auto"></div>
-          </div>
+      {/* Services Section - Horizontal Panels */}
+<section id="services" className="relative h-screen w-full flex overflow-hidden">
+  {/* Panel 1 - Remote Virtual Assistance */}
+  <div className="relative w-1/3 h-full overflow-hidden group cursor-pointer">
+    <img
+      src="/Remote Virtual Assistance.jpg"
+      alt="Remote Virtual Assistance"
+      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+    />
+    <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors duration-500" />
+    
+    <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8">
+      <h3 className="text-white text-4xl md:text-5xl lg:text-6xl font-bold mb-8 tracking-wider">
+        REMOTE VIRTUAL
+        <br />
+        ASSISTANCE
+      </h3>
+      
+      <div className="text-white/90 space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 max-w-md">
+        <p className="text-lg">Calendar management</p>
+        <p className="text-lg">Email handling</p>
+        <p className="text-lg">Client coordination</p>
+        <p className="text-lg">Document organization</p>
+      </div>
+    </div>
+  </div>
 
-          {/* Services Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
-            {/* Service Card 1 - Remote Virtual Assistance */}
-            <ServiceCard
-              index={0}
-              image="/Remote Virtual Assistance.jpg"
-              title="Remote Virtual Assistance"
-              description="Comprehensive support — managing calendars, emails, clients, and documents to keep your operations running smoothly."
-              isVisible={serviceCardsVisible[0]}
-            />
+  {/* Panel 2 - Data Entry */}
+  <div className="relative w-1/3 h-full overflow-hidden group cursor-pointer">
+    <img
+      src="/Data Entry.jpg"
+      alt="Data Entry"
+      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+    />
+    <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors duration-500" />
+    
+    <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8">
+      <h3 className="text-white text-4xl md:text-5xl lg:text-6xl font-bold mb-8 tracking-wider">
+        DATA ENTRY
+      </h3>
+      
+      <div className="text-white/90 space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 max-w-md">
+        <p className="text-lg">Excel & Google Sheets</p>
+        <p className="text-lg">Database management</p>
+        <p className="text-lg">Record organization</p>
+        <p className="text-lg">Accuracy & speed</p>
+      </div>
+    </div>
+  </div>
 
-            {/* Service Card 2 - Data Entry */}
-            <ServiceCard
-              index={1}
-              image="/Data Entry.jpg"
-              title="Data Entry"
-              description="Accurate and organized data handling using Excel and Google Sheets to keep your records reliable and decision-ready."
-              isVisible={serviceCardsVisible[1]}
-            />
+  {/* Panel 3 - IT Support */}
+  <div className="relative w-1/3 h-full overflow-hidden group cursor-pointer">
+    <img
+      src="/IT Support Help Desk L1.png"
+      alt="IT Support Help Desk L1"
+      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+    />
+    <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors duration-500" />
+    
+    <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8">
+      <h3 className="text-white text-4xl md:text-5xl lg:text-6xl font-bold mb-8 tracking-wider">
+        IT SUPPORT
+        <br />
+        HELP DESK L1
+      </h3>
+      
+      <div className="text-white/90 space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 max-w-md">
+        <p className="text-lg">Software integration</p>
+        <p className="text-lg">Cloud systems</p>
+        <p className="text-lg">Technical support</p>
+        <p className="text-lg">System automation</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-            {/* Service Card 3 - IT Support Help Desk L1 */}
-            <ServiceCard
-              index={2}
-              image="/IT Support Help Desk L1.png"
-              title="IT Support Help Desk L1"
-              description="I help remote teams integrate software tools, manage cloud systems, and resolve technical issues quickly. From automation setup to day-to-day IT support, I make your systems efficient and dependable."
-              isVisible={serviceCardsVisible[2]}
-            />
-          </div>
+{/* Mobile Version - Stack Vertically */}
+<section id="services-mobile" className="md:hidden relative w-full">
+  {[
+    {
+      title: "REMOTE VIRTUAL\nASSISTANCE",
+      image: "/Remote Virtual Assistance.jpg",
+      services: ["Calendar management", "Email handling", "Client coordination", "Document organization"]
+    },
+    {
+      title: "DATA ENTRY",
+      image: "/Data Entry.jpg",
+      services: ["Excel & Google Sheets", "Database management", "Record organization", "Accuracy & speed"]
+    },
+    {
+      title: "IT SUPPORT\nHELP DESK L1",
+      image: "/IT Support Help Desk L1.png",
+      services: ["Software integration", "Cloud systems", "Technical support", "System automation"]
+    }
+  ].map((panel, idx) => (
+    <div key={idx} className="relative h-screen w-full overflow-hidden">
+      <img
+        src={panel.image}
+        alt={panel.title}
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+      <div className="absolute inset-0 bg-black/40" />
+      
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
+        <h3 className="text-white text-3xl sm:text-4xl font-bold mb-6 tracking-wider whitespace-pre-line">
+          {panel.title}
+        </h3>
+        
+        <div className="text-white/90 space-y-2 max-w-sm">
+          {panel.services.map((service, i) => (
+            <p key={i} className="text-base">{service}</p>
+          ))}
         </div>
-      </section>
+      </div>
+    </div>
+  ))}
+</section>
 
       {/* Flow Section - How I Keep Your Business Flowing */}
       <section id="flow" className="relative py-24 md:py-32 lg:py-40 px-6 md:px-12 lg:px-16 bg-[#f8fafc] overflow-hidden">
