@@ -16,6 +16,11 @@ export default function Home() {
   const imageParallaxRef = useRef<HTMLDivElement>(null);
   const [serviceCardsVisible, setServiceCardsVisible] = useState<boolean[]>([false, false, false]);
   const [featureVisible, setFeatureVisible] = useState<boolean[]>([false, false, false]);
+  const [formStatus, setFormStatus] = useState<{ type: 'success' | 'error' | null; message: string }>({
+    type: null,
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -333,7 +338,7 @@ export default function Home() {
       </section>
 
 {/* About Section */}
-      <section id="about" className="relative py-24 md:py-32 lg:py-40 px-6 md:px-12 lg:px-16 bg-[#f5f5f5] overflow-hidden">
+      <section id="about" className="animate-section relative py-24 md:py-32 lg:py-40 px-6 md:px-12 lg:px-16 bg-[#f5f5f5] overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             {/* Left Side - Text Content */}
@@ -377,7 +382,7 @@ export default function Home() {
       </section>
 
       {/* Services Section - Horizontal Panels */}
-<section id="services" className="relative h-screen w-full flex overflow-hidden">
+<section id="services" className="panels-premium animate-section relative h-screen w-full flex overflow-hidden">
   {/* Panel 1 - Remote Virtual Assistance */}
   <div className="relative w-1/3 h-full overflow-hidden group cursor-pointer">
     <img
@@ -495,7 +500,7 @@ export default function Home() {
 </section>
 
       {/* Flow Section - How I Keep Your Business Flowing */}
-      <section id="flow" className="relative py-24 md:py-32 lg:py-40 px-6 md:px-12 lg:px-16 bg-[#f8fafc] overflow-hidden">
+      <section id="flow" className="animate-section relative py-24 md:py-32 lg:py-40 px-6 md:px-12 lg:px-16 bg-[#f8fafc] overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="mb-16 md:mb-20 text-center">
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#111] mb-4">How I Keep Your Business Flowing</h2>
@@ -537,11 +542,11 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="relative bg-[#141414] text-white px-6 md:px-12 lg:px-16 pt-32 md:pt-40 pb-8">
+      <section id="contact" className="animate-section relative bg-[#141414] text-white px-2 md:px-6 lg:px-8 pt-8 md:pt-16 pb-2">
         <div className="max-w-7xl mx-auto w-full">
           {/* Main Content */}
-          <div className="mb-24 md:mb-32">
-            <div className="mb-32 md:mb-40 lg:mb-48">
+          <div className="mb-6 md:mb-8">
+            <div className="mb-8 md:mb-12 lg:mb-16">
               {/* Profile Picture and Title */}
               <div className="flex items-center gap-6 md:gap-8 mb-2">
                 <div className="w-24 h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 xl:w-36 xl:h-36 rounded-full overflow-hidden flex-shrink-0 bg-gray-700">
@@ -561,7 +566,7 @@ export default function Home() {
             </div>
 
             {/* Divider Line with Centered Button */}
-            <div className="relative mb-16 md:mb-20">
+            <div className="relative mb-8 md:mb-12">
               {/* Horizontal Dividing Line */}
               <div className="relative w-full h-px overflow-hidden">
                 <div 
@@ -648,7 +653,7 @@ export default function Home() {
           </div>
 
           {/* Footer - minimal spacing */}
-          <div className="border-t border-white/10 pt-4 mt-12 md:mt-16 pb-2">
+          <div className="border-t border-white/10 pt-2 mt-4 md:mt-6 pb-1">
             <div className="flex flex-col md:flex-row justify-between gap-4 md:gap-6">
               <div className="flex flex-col sm:flex-row gap-6 md:gap-12">
                 <div>
@@ -717,14 +722,57 @@ export default function Home() {
             Get in touch
           </h3>
 
-          <form className="space-y-8" onSubmit={(e) => {
+          <form className="space-y-8" onSubmit={async (e) => {
             e.preventDefault();
-            alert('Message sent! (This is a demo)');
-            const contactForm = document.getElementById('contact-form');
-            if (contactForm) {
-              contactForm.classList.add('hidden');
-              contactForm.classList.remove('flex');
-              document.body.style.overflow = 'auto';
+            setIsSubmitting(true);
+            
+            const formData = new FormData(e.currentTarget);
+            const name = formData.get('name') as string;
+            const email = formData.get('email') as string;
+            const message = formData.get('message') as string;
+            
+            try {
+              const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, email, message }),
+              });
+              
+              const data = await response.json();
+              
+              if (response.ok) {
+                setFormStatus({
+                  type: 'success',
+                  message: 'Your message has been sent successfully!'
+                });
+                // Reset form
+                e.currentTarget.reset();
+                // Close form after a short delay
+                setTimeout(() => {
+                  const contactForm = document.getElementById('contact-form');
+                  if (contactForm) {
+                    contactForm.classList.add('hidden');
+                    contactForm.classList.remove('flex');
+                    document.body.style.overflow = 'auto';
+                    // Reset form status when closing
+                    setFormStatus({ type: null, message: '' });
+                  }
+                }, 2000);
+              } else {
+                setFormStatus({
+                  type: 'error',
+                  message: data.error || 'Failed to send your message. Please try again.'
+                });
+              }
+            } catch (error) {
+              setFormStatus({
+                type: 'error',
+                message: 'An unexpected error occurred. Please try again.'
+              });
+            } finally {
+              setIsSubmitting(false);
             }
           }}>
             <div>
@@ -766,12 +814,24 @@ export default function Home() {
               />
             </div>
 
-            <button
-              type="submit"
-              className="bg-white text-black px-12 py-4 rounded-full text-lg font-medium hover:bg-gray-200 transition-colors mt-8"
-            >
-              Send Message
-            </button>
+            <div className="mt-8">
+              {formStatus.type && (
+                <div className={`mb-4 p-4 rounded-lg ${
+                  formStatus.type === 'success' 
+                    ? 'bg-green-100 text-green-800' 
+                    : 'bg-red-100 text-red-800'
+                }`}>
+                  {formStatus.message}
+                </div>
+              )}
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="bg-white text-black px-12 py-4 rounded-full text-lg font-medium hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? 'Sending...' : 'Send Message'}
+              </button>
+            </div>
           </form>
         </div>
       </div>
@@ -917,7 +977,7 @@ function HorizontalPanels() {
     `mt-6 text-white/90 text-sm md:text-base max-w-xl mx-auto`;
 
   return (
-    <div className="relative flex w-full h-screen">
+    <div className="animate-section relative flex w-full h-screen">
       {/* Panel 1 */}
       <div className={panelClass()}>
         <img src="/hero-image.jpg" alt="Art Direction" className={imgClass()} />
