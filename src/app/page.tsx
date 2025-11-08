@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import './page.css';
 
 export default function Home() {
   const textRef = useRef<HTMLDivElement>(null);
@@ -10,6 +11,13 @@ export default function Home() {
   const [lineAnimated, setLineAnimated] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });
+  
+  // Apply transform to button based on position
+  useEffect(() => {
+    if (buttonRef.current) {
+      buttonRef.current.style.transform = `translate(${buttonPosition.x}px, ${buttonPosition.y}px) translateY(-50%)`;
+    }
+  }, [buttonPosition]);
   const [activeService, setActiveService] = useState(0);
   const [revealed, setRevealed] = useState<boolean[]>([false, false, false]);
   const servicesRef = useRef<HTMLElement>(null);
@@ -285,8 +293,7 @@ export default function Home() {
           <img
             src="/hero-image.jpg"
             alt="Fares Bermak"
-            className="w-full h-full object-cover"
-            style={{ objectPosition: 'center 20%' }}
+            className="w-full h-full object-cover hero-image"
           />
           {/* Subtle overlay */}
           <div className="absolute inset-0 bg-black/5"></div>
@@ -599,10 +606,7 @@ export default function Home() {
                   onMouseLeave={() => {
                     setButtonPosition({ x: 0, y: 0 });
                   }}
-                  style={{
-                    transform: `translate(${buttonPosition.x}px, ${buttonPosition.y}px) translateY(-50%)`,
-                  }}
-                  className="w-40 h-40 lg:w-44 lg:h-44 rounded-full bg-[#4D64FF] hover:bg-[#3d50cc] flex items-center justify-center text-base lg:text-lg text-white transition-all duration-300 cursor-pointer hover:scale-105"
+                  className={`contact-button w-40 h-40 lg:w-44 lg:h-44 rounded-full bg-[#4D64FF] hover:bg-[#3d50cc] flex items-center justify-center text-base lg:text-lg text-white transition-all duration-300 cursor-pointer hover:scale-105 ${buttonPosition.x !== 0 || buttonPosition.y !== 0 ? 'button-moved' : ''}`}
                 >
                   <span className="inline-block hover:animate-pulse">Get in touch</span>
                 </button>
@@ -861,8 +865,7 @@ function FeatureRow({ index, title, description, image, reverse, visible }: Feat
       <div
         className={`relative overflow-hidden rounded-2xl shadow-lg transition-all duration-700 ease-out will-change-transform ${
           visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-        }`}
-        style={{ transitionDelay: visible ? `${index * 150}ms` : '0ms' }}
+        } ${visible ? `transition-delay-${index * 150}` : 'transition-delay-1'}`}
       >
         <img src={image} alt={title} className="w-full h-[320px] md:h-[420px] lg:h-[480px] object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
@@ -875,8 +878,7 @@ function FeatureRow({ index, title, description, image, reverse, visible }: Feat
       <div
         className={`transition-all duration-700 ease-out ${
           visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-        }`}
-        style={{ transitionDelay: visible ? `${index * 200 + 100}ms` : '0ms' }}
+        } ${visible ? `transition-delay-${index * 200 + 100}` : 'transition-delay-1'}`}
       >
         <h3 className="text-3xl md:text-4xl font-semibold text-[#111] mb-4">{title}</h3>
         <p className="text-[#555] text-lg leading-relaxed">{description}</p>
@@ -902,8 +904,7 @@ function ServiceCard({ index, image, title, description, isVisible }: ServiceCar
         isVisible
           ? 'opacity-100 translate-y-0'
           : 'opacity-0 translate-y-8'
-      } hover:shadow-2xl hover:-translate-y-2`}
-      style={{ transitionDelay: isVisible ? `${index * 150}ms` : '0ms' }}
+      } hover:shadow-2xl hover:-translate-y-2 ${isVisible ? `transition-delay-${index * 150}` : 'transition-delay-1'}`}
     >
       {/* Image Container */}
       <div className="relative h-64 md:h-72 overflow-hidden">
