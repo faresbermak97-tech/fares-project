@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
+import './CardsSection.css';
 
 const CardsSection = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
-  const sectionRef = useRef(null);
-  const containerRef = useRef(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,7 +35,7 @@ const CardsSection = () => {
   }, []);
 
   // Calculate card positions based on scroll progress
-  const getCardStyle = (cardIndex) => {
+  const getCardStyle = (cardIndex: number) => {
     const card1Progress = Math.min(scrollProgress * 3, 1);
     const card2Progress = Math.min(Math.max((scrollProgress - 0.33) * 3, 0), 1);
     const card3Progress = Math.min(Math.max((scrollProgress - 0.66) * 3, 0), 1);
@@ -85,7 +86,7 @@ const CardsSection = () => {
   ];
 
   return (
-    <div ref={sectionRef} className="cards-section relative bg-gray-50" style={{ height: '400vh' }}>
+    <div ref={sectionRef} className="cards-section relative bg-gray-50 full-height">
       {/* Sticky container */}
       <div 
         ref={containerRef}
@@ -95,13 +96,8 @@ const CardsSection = () => {
           {cardData.map((card, index) => (
             <div
               key={card.id}
-              className={`card absolute ${card.bgColor} rounded-3xl shadow-2xl overflow-hidden transition-all duration-300 ease-out`}
-              style={{
-                width: 'calc(100% - 2cm)',
-                height: 'calc(100% - 4cm)',
-                maxWidth: '1400px',
-                ...getCardStyle(index)
-              }}
+              className={`card absolute ${card.bgColor} rounded-3xl shadow-2xl overflow-hidden transition-all duration-300 ease-out card-dimensions`}
+              style={getCardStyle(index)}
             >
               <div className="card-content h-full flex flex-col lg:flex-row">
                 {/* Left Content */}

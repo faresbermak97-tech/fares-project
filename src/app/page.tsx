@@ -188,11 +188,21 @@ export default function Home() {
     if (!textElement) return;
 
     let scrollPosition = 0;
-    const scroll = () => {
-      scrollPosition -= 0.5;
+    let lastTime = 0;
+    const scroll = (timestamp: number) => {
+      if (!lastTime) lastTime = timestamp;
+      const deltaTime = timestamp - lastTime;
+      lastTime = timestamp;
+      
+      // Use time-based animation for smoother movement
+      scrollPosition -= 0.15 * deltaTime; // Increased speed from 0.05 to 0.15
       if (textElement) {
-        const totalTransform = scrollPosition - scrollY * 0.2;
+        // Enhance parallax effect with page scroll
+        const parallaxEffect = scrollY * 0.15;
+        const totalTransform = scrollPosition - parallaxEffect;
         textElement.style.transform = `translateX(${totalTransform}px)`;
+        
+        // Reset position when text has scrolled completely
         if (Math.abs(scrollPosition) > textElement.scrollWidth / 2) {
           scrollPosition = 0;
         }
@@ -338,9 +348,9 @@ export default function Home() {
         <div className="absolute bottom-12 sm:bottom-16 md:bottom-20 lg:bottom-24 left-0 right-0 z-10 w-full pointer-events-none overflow-hidden">
           <div
             ref={textRef}
-            className="text-[18vw] sm:text-[15vw] md:text-[12vw] lg:text-[10vw] font-extrabold text-white leading-none whitespace-nowrap inline-block will-change-transform tracking-tighter"
+            className="text-[18vw] sm:text-[15vw] md:text-[12vw] lg:text-[10vw] font-extrabold text-white/90 leading-none whitespace-nowrap inline-block will-change-transform tracking-tighter transition-opacity duration-500 hover:text-white hover:opacity-100"
           >
-            Fares Bermak — Fares Bermak — Fares Bermak —
+            Fares Bermak — Fares Bermak — Fares Bermak — Fares Bermak — Fares Bermak — Fares Bermak — Fares Bermak — Fares Bermak — Fares Bermak —
           </div>
         </div>
       </section>

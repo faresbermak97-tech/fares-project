@@ -1,0 +1,11 @@
+/* CardsSection.css */
+
+.full-height {
+  height: 400vh;
+}
+
+.card-dimensions {
+  width: calc(100% - 2cm);
+  height: calc(100% - 4cm);
+  max-width: 1400px;
+}
