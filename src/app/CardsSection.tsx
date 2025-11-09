@@ -63,26 +63,23 @@ const CardsSection = () => {
   const cardData = [
     {
       id: 1,
-      title: 'Content creation',
-      description: 'Content die opvalt en raakt.',
-      details: 'We maken content die opvalt. Blijft hangen. En jouw doelgroep raakt. Creatief, snel en energiek. Altijd met het doel voor ogen.',
-      image: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&q=80',
+      title: 'Remote Virtual Assistance',
+      description: 'Comprehensive support — managing calendars, emails, clients, and documents to keep your operations running smoothly.',
+      image: '/Remote Virtual Assistance.jpg',
       bgColor: 'bg-pink-300'
     },
     {
       id: 2,
-      title: 'Digital Marketing',
-      description: 'Jouw merk, onze expertise.',
-      details: 'Van strategie tot uitvoering. We zorgen dat jouw boodschap aankomt waar het moet. Met data-gedreven campagnes die resultaat opleveren.',
-      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80',
+      title: 'Data Entry',
+      description: 'Accurate and organized data handling using Excel and Google Sheets to keep your records reliable and decision-ready.',
+      image: '/Data Entry.jpg',
       bgColor: 'bg-blue-300'
     },
     {
       id: 3,
-      title: 'Brand Experience',
-      description: 'Ervaringen die blijven plakken.',
-      details: 'We creëren merkbelevinissen die impact maken. Van events tot digitale experiences. Altijd met aandacht voor detail en authentieke connectie.',
-      image: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&q=80',
+      title: 'IT Support Help Desk L1',
+      description: 'I help remote teams integrate software tools, manage cloud systems, and resolve technical issues quickly.From automation setup to day-to-day IT support, I make your systems efficient and dependable.',
+      image: '/IT Support Help Desk L1.png',
       bgColor: 'bg-purple-300'
     }
   ];
@@ -114,12 +111,8 @@ const CardsSection = () => {
                     {card.title}
                   </h2>
 
-                  <p className="text-xl md:text-2xl lg:text-3xl font-semibold text-gray-800 mb-3 md:mb-4">
+                  <p className="text-base md:text-lg text-gray-700 mb-6 md:mb-8 max-w-xl leading-relaxed pl-1 md:pl-2">
                     {card.description}
-                  </p>
-
-                  <p className="text-base md:text-lg text-gray-700 mb-6 md:mb-8 max-w-xl leading-relaxed">
-                    {card.details}
                   </p>
 
 
