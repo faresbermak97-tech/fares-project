@@ -12,6 +12,7 @@
 /* Button movement - will be handled via JavaScript */
 .button-moved {
   /* This class will be used to indicate the button is moved */
+  position: relative;
 }
 
 /* Transition delays */
