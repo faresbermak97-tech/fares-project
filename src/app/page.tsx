@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import './page.css';
+import CardsSection from './CardsSection';
 
 export default function Home() {
   const textRef = useRef<HTMLDivElement>(null);
@@ -387,6 +388,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Card Section */}
+      <CardsSection />
 
       {/* Services Section - Horizontal Panels */}
 <section id="services" className="panels-premium animate-section relative h-screen w-full flex overflow-hidden">
