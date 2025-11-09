@@ -35,29 +35,17 @@ const CardsSection = () => {
   }, []);
 
   // Calculate card positions based on scroll progress
-  const getCardStyle = (cardIndex: number) => {
+  const getCardClasses = (cardIndex: number) => {
     const card1Progress = Math.min(scrollProgress * 3, 1);
     const card2Progress = Math.min(Math.max((scrollProgress - 0.33) * 3, 0), 1);
     const card3Progress = Math.min(Math.max((scrollProgress - 0.66) * 3, 0), 1);
 
     if (cardIndex === 0) {
-      return {
-        transform: `scale(${1 - card1Progress * 0.05}) translateY(0%)`,
-        opacity: 1,
-        zIndex: 1
-      };
+      return `card-1 card-1-progress-${Math.round(card1Progress * 10)}`;
     } else if (cardIndex === 1) {
-      return {
-        transform: `scale(${1 - card2Progress * 0.05}) translateY(${100 - card2Progress * 100}%)`,
-        opacity: 1,
-        zIndex: 2
-      };
+      return `card-2 card-2-progress-${Math.round(card2Progress * 10)}`;
     } else {
-      return {
-        transform: `scale(1) translateY(${100 - card3Progress * 100}%)`,
-        opacity: 1,
-        zIndex: 3
-      };
+      return `card-3 card-3-progress-${Math.round(card3Progress * 10)}`;
     }
   };
 
@@ -96,8 +84,7 @@ const CardsSection = () => {
           {cardData.map((card, index) => (
             <div
               key={card.id}
-              className={`card absolute ${card.bgColor} rounded-3xl shadow-2xl overflow-hidden transition-all duration-300 ease-out card-dimensions`}
-              style={getCardStyle(index)}
+              className={`card absolute ${card.bgColor} rounded-3xl shadow-2xl overflow-hidden transition-all duration-300 ease-out card-dimensions ${getCardClasses(index)}`}
             >
               <div className="card-content h-full flex flex-col lg:flex-row">
                 {/* Left Content */}
