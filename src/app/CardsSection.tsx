@@ -63,31 +63,25 @@ const CardsSection = () => {
   const cardData = [
     {
       id: 1,
-      tag: 'Expertise',
       title: 'Content creation',
       description: 'Content die opvalt en raakt.',
       details: 'We maken content die opvalt. Blijft hangen. En jouw doelgroep raakt. Creatief, snel en energiek. Altijd met het doel voor ogen.',
-      buttonText: 'Meer over content creatie',
       image: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&q=80',
       bgColor: 'bg-pink-300'
     },
     {
       id: 2,
-      tag: 'Strategy',
       title: 'Digital Marketing',
       description: 'Jouw merk, onze expertise.',
       details: 'Van strategie tot uitvoering. We zorgen dat jouw boodschap aankomt waar het moet. Met data-gedreven campagnes die resultaat opleveren.',
-      buttonText: 'Ontdek onze aanpak',
       image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80',
       bgColor: 'bg-blue-300'
     },
     {
       id: 3,
-      tag: 'Innovation',
       title: 'Brand Experience',
       description: 'Ervaringen die blijven plakken.',
       details: 'We creëren merkbelevinissen die impact maken. Van events tot digitale experiences. Altijd met aandacht voor detail en authentieke connectie.',
-      buttonText: 'Zie onze projecten',
       image: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&q=80',
       bgColor: 'bg-purple-300'
     }
@@ -115,11 +109,6 @@ const CardsSection = () => {
               <div className="card-content h-full flex flex-col lg:flex-row">
                 {/* Left Content */}
                 <div className="content-left flex-1 p-6 md:p-12 lg:p-16 flex flex-col justify-center">
-                  <div className="mb-4 md:mb-6">
-                    <span className="inline-block px-4 py-2 bg-white rounded-full text-sm font-medium shadow-sm">
-                      {card.tag}
-                    </span>
-                  </div>
 
                   <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">
                     {card.title}
@@ -133,17 +122,7 @@ const CardsSection = () => {
                     {card.details}
                   </p>
 
-                  <button className="group inline-flex items-center gap-3 px-6 py-3 bg-gray-900 text-white rounded-full font-medium hover:bg-gray-800 transition-all hover:gap-4 w-fit">
-                    {card.buttonText}
-                    <svg 
-                      className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </button>
+
                 </div>
                 {/* Right Image */}
                 <div className="content-right flex-1 relative overflow-hidden min-h-[300px] lg:min-h-0">
