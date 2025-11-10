@@ -418,10 +418,11 @@ section.animate-section { animation-delay: 0.2s; }
   padding: 0 40px;
 }
 .slide-text h2 {
-  font-size: clamp(28px, 4vw, 48px);
+  font-size: clamp(32px, 5vw, 56px);
   font-weight: 700;
   color: #0b1220;
-  margin-bottom: 16px;
+  margin-top: -20px;
+  margin-bottom: 24px;
   line-height: 1.2;
 }
 .slide-text .accent {

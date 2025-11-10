@@ -593,21 +593,18 @@ export default function Home() {
 
         {[
           {
-            title: "Workflow Automation",
             highlight: "Workflow Automation",
             text: "I design intelligent automations that eliminate repetitive manual tasks and connect your essential tools — from Google Workspace to Zapier integrations. By streamlining processes like data transfers, email triggers, and task creation, I help your systems work together seamlessly — saving hours every week and allowing you to focus on growth instead of routine.",
             img: "/Workflow Automation.jpg",
             reverse: false,
           },
           {
-            title: "Organization",
             highlight: "Organization",
             text: "I bring structure to your digital workspace by creating clear systems for managing data, schedules, and workflows. From maintaining organized spreadsheets and shared drives to setting up project dashboards and reporting templates, I ensure everything is accessible, consistent, and easy to maintain. An organized business is an efficient business — and I make sure yours stays that way.",
             img: "/Organization.jpg",
             reverse: true,
           },
           {
-            title: "Communication",
             highlight: "Communication",
             text: "Smooth communication is the backbone of any remote team. I manage inboxes, coordinate updates, and ensure that information flows clearly between departments and clients. Whether through Slack, email, or project platforms like Asana, I help teams stay aligned, responsive, and focused on what truly matters — collaboration and results.",
             img: "/Communication.png",
@@ -627,7 +624,7 @@ export default function Home() {
             <div className="divider" />
             <div className="slide-text">
               <h2>
-                {s.title} <span className="accent">{s.highlight}</span>
+                <span className="accent">{s.highlight}</span>
               </h2>
               <p>{s.text}</p>
             </div>
