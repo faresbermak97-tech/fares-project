@@ -236,7 +236,10 @@ export default function Home() {
           ease: "power3.out",
           scrollTrigger: {
             trigger: slide,
-            start: "top 80%",
+            start: () => {
+              const index = slidesRef.current.indexOf(slide);
+              return `${index * 100}vh center`;
+            },
             toggleActions: "play none none reverse",
           },
         }
@@ -251,7 +254,10 @@ export default function Home() {
           ease: "power3.out",
           scrollTrigger: {
             trigger: slide,
-            start: "top 80%",
+            start: () => {
+              const index = slidesRef.current.indexOf(slide);
+              return `${index * 100}vh center`;
+            },
             toggleActions: "play none none reverse",
           },
         }
@@ -619,7 +625,7 @@ export default function Home() {
             }}
           >
             <div className="slide-img">
-              <img src={s.img} alt={s.title} />
+              <img src={s.img} alt={s.highlight} />
             </div>
             <div className="divider" />
             <div className="slide-text">
