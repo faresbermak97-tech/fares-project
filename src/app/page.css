@@ -16,38 +16,7 @@
 }
 
 /* Transition delays */
-.transition-delay-1 {
-  transition-delay: 0ms;
-}
-
-/* Dynamic transition delay classes */
-.transition-delay-150 {
-  transition-delay: 150ms;
-}
-
-.transition-delay-300 {
-  transition-delay: 300ms;
-}
-
-.transition-delay-450 {
-  transition-delay: 450ms;
-}
-
-.transition-delay-600 {
-  transition-delay: 600ms;
-}
-
-.transition-delay-750 {
-  transition-delay: 750ms;
-}
-
-.transition-delay-900 {
-  transition-delay: 900ms;
-}
-
-.transition-delay-100 {
-  transition-delay: 100ms;
-}
+/* Only keep transition delays that are used in the component */
 
 /* Timeline dots positions */
 .timeline-dot-top-1 {
@@ -62,22 +31,4 @@
   top: 83.33%;
 }
 
-.transition-delay-250 {
-  transition-delay: 250ms;
-}
-
-.transition-delay-400 {
-  transition-delay: 400ms;
-}
-
-.transition-delay-550 {
-  transition-delay: 550ms;
-}
-
-.transition-delay-700 {
-  transition-delay: 700ms;
-}
-
-.transition-delay-850 {
-  transition-delay: 850ms;
-}
+/* Unused transition delays removed */
