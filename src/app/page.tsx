@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './page.css';
 import CardsSection from './CardsSection';
 
@@ -30,6 +32,9 @@ export default function Home() {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const slidesRef = useRef<HTMLDivElement[]>([]);
+  const sectionRef = useRef<HTMLElement>(null);
+  const progressLineRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -213,6 +218,61 @@ export default function Home() {
     const animation = requestAnimationFrame(scroll);
     return () => cancelAnimationFrame(animation);
   }, [scrollY]);
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    // Animate text + image on scroll
+    slidesRef.current.forEach((slide) => {
+      if (!slide) return;
+      const text = slide.querySelector(".slide-text") as HTMLElement;
+      const img = slide.querySelector(".slide-img") as HTMLElement;
+      gsap.fromTo(
+        text,
+        { opacity: 0, x: 60 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: slide,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+      gsap.fromTo(
+        img,
+        { opacity: 0, x: -60 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: slide,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+    });
+    // Animate progress line while scrolling
+    gsap.fromTo(
+      progressLineRef.current,
+      { height: "0%" },
+      {
+        height: "100%",
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top center",
+          end: "bottom center",
+          scrub: true,
+        },
+      }
+    );
+  }, []);
 
   return (
     <main className="bg-[#f5f5f5]">
@@ -520,47 +580,60 @@ export default function Home() {
   ))}
 </section>
 
-      {/* Flow Section - How I Keep Your Business Flowing */}
-      <section id="flow" className="animate-section relative py-24 md:py-32 lg:py-40 px-6 md:px-12 lg:px-16 bg-[#f8fafc] overflow-hidden">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-16 md:mb-20 text-center">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#111] mb-4">How I Keep Your Business Flowing</h2>
-            <p className="text-[#555] max-w-3xl mx-auto">Automation, organization, and clear communication—built to keep teams moving.</p>
-          </div>
-
-          <div className="space-y-14 md:space-y-20">
-            {/* Row 1 - Automation */}
-            <FeatureRow
-              index={0}
-              title="Workflow Automation"
-              description="I design intelligent automations that eliminate repetitive manual tasks and connect your essential tools—from Google Workspace to Zapier. By streamlining processes like data transfers, email triggers, and task creation, I help your systems work together seamlessly—saving hours every week and letting you focus on growth."
-              image="Workflow Automation.jpg"
-              reverse={false}
-              visible={featureVisible[0]}
-            />
-
-            {/* Row 2 - Organization */}
-            <FeatureRow
-              index={1}
-              title="Organization"
-              description="I bring structure to your digital workspace by creating clear systems for managing data, schedules, and workflows. From organized spreadsheets and shared drives to project dashboards and reporting templates, I make everything accessible, consistent, and simple to maintain."
-              image="Organization.jpg"
-              reverse={true}
-              visible={featureVisible[1]}
-            />
-
-            {/* Row 3 - Communication */}
-            <FeatureRow
-              index={2}
-              title="Communication"
-              description="Smooth communication is the backbone of any remote team. I manage inboxes, coordinate updates, and ensure clear information flow between departments and clients—via Slack, email, or project tools like Asana—so everyone stays aligned and focused on results."
-              image="Communication.png"
-              reverse={false}
-              visible={featureVisible[2]}
-            />
-          </div>
+      {/* Scroll-Triggered Features Section */}
+      <section id="features" className="triple-section" ref={sectionRef}>
+        {/* fixed center timeline */}
+        <div className="timeline-line">
+          <div className="timeline-progress" ref={progressLineRef}></div>
         </div>
-      </section>
+        {/* glowing dots */}
+        <div className="timeline-dot timeline-dot-top-1"></div>
+        <div className="timeline-dot timeline-dot-top-2"></div>
+        <div className="timeline-dot timeline-dot-top-3"></div>
+
+        {[
+          {
+            title: "Remote Virtual Assistance",
+            highlight: "Your Digital Right Hand",
+            text: "Professional calendar management, email handling, and client coordination. Let me handle the details while you focus on growing your business.",
+            img: "/Remote Virtual Assistance.jpg",
+            reverse: false,
+          },
+          {
+            title: "Data Entry Excellence",
+            highlight: "Precision & Speed",
+            text: "High-accuracy data processing with Excel & Google Sheets. From database management to record organization, I ensure your data is always reliable.",
+            img: "/Data Entry.jpg",
+            reverse: true,
+          },
+          {
+            title: "IT Support Help Desk L1",
+            highlight: "Technical Solutions",
+            text: "Software integration, cloud systems setup, and technical support. Streamline your operations with automated workflows and system optimization.",
+            img: "/IT Support Help Desk L1.png",
+            reverse: false,
+          },
+        ].map((s, i) => (
+          <div
+            key={i}
+            className={`slide ${s.reverse ? "reverse" : ""}`}
+            ref={(el) => {
+              if (el) slidesRef.current[i] = el;
+            }}
+          >
+            <div className="slide-img">
+              <img src={s.img} alt={s.title} />
+            </div>
+            <div className="divider" />
+            <div className="slide-text">
+              <h2>
+                {s.title} <span className="accent">{s.highlight}</span>
+              </h2>
+              <p>{s.text}</p>
+            </div>
+          </div>
+        ))}
+      </section>    
 
       {/* Contact Section */}
       <section id="contact" className="animate-section relative bg-[#141414] text-white px-2 md:px-6 lg:px-8 pt-8 md:pt-16 pb-2">

@@ -49,6 +49,19 @@
   transition-delay: 100ms;
 }
 
+/* Timeline dots positions */
+.timeline-dot-top-1 {
+  top: 16.66%;
+}
+
+.timeline-dot-top-2 {
+  top: 50%;
+}
+
+.timeline-dot-top-3 {
+  top: 83.33%;
+}
+
 .transition-delay-250 {
   transition-delay: 250ms;
 }
