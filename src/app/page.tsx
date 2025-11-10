@@ -593,24 +593,24 @@ export default function Home() {
 
         {[
           {
-            title: "Remote Virtual Assistance",
-            highlight: "Your Digital Right Hand",
-            text: "Professional calendar management, email handling, and client coordination. Let me handle the details while you focus on growing your business.",
-            img: "/Remote Virtual Assistance.jpg",
+            title: "Workflow Automation",
+            highlight: "Workflow Automation",
+            text: "I design intelligent automations that eliminate repetitive manual tasks and connect your essential tools — from Google Workspace to Zapier integrations. By streamlining processes like data transfers, email triggers, and task creation, I help your systems work together seamlessly — saving hours every week and allowing you to focus on growth instead of routine.",
+            img: "/Workflow Automation.jpg",
             reverse: false,
           },
           {
-            title: "Data Entry Excellence",
-            highlight: "Precision & Speed",
-            text: "High-accuracy data processing with Excel & Google Sheets. From database management to record organization, I ensure your data is always reliable.",
-            img: "/Data Entry.jpg",
+            title: "Organization",
+            highlight: "Organization",
+            text: "I bring structure to your digital workspace by creating clear systems for managing data, schedules, and workflows. From maintaining organized spreadsheets and shared drives to setting up project dashboards and reporting templates, I ensure everything is accessible, consistent, and easy to maintain. An organized business is an efficient business — and I make sure yours stays that way.",
+            img: "/Organization.jpg",
             reverse: true,
           },
           {
-            title: "IT Support Help Desk L1",
-            highlight: "Technical Solutions",
-            text: "Software integration, cloud systems setup, and technical support. Streamline your operations with automated workflows and system optimization.",
-            img: "/IT Support Help Desk L1.png",
+            title: "Communication",
+            highlight: "Communication",
+            text: "Smooth communication is the backbone of any remote team. I manage inboxes, coordinate updates, and ensure that information flows clearly between departments and clients. Whether through Slack, email, or project platforms like Asana, I help teams stay aligned, responsive, and focused on what truly matters — collaboration and results.",
+            img: "/Communication.png",
             reverse: false,
           },
         ].map((s, i) => (
