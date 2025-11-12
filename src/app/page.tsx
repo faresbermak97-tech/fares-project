@@ -5,6 +5,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './page.css';
 import CardsSection from './CardsSection';
+import DetailModal from '@/components/DetailModal';
 
 export default function Home() {
   const textRef = useRef<HTMLDivElement>(null);
@@ -482,56 +483,88 @@ export default function Home() {
       <CardsSection />
 
       {/* Scroll-Triggered Features Section */}
-      <section id="features" className="triple-section" ref={sectionRef}>
-        {/* fixed center timeline */}
-        <div className="timeline-line">
-          <div className="timeline-progress" ref={progressLineRef}></div>
-        </div>
-        {/* glowing dots */}
-        <div className="timeline-dot timeline-dot-top-1"></div>
-        <div className="timeline-dot timeline-dot-top-2"></div>
-        <div className="timeline-dot timeline-dot-top-3"></div>
+<section id="features" className="triple-section" ref={sectionRef}>
+  {/* fixed center timeline */}
+  <div className="timeline-line">
+    <div className="timeline-progress" ref={progressLineRef}></div>
+  </div>
+  {/* glowing dots */}
+  <div className="timeline-dot timeline-dot-top-1"></div>
+  <div className="timeline-dot timeline-dot-top-2"></div>
+  <div className="timeline-dot timeline-dot-top-3"></div>
 
-        {[
-          {
-            highlight: "Workflow Automation",
-            text: "I design smart automations that eliminate repetitive manual tasks and connect your essential tools—from Google Workspace to Zapier integrations. By streamlining processes like data transfers, email triggers, and task creation, I save your team 5-15 hours weekly and allow you to focus on growth instead of routine.",
-            img: "/Workflow Automation.jpg",
-            reverse: false,
-          },
-          {
-            highlight: "Organization",
-            text: "I bring structure to your digital workspace by creating clear systems for managing data, schedules, and workflows. From organized spreadsheets and shared drives to project dashboards and reporting templates, I ensure everything is accessible, consistent, and easy to maintain.",
-            img: "/Organization.jpg",
-            reverse: true,
-          },
-          {
-            highlight: "Communication",
-            text: "Smooth communication is the backbone of any remote team. I manage inboxes, coordinate updates, and ensure information flows clearly between departments and clients. Whether through Slack, email, or project platforms like Asana, I help teams stay aligned and focused on results.",
-            img: "/Communication.png",
-            reverse: false,
-          },
-        ].map((s, i) => (
-          <div
-            key={i}
-            className={`slide ${s.reverse ? "reverse" : ""}`}
-            ref={(el) => {
-              if (el) slidesRef.current[i] = el;
-            }}
-          >
-            <div className="slide-img">
-              <img src={s.img} alt={s.highlight} />
-            </div>
-            <div className="divider" />
-            <div className="slide-text">
-              <h2>
-                <span className="accent">{s.highlight}</span>
-              </h2>
-              <p>{s.text}</p>
-            </div>
-          </div>
-        ))}
-      </section>    
+  {[
+    {
+      highlight: "Workflow Automation",
+      text: "I design smart automations that eliminate repetitive manual tasks and connect your essential tools—from Google Workspace to Zapier integrations. By streamlining processes like data transfers, email triggers, and task creation, I save your team 5-15 hours weekly and allow you to focus on growth instead of routine.",
+      img: "/Workflow Automation.jpg",
+      reverse: false,
+      details: [
+        'Auto-import email purchase orders → Google Sheets with categorization',
+        'New CRM contact → Welcome email + calendar invite + task in Asana',
+        'Invoice sent → Automatic 7-day follow-up reminder if unpaid',
+        'Form submission → Data added to spreadsheet + Slack notification',
+        'Calendar event → Meeting prep doc auto-created in Google Drive',
+        'Result: 5-15 hours saved weekly per client'
+      ]
+    },
+    {
+      highlight: "Organization",
+      text: "I bring structure to your digital workspace by creating clear systems for managing data, schedules, and workflows. From organized spreadsheets and shared drives to project dashboards and reporting templates, I ensure everything is accessible, consistent, and easy to maintain.",
+      img: "/Organization.jpg",
+      reverse: true,
+      details: [
+        'Google Drive/Dropbox folder structures with naming conventions',
+        'Excel/Sheets workbooks with validation, formulas, pivot tables',
+        'Project dashboards in Asana/Trello with status tracking',
+        'Standard operating procedures (SOPs) documentation',
+        'Email templates for common scenarios',
+        'Client/vendor contact databases - Find any file in under 30 seconds'
+      ]
+    },
+    {
+      highlight: "Communication",
+      text: "Smooth communication is the backbone of any remote team. I manage inboxes, coordinate updates, and ensure information flows clearly between departments and clients. Whether through Slack, email, or project platforms like Asana, I help teams stay aligned and focused on results.",
+      img: "/Communication.png",
+      reverse: false,
+      details: [
+        'Inbox filtering and priority flagging (Inbox Zero daily)',
+        'Client email responses with your tone/voice',
+        'Meeting scheduling across multiple time zones',
+        'Follow-up tracking to ensure no missed replies',
+        'Internal team updates via Slack/email',
+        'Cross-department coordination - Response Time: Within 4 hours'
+      ]
+    },
+  ].map((s, i) => (
+    <div
+      key={i}
+      className={`slide ${s.reverse ? "reverse" : ""}`}
+      ref={(el) => {
+        if (el) slidesRef.current[i] = el;
+      }}
+    >
+      <div className="slide-img">
+        <img src={s.img} alt={s.highlight} />
+      </div>
+      <div className="divider" />
+      <div className="slide-text">
+        <h2>
+          <span className="accent">{s.highlight}</span>
+        </h2>
+        <p>{s.text}</p>
+        
+        {/* ADD THIS: Detail Button */}
+        <div className="mt-8">
+          <DetailModal 
+            title={s.highlight}
+            details={s.details}
+          />
+        </div>
+      </div>
+    </div>
+  ))}
+</section>    
 
       {/* Contact Section */}
       <section id="contact" className="animate-section relative bg-[#141414] text-white px-2 md:px-6 lg:px-8 pt-8 md:pt-16 pb-2">
