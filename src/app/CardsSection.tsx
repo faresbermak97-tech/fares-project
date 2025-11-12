@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './CardsSection.css';
-import DetailModal from '@/components/DetailModal';
+import CardDetailModal from '@/components/CardDetailModal';
 
 const CardsSection = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -37,8 +37,13 @@ const CardsSection = () => {
 
   // Calculate card positions based on scroll progress
   const getCardClasses = (cardIndex: number) => {
+    // Card 1: Starts immediately, scales down 0-33%
     const card1Progress = Math.min(scrollProgress * 3, 1);
+    
+    // Card 2: Starts at 33%, fully revealed at 66%
     const card2Progress = Math.min(Math.max((scrollProgress - 0.33) * 3, 0), 1);
+    
+    // Card 3: Starts ONLY after card 2 is fully revealed (at 66%)
     const card3Progress = Math.min(Math.max((scrollProgress - 0.66) * 3, 0), 1);
 
     if (cardIndex === 0) {
@@ -109,7 +114,7 @@ const CardsSection = () => {
           {cardData.map((card, index) => (
             <div
               key={card.id}
-              className={`card absolute ${card.bgColor} rounded-3xl shadow-2xl transition-all duration-300 ease-out card-dimensions ${getCardClasses(index)}`}
+              className={`card absolute ${card.bgColor} rounded-3xl shadow-2xl transition-all duration-300 ease-out card-dimensions card-overflow-visible ${getCardClasses(index)}`}
             >
               <div className="card-content h-full flex flex-col lg:flex-row overflow-hidden rounded-3xl">
                 {/* Left Content */}
@@ -125,9 +130,10 @@ const CardsSection = () => {
 
                   {/* Detail Button */}
                   <div className="pl-1 md:pl-2">
-                    <DetailModal 
+                    <CardDetailModal 
                       title={card.title}
                       details={card.details}
+                      imageSrc={card.image}
                     />
                   </div>
 
