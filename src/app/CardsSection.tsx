@@ -52,22 +52,22 @@ const CardsSection = () => {
   const cardData = [
     {
       id: 1,
-      title: 'Remote Virtual Assistance',
-      description: 'Comprehensive support — managing calendars, emails, clients, and documents to keep your operations running smoothly.',
+      title: 'Virtual Assistant & Admin Support',
+      description: 'Complete day-to-day operational support: calendar management, inbox organization, client communications, meeting prep, and document control. I keep your operations smooth so you can focus on strategy, not admin overhead.',
       image: '/Remote Virtual Assistance.jpg',
       bgColor: 'bg-pink-300'
     },
     {
       id: 2,
-      title: 'Data Entry',
-      description: 'Accurate and organized data handling using Excel and Google Sheets to keep your records reliable and decision-ready.',
+      title: 'Data Entry & Management',
+      description: 'Fast, accurate data capture with structured spreadsheets designed for analysis. I process 200-400+ records monthly with 99%+ accuracy. Invoice data, CRM updates, financial records—I deliver clean datasets using Excel and Google Sheets.',
       image: '/Data Entry.jpg',
       bgColor: 'bg-blue-300'
     },
     {
       id: 3,
       title: 'IT Support Help Desk L1',
-      description: 'I help remote teams integrate software tools, manage cloud systems, and resolve technical issues quickly.From automation setup to day-to-day IT support, I make your systems efficient and dependable.',
+      description: 'I help remote teams integrate software tools, manage cloud systems, and resolve technical issues quickly. From automation setup to day-to-day IT support, I make your systems efficient and dependable.',
       image: '/IT Support Help Desk L1.png',
       bgColor: 'bg-purple-300'
     }

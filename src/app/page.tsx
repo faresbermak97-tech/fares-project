@@ -393,13 +393,13 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Freelance Badge - Top Right */}
-        <div className="absolute right-6 md:right-16 top-[25%] md:top-[30%] z-20 text-right">
-          <div className="text-white text-lg md:text-2xl lg:text-3xl leading-tight font-semibold">
-            <div>Remote Virtual Assistant</div>
-            <div>& Data Entry</div>
-          </div>
-        </div>
+{/* Freelance Badge - Top Right */}
+<div className="absolute right-6 md:right-16 top-[25%] md:top-[30%] z-20">
+  <div className="text-white text-lg md:text-2xl lg:text-3xl leading-tight font-semibold text-left flex flex-col items-start">
+    <div>Remote Virtual Assistant</div>
+    <div>& Data Entry</div>
+  </div>
+</div>
 
         {/* Scroll Indicator - Middle Right */}
         <div className="absolute right-6 md:right-12 lg:right-16 top-1/2 -translate-y-1/2 z-20 hidden sm:block">
@@ -430,18 +430,31 @@ export default function Home() {
               <div className="overflow-hidden">
                 <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight animate-fade-in-up">
                   <span className="inline-block hover:text-[#4D64FF] transition-colors duration-300">
-                    I am Fares Bermak
+                    Who I Am
                   </span>
                 </h2>
               </div>
               
               <div className="overflow-hidden">
-                <p className="text-base md:text-lg lg:text-xl text-gray-700 leading-relaxed animate-fade-in-up animation-delay-200">
-                  Meticulous remote Administrative Professional focused on high-accuracy data management and process automation. 
-                  Proven at converting local operations into reliable digital workflows, automating repetitive tasks with Zapier 
-                  and Advanced Excel, and maintaining strict data integrity across financial and operational records. Trilingual 
-                  (Arabic, English, French) with strong asynchronous collaboration experience.
-                </p>
+                <div className="space-y-6 animate-fade-in-up animation-delay-200">
+                  <p className="text-base md:text-lg lg:text-xl text-gray-700 leading-relaxed">
+                    I'm Fares Bermak, a disciplined Remote Administrative Professional who converts chaotic manual processes into dependable digital systems.
+                  </p>
+
+                  <p className="text-base md:text-lg lg:text-xl text-gray-700 leading-relaxed">
+                    I specialize in high-accuracy data management, workflow automation with Zapier and Advanced Excel, and maintaining strict integrity across financial and operational records.
+                  </p>
+
+                  <p className="text-base md:text-lg lg:text-xl text-gray-700 leading-relaxed">
+                    Trilingual (Arabic, English, French) with proven experience in asynchronous remote collaboration, I've helped businesses eliminate hours of repetitive work each week while reducing errors and improving team coordination.
+                  </p>
+
+                  <div className="pt-4 border-l-4 border-[#4D64FF] pl-6 bg-white/50 py-4 rounded-r-lg">
+                    <p className="text-lg md:text-xl text-gray-900 font-medium italic leading-relaxed">
+                      My approach is simple: Build systems that work reliably, automate what shouldn't require human attention, and keep everything organized so your business scales without friction.
+                    </p>
+                  </div>
+                </div>
               </div>
               
             </div> {/* This closes the "space-y-8" container */}
@@ -482,19 +495,19 @@ export default function Home() {
         {[
           {
             highlight: "Workflow Automation",
-            text: "I design intelligent automations that eliminate repetitive manual tasks and connect your essential tools — from Google Workspace to Zapier integrations. By streamlining processes like data transfers, email triggers, and task creation, I help your systems work together seamlessly — saving hours every week and allowing you to focus on growth instead of routine.",
+            text: "I design smart automations that eliminate repetitive manual tasks and connect your essential tools—from Google Workspace to Zapier integrations. By streamlining processes like data transfers, email triggers, and task creation, I save your team 5-15 hours weekly and allow you to focus on growth instead of routine.",
             img: "/Workflow Automation.jpg",
             reverse: false,
           },
           {
             highlight: "Organization",
-            text: "I bring structure to your digital workspace by creating clear systems for managing data, schedules, and workflows. From maintaining organized spreadsheets and shared drives to setting up project dashboards and reporting templates, I ensure everything is accessible, consistent, and easy to maintain. An organized business is an efficient business — and I make sure yours stays that way.",
+            text: "I bring structure to your digital workspace by creating clear systems for managing data, schedules, and workflows. From organized spreadsheets and shared drives to project dashboards and reporting templates, I ensure everything is accessible, consistent, and easy to maintain.",
             img: "/Organization.jpg",
             reverse: true,
           },
           {
             highlight: "Communication",
-            text: "Smooth communication is the backbone of any remote team. I manage inboxes, coordinate updates, and ensure that information flows clearly between departments and clients. Whether through Slack, email, or project platforms like Asana, I help teams stay aligned, responsive, and focused on what truly matters — collaboration and results.",
+            text: "Smooth communication is the backbone of any remote team. I manage inboxes, coordinate updates, and ensure information flows clearly between departments and clients. Whether through Slack, email, or project platforms like Asana, I help teams stay aligned and focused on results.",
             img: "/Communication.png",
             reverse: false,
           },
