@@ -20,7 +20,7 @@ export default function DetailModal({ title, icon, details }: DetailModalProps) 
         onClick={() => setIsOpen(true)}
         className="group relative inline-flex items-center gap-2 px-6 py-2 rounded-full bg-black/70 hover:bg-black/80 backdrop-blur-md border border-black/50 hover:border-black/70 transition-all duration-300 text-white text-sm font-medium"
       >
-        <span>Detail</span>
+        <span>See details</span>
         <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>

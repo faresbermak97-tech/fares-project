@@ -6,6 +6,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './page.css';
 import CardsSection from './CardsSection';
 import DetailModal from '@/components/DetailModal';
+import ResultsSection from '@/components/ResultsSection';
+import PricingSection from '@/components/PricingSection';
 
 export default function Home() {
   const textRef = useRef<HTMLDivElement>(null);
@@ -565,6 +567,9 @@ export default function Home() {
     </div>
   ))}
 </section>    
+
+<ResultsSection />
+<PricingSection />
 
       {/* Contact Section */}
       <section id="contact" className="animate-section relative bg-[#141414] text-white px-2 md:px-6 lg:px-8 pt-8 md:pt-16 pb-2">
