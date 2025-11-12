@@ -13,6 +13,7 @@
 /* Base card styles */
 .card {
   opacity: 1;
+  overflow: visible;
 }
 
 .card-1 {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './CardsSection.css';
+import DetailModal from '@/components/DetailModal';
 
 const CardsSection = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -55,21 +56,45 @@ const CardsSection = () => {
       title: 'Virtual Assistant & Admin Support',
       description: 'Complete day-to-day operational support: calendar management, inbox organization, client communications, meeting prep, and document control. I keep your operations smooth so you can focus on strategy, not admin overhead.',
       image: '/Remote Virtual Assistance.jpg',
-      bgColor: 'bg-pink-300'
+      bgColor: 'bg-pink-300',
+      details: [
+        'Email & Calendar Management - Organize inbox, schedule meetings across time zones, send reminders, ensure no conflicts',
+        'Client Communication & Follow-ups - Manage routine emails, payment reminders, onboarding, maintain conversation logs',
+        'Document Organization - Structure Google Drive/Dropbox, create naming conventions, organize files by project',
+        'Meeting Preparation & Support - Prepare agendas, compile documents, take notes, distribute action items',
+        'Task & Project Management - Manage Asana/Trello boards, update statuses, send progress reminders',
+        'Travel & Event Coordination - Book flights/hotels, manage itineraries, coordinate logistics'
+      ]
     },
     {
       id: 2,
       title: 'Data Entry & Management',
       description: 'Fast, accurate data capture with structured spreadsheets designed for analysis. I process 200-400+ records monthly with 99%+ accuracy. Invoice data, CRM updates, financial records—I deliver clean datasets using Excel and Google Sheets.',
       image: '/Data Entry.jpg',
-      bgColor: 'bg-blue-300'
+      bgColor: 'bg-blue-300',
+      details: [
+        'High-Volume Data Entry - 200-400+ records monthly, invoice data, customer records, inventory lists, expense logs with validation checks',
+        'CRM & Database Management - Input/update records in HubSpot, Salesforce, Pipedrive; clean duplicates, maintain consistency',
+        'Spreadsheet Development - Custom Excel/Google Sheets templates with formulas, pivot tables, validation rules, automated calculations',
+        'Financial Data Entry - Enter invoice data, expense records, transaction details into QuickBooks or spreadsheets for accountant review',
+        'Report Generation - Compile data into clear reports with summaries, charts, insights (operational, sales, expense reports)',
+        'Data Quality & Cleanup - Audit databases, identify errors, remove duplicates, standardize formatting, implement validation rules'
+      ]
     },
     {
       id: 3,
       title: 'IT Support Help Desk L1',
       description: 'I help remote teams integrate software tools, manage cloud systems, and resolve technical issues quickly. From automation setup to day-to-day IT support, I make your systems efficient and dependable.',
       image: '/IT Support Help Desk L1.png',
-      bgColor: 'bg-purple-300'
+      bgColor: 'bg-purple-300',
+      details: [
+        'Software Onboarding - Set up accounts, configure permissions, walk new team members through tools and access',
+        'Basic Troubleshooting - Password resets, access issues, connectivity problems, software conflicts—resolved quickly to keep your team productive',
+        'Cloud System Management - Help manage Google Workspace, Microsoft 365, configure sharing settings, organize cloud storage',
+        'Tool Integration Support - Assist with connecting apps (Zapier setups, Google Workspace integrations) and document workflows',
+        'Technical Documentation - Create simple guides and SOPs for common technical tasks and tool usage',
+        'Tools Supported: Google Workspace, Microsoft Office 365, Slack, Zoom, Asana, Trello, QuickBooks Online, basic CRM platforms'
+      ]
     }
   ];
 
@@ -84,11 +109,11 @@ const CardsSection = () => {
           {cardData.map((card, index) => (
             <div
               key={card.id}
-              className={`card absolute ${card.bgColor} rounded-3xl shadow-2xl overflow-hidden transition-all duration-300 ease-out card-dimensions ${getCardClasses(index)}`}
+              className={`card absolute ${card.bgColor} rounded-3xl shadow-2xl transition-all duration-300 ease-out card-dimensions ${getCardClasses(index)}`}
             >
-              <div className="card-content h-full flex flex-col lg:flex-row">
+              <div className="card-content h-full flex flex-col lg:flex-row overflow-hidden rounded-3xl">
                 {/* Left Content */}
-                <div className="content-left flex-1 p-6 md:p-12 lg:p-16 flex flex-col justify-center">
+                <div className="content-left flex-1 p-6 md:p-12 lg:p-16 flex flex-col justify-center relative z-10">
 
                   <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">
                     {card.title}
@@ -98,6 +123,13 @@ const CardsSection = () => {
                     {card.description}
                   </p>
 
+                  {/* Detail Button */}
+                  <div className="pl-1 md:pl-2">
+                    <DetailModal 
+                      title={card.title}
+                      details={card.details}
+                    />
+                  </div>
 
                 </div>
                 {/* Right Image */}
