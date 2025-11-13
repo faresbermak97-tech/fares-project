@@ -7,10 +7,10 @@ import { X } from 'lucide-react';
 interface CardDetailModalProps {
   title: string;
   details: string[];
-  imageSrc: string;
+  imageSrc?: string; // Made optional with ?
 }
 
-export default function CardDetailModal({ title, details, imageSrc }: CardDetailModalProps) {
+export default function CardDetailModal({ title, details, imageSrc = "" }: CardDetailModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanding, setIsExpanding] = useState(false);
   const [showContent, setShowContent] = useState(false);
@@ -80,9 +80,10 @@ export default function CardDetailModal({ title, details, imageSrc }: CardDetail
             >
               {/* Blurred Background Image */}
               <div
-                className={`absolute inset-0 bg-cover bg-center transition-all duration-1000 modal-background-image modal-background-image-${imageSrc.replace(/[^a-zA-Z0-9]/g, '')} ${
+                className={`absolute inset-0 bg-cover bg-center transition-all duration-1000 modal-background-image modal-background-image-${(imageSrc || "").replace(/[^a-zA-Z0-9]/g, '')} ${
                   isExpanding ? 'modal-background-image-blurred' : 'modal-background-image-normal'
                 }`}
+                style={{ backgroundImage: imageSrc ? `url(${imageSrc})` : 'none' }}
               />
 
               {/* Liquid Glass Overlay */}

@@ -8,18 +8,16 @@ interface OptimizedImageProps {
   className?: string;
   priority?: boolean;
   style?: React.CSSProperties;
-  objectPosition?: string;
 }
 
-export default function OptimizedImage({ 
-  src, 
-  alt, 
-  width, 
-  height, 
-  className, 
+export default function OptimizedImage({
+  src,
+  alt,
+  width,
+  height,
+  className,
   priority = false,
-  style,
-  objectPosition = 'center'
+  style
 }: OptimizedImageProps) {
   return (
     <Image
@@ -30,7 +28,6 @@ export default function OptimizedImage({
       className={className}
       priority={priority}
       style={style}
-      objectPosition={objectPosition}
     />
   );
 }
