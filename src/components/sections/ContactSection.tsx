@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import OptimizedImage from './OptimizedImage';
+import OptimizedImage from '@/components/shared/OptimizedImage';
 
 interface FormStatus {
   type: 'success' | 'error' | null;

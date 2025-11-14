@@ -1,5 +1,6 @@
 import { POST } from '../route';
 import { NextRequest } from 'next/server';
+import nodemailer from 'nodemailer';
 
 // Mock nodemailer
 jest.mock('nodemailer', () => ({
@@ -49,7 +50,6 @@ describe('/api/contact', () => {
 
   it('handles server errors gracefully', async () => {
     // Mock a server error
-    const nodemailer = require('nodemailer');
     nodemailer.createTransport().sendMail.mockRejectedValueOnce(new Error('Server error'));
 
     const request = new NextRequest('http://localhost/api/contact', {

@@ -15,6 +15,18 @@ const CardDetailModal: React.FC<CardDetailModalProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
+  // Function to create a dynamic CSS class name based on the image source
+  const getImageClassName = () => {
+    if (!imageSrc) return '';
+    
+    // Extract filename from path
+    const filename = imageSrc.split('/').pop()?.split('.')[0];
+    if (!filename) return '';
+    
+    // Convert to a valid CSS class name
+    return `modal-background-image-${filename.replace(/[^a-zA-Z0-9]/g, '')}`;
+  };
+
   return (
     <>
       {/* Detail Button */}
@@ -40,7 +52,7 @@ const CardDetailModal: React.FC<CardDetailModalProps> = ({
       {isOpen && (
         <div className="modal-container">
           <div
-            className="modal-content"
+            className={`modal-content modal-background-image has-bg-image ${getImageClassName()} ${imageSrc ? 'modal-with-bg-image' : ''}`}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button */}
@@ -63,7 +75,7 @@ const CardDetailModal: React.FC<CardDetailModalProps> = ({
               {/* Details List */}
               <div className="modal-details">
                 {details.map((detail, idx) => (
-                  <div key={idx} className="detail-item">
+                  <div key={idx} className={`detail-item detail-item-${idx % 10}`}>
                     <span className="detail-bullet">•</span>
                     <p className="detail-text">
                       {detail}

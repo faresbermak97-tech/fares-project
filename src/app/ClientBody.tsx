@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Preloader from "@/components/Preloader";
+import Preloader from "@/components/shared/Preloader";
+import { monitorAnimationPerformance } from "@/utils/animation";
 
 export default function ClientBody({
   children,
@@ -12,6 +13,8 @@ export default function ClientBody({
 
   useEffect(() => {
     document.body.className = "antialiased";
+    // Start performance monitoring
+    monitorAnimationPerformance();
   }, []);
 
   useEffect(() => {

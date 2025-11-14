@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './CardsSection.css';
-import CardDetailModal from '@/components/CardDetailModal';
-import OptimizedImage from '@/components/OptimizedImage';
+import '@/app/CardsSection.css';
+import CardDetailModal from '@/components/modals/CardDetailModal';
+import OptimizedImage from '@/components/shared/OptimizedImage';
 
 const CardsSection = () => {
   const [scrollProgress, setScrollProgress] = useState(0);

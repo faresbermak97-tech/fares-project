@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
+import * as nodemailer from 'nodemailer';
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     if (!name || !email || !message) {
       return NextResponse.json(
         { error: 'Missing required fields' },
-        { status: 400 }
+        { status: 400, headers: { 'Cache-Control': 'no-store, must-revalidate' } }
       );
     }
 
@@ -71,13 +71,13 @@ Fares Bermak`,
 
     return NextResponse.json(
       { success: true, message: 'Your message has been sent successfully!' },
-      { status: 200 }
+      { status: 200, headers: { 'Cache-Control': 'no-store, must-revalidate' } }
     );
   } catch (error) {
     console.error('Error sending email:', error);
     return NextResponse.json(
       { error: 'Failed to send your message. Please try again later.' },
-      { status: 500 }
+      { status: 500, headers: { 'Cache-Control': 'no-store, must-revalidate' } }
     );
   }
 }

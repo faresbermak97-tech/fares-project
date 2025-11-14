@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { act } from 'react';
-import Preloader from '../Preloader';
+import Preloader from '../../shared/Preloader';
 
 // Mock timers
 jest.useFakeTimers();

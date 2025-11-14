@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import OptimizedImage from '../OptimizedImage';
+import OptimizedImage from '../../shared/OptimizedImage';
 
 describe('OptimizedImage', () => {
   it('renders an image with correct alt text', () => {

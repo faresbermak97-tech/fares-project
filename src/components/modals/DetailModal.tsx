@@ -33,6 +33,12 @@ export default function CardDetailModal({ title, details, imageSrc = "" }: CardD
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    if (imageSrc) {
+      document.documentElement.style.setProperty('--modal-bg-image', `url(${imageSrc})`);
+    }
+  }, [imageSrc]);
+
   const handleClose = () => {
     setShowContent(false);
     setTimeout(() => {
@@ -82,8 +88,7 @@ export default function CardDetailModal({ title, details, imageSrc = "" }: CardD
               <div
                 className={`absolute inset-0 bg-cover bg-center transition-all duration-1000 modal-background-image modal-background-image-${(imageSrc || "").replace(/[^a-zA-Z0-9]/g, '')} ${
                   isExpanding ? 'modal-background-image-blurred' : 'modal-background-image-normal'
-                }`}
-                style={{ backgroundImage: imageSrc ? `url(${imageSrc})` : 'none' }}
+                } ${imageSrc ? 'has-bg-image' : ''}`}
               />
 
               {/* Liquid Glass Overlay */}
@@ -156,23 +161,7 @@ export default function CardDetailModal({ title, details, imageSrc = "" }: CardD
                 </div>
               </div>
 
-              {/* Scrollbar styling */}
-              <style jsx>{`
-                div::-webkit-scrollbar {
-                  width: 8px;
-                }
-                div::-webkit-scrollbar-track {
-                  background: rgba(255, 255, 255, 0.1);
-                  border-radius: 10px;
-                }
-                div::-webkit-scrollbar-thumb {
-                  background: rgba(255, 255, 255, 0.3);
-                  border-radius: 10px;
-                }
-                div::-webkit-scrollbar-thumb:hover {
-                  background: rgba(255, 255, 255, 0.5);
-                }
-              `}</style>
+              {/* Scrollbar styling is now in DetailModal.css */}
             </div>
           </div>
         </>

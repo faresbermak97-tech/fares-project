@@ -1,8 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   allowedDevOrigins: ["*.preview.same-app.com"],
+  compress: true,
+  poweredByHeader: false,
+  generateEtags: false,
   images: {
     unoptimized: false,
+    formats: ['image/webp', 'image/avif'],
     remotePatterns: [
       {
         protocol: "https",
@@ -25,6 +29,18 @@ const nextConfig = {
         pathname: "/**",
       },
     ],
+  },
+  experimental: {
+    optimizeCss: true,
+    optimizePackageImports: ['gsap', 'react-icons'],
+  },
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
+      },
+    },
   },
 };
 

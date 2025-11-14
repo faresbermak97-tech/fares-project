@@ -1,15 +1,38 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { animationManager } from '@/utils/animation';
 import './page.css';
-import CardsSection from './CardsSection';
-import DetailModal from '@/components/DetailModal';
-import ResultsSection from '@/components/ResultsSection';
-import PricingSection from '@/components/PricingSection';
-import OptimizedImage from '@/components/OptimizedImage';
-import ContactSection from '@/components/ContactSection';
+import HeroSection from '@/components/sections/HeroSection';
+import AboutSection from '@/components/sections/AboutSection';
+import FeaturesSection from '@/components/sections/FeaturesSection';
+import ContactFormModal from '@/components/modals/ContactFormModal';
+import OptimizedImage from '@/components/shared/OptimizedImage';
+import DetailModal from '@/components/modals/DetailModal';
+
+// Dynamically import heavy components
+const CardsSection = dynamic(() => import('@/components/sections/CardsSection'), {
+  loading: () => <div className="h-96 flex items-center justify-center">Loading...</div>,
+  ssr: false
+});
+
+const ResultsSection = dynamic(() => import('@/components/sections/ResultsSection'), {
+  loading: () => <div className="h-96 flex items-center justify-center">Loading...</div>,
+  ssr: false
+});
+
+const PricingSection = dynamic(() => import('@/components/sections/PricingSection'), {
+  loading: () => <div className="h-96 flex items-center justify-center">Loading...</div>,
+  ssr: false
+});
+
+const ContactSection = dynamic(() => import('@/components/sections/ContactSection'), {
+  loading: () => <div className="h-96 flex items-center justify-center">Loading...</div>,
+  ssr: false
+});
 
 export default function Home() {
   const textRef = useRef<HTMLDivElement>(null);
@@ -42,9 +65,9 @@ export default function Home() {
   const progressLineRef = useRef<HTMLDivElement>(null);
 
   // Debounce function to limit how often a function can be called
-  const debounce = (func: Function, wait: number) => {
+  const debounce = <T extends (...args: unknown[]) => void>(func: T, wait: number) => {
     let timeout: NodeJS.Timeout;
-    return function executedFunction(...args: any[]) {
+    return function executedFunction(...args: Parameters<T>) {
       const later = () => {
         clearTimeout(timeout);
         func(...args);
@@ -247,16 +270,27 @@ export default function Home() {
     const scrollTriggers: ScrollTrigger[] = [];
     
     // Animate text + image on scroll
-    slidesRef.current.forEach((slide) => {
+    slidesRef.current.forEach((slide, index) => {
       if (!slide) return;
       const text = slide.querySelector(".slide-text") as HTMLElement;
       const img = slide.querySelector(".slide-img") as HTMLElement;
       
       // Create and store text animation
+      const textAnimation = gsap.to(text, {
+        opacity: 0,
+        x: 60,
+        duration: 1,
+        ease: "power3.out",
+        force3D: true,
+        transformPerspective: 1000
+      });
+      
+      // Store animation in manager
+      animationManager.add(`text-${index}`, textAnimation);
+      
       const textTrigger = ScrollTrigger.create({
         trigger: slide,
         start: () => {
-          const index = slidesRef.current.indexOf(slide);
           return `${index * 100}vh center`;
         },
         toggleActions: "play none none reverse",
@@ -265,7 +299,9 @@ export default function Home() {
             opacity: 1,
             x: 0,
             duration: 1,
-            ease: "power3.out"
+            ease: "power3.out",
+            force3D: true,
+            transformPerspective: 1000
           });
         },
         onLeaveBack: () => {
@@ -273,17 +309,30 @@ export default function Home() {
             opacity: 0,
             x: 60,
             duration: 1,
-            ease: "power3.out"
+            ease: "power3.out",
+            force3D: true,
+            transformPerspective: 1000
           });
         }
       });
       scrollTriggers.push(textTrigger);
       
       // Create and store image animation
+      const imgAnimation = gsap.to(img, {
+        opacity: 0,
+        x: -60,
+        duration: 1,
+        ease: "power3.out",
+        force3D: true,
+        transformPerspective: 1000
+      });
+      
+      // Store animation in manager
+      animationManager.add(`img-${index}`, imgAnimation);
+      
       const imgTrigger = ScrollTrigger.create({
         trigger: slide,
         start: () => {
-          const index = slidesRef.current.indexOf(slide);
           return `${index * 100}vh center`;
         },
         toggleActions: "play none none reverse",
@@ -292,7 +341,9 @@ export default function Home() {
             opacity: 1,
             x: 0,
             duration: 1,
-            ease: "power3.out"
+            ease: "power3.out",
+            force3D: true,
+            transformPerspective: 1000
           });
         },
         onLeaveBack: () => {
@@ -300,12 +351,25 @@ export default function Home() {
             opacity: 0,
             x: -60,
             duration: 1,
-            ease: "power3.out"
+            ease: "power3.out",
+            force3D: true,
+            transformPerspective: 1000
           });
         }
       });
       scrollTriggers.push(imgTrigger);
     });
+    
+    // Create progress line animation
+    const progressAnimation = gsap.to(progressLineRef.current, {
+      height: "0%",
+      duration: 0,
+      ease: "none",
+      force3D: true
+    });
+    
+    // Store animation in manager
+    animationManager.add('progress-line', progressAnimation);
     
     // Create and store progress line animation
     const progressTrigger = ScrollTrigger.create({
@@ -317,16 +381,58 @@ export default function Home() {
         gsap.to(progressLineRef.current, {
           height: `${self.progress * 100}%`,
           duration: 0,
-          ease: "none"
+          ease: "none",
+          force3D: true
         });
       }
     });
     scrollTriggers.push(progressTrigger);
     
-    // Cleanup function to kill all ScrollTriggers
+    // Create batch animation timeline for better performance
+    const batchTimeline = gsap.timeline({
+      paused: true,
+      force3D: true
+    });
+    
+    // Add animations to timeline
+    slidesRef.current.forEach((slide, index) => {
+      if (!slide) return;
+      const text = slide.querySelector(".slide-text") as HTMLElement;
+      const img = slide.querySelector(".slide-img") as HTMLElement;
+      
+      if (text) {
+        batchTimeline.to(text, {
+          opacity: 1,
+          x: 0,
+          duration: 0.5,
+          ease: "power2.out",
+          force3D: true,
+          transformPerspective: 1000
+        }, index * 0.1);
+      }
+      
+      if (img) {
+        batchTimeline.to(img, {
+          opacity: 1,
+          x: 0,
+          duration: 0.5,
+          ease: "power2.out",
+          force3D: true,
+          transformPerspective: 1000
+        }, index * 0.1);
+      }
+    });
+    
+    // Store timeline in manager
+    animationManager.addTimeline('batch-animations', batchTimeline);
+    
+    // Cleanup function to kill all ScrollTriggers and animations
     return () => {
       scrollTriggers.forEach(trigger => trigger.kill());
       ScrollTrigger.refresh();
+      
+      // Clean up animations
+      animationManager.cleanup();
     };
   }, []);
 
