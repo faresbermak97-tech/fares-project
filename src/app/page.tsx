@@ -19,15 +19,7 @@ const CardsSection = dynamic(() => import('@/components/sections/CardsSection'),
   ssr: false
 });
 
-const ResultsSection = dynamic(() => import('@/components/sections/ResultsSection'), {
-  loading: () => <div className="h-96 flex items-center justify-center">Loading...</div>,
-  ssr: false
-});
 
-const PricingSection = dynamic(() => import('@/components/sections/PricingSection'), {
-  loading: () => <div className="h-96 flex items-center justify-center">Loading...</div>,
-  ssr: false
-});
 
 const ContactSection = dynamic(() => import('@/components/sections/ContactSection'), {
   loading: () => <div className="h-96 flex items-center justify-center">Loading...</div>,
@@ -733,8 +725,8 @@ export default function Home() {
   ))}
 </section>    
 
-<ResultsSection />
-<PricingSection />
+
+
 <ContactSection />
 
     </main>

@@ -1,10 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, memo, useCallback } from 'react';
 import { gsap } from 'gsap';
 import OptimizedImage from '@/components/shared/OptimizedImage';
+import { performanceMonitor, withPerformanceMonitoring } from '@/utils/performanceMonitor';
+import { throttle, debounce } from '@/utils/optimization';
 
-export default function HeroSection() {
+const HeroSection = memo(() => {
   const textRef = useRef<HTMLDivElement>(null);
   const [scrollY, setScrollY] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -12,37 +14,27 @@ export default function HeroSection() {
   const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  // Apply transform to button based on position
+  // Apply transform to button based on position - memoized for performance
   useEffect(() => {
     if (buttonRef.current) {
       buttonRef.current.style.transform = `translate(${buttonPosition.x}px, ${buttonPosition.y}px) translateY(-50%)`;
     }
-  }, [buttonPosition]);
+  }, [buttonPosition.x, buttonPosition.y]); // Only track specific values
 
-  // Debounce function to limit how often a function can be called
-  const debounce = <T extends (...args: unknown[]) => void>(func: T, wait: number) => {
-    let timeout: NodeJS.Timeout;
-    return function executedFunction(...args: Parameters<T>) {
-      const later = () => {
-        clearTimeout(timeout);
-        func(...args);
-      };
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-    };
-  };
+  // Remove local debounce function - using imported utility instead
+
+  // Memoized scroll handler
+  const handleScroll = useCallback(() => {
+    setScrollY(window.scrollY);
+  }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
+    // Use throttled version of scroll handler for better performance
+    const throttledScrollHandler = throttle(handleScroll, 16); // ~60fps
 
-    // Use debounced version of scroll handler for better performance
-    const debouncedScrollHandler = debounce(handleScroll, 10);
-
-    window.addEventListener('scroll', debouncedScrollHandler, { passive: true });
-    return () => window.removeEventListener('scroll', debouncedScrollHandler);
-  }, []);
+    window.addEventListener('scroll', throttledScrollHandler, { passive: true });
+    return () => window.removeEventListener('scroll', throttledScrollHandler);
+  }, [handleScroll]);
 
   useEffect(() => {
     const updateTime = () => {
@@ -61,18 +53,25 @@ export default function HeroSection() {
   }, []);
 
   useEffect(() => {
+    const monitor = performanceMonitor.startRenderMonitoring('HeroTextAnimation');
     const textElement = textRef.current;
-    if (!textElement) return;
+    if (!textElement) {
+      monitor.end();
+      return;
+    }
 
     let scrollPosition = 0;
     let lastTime = 0;
+    let animationId: number;
+    
     const scroll = (timestamp: number) => {
       if (!lastTime) lastTime = timestamp;
       const deltaTime = timestamp - lastTime;
       lastTime = timestamp;
 
       // Use time-based animation for smoother movement
-      scrollPosition -= 0.15 * deltaTime; // Increased speed from 0.05 to 0.15
+      scrollPosition -= 0.15 * deltaTime;
+      
       if (textElement) {
         // Enhance parallax effect with page scroll
         const parallaxEffect = scrollY * 0.15;
@@ -84,11 +83,16 @@ export default function HeroSection() {
           scrollPosition = 0;
         }
       }
-      requestAnimationFrame(scroll);
+      
+      animationId = requestAnimationFrame(scroll);
     };
 
-    const animation = requestAnimationFrame(scroll);
-    return () => cancelAnimationFrame(animation);
+    animationId = requestAnimationFrame(scroll);
+    monitor.end();
+    
+    return () => {
+      cancelAnimationFrame(animationId);
+    };
   }, [scrollY]);
 
   return (
@@ -235,4 +239,8 @@ export default function HeroSection() {
       )}
     </>
   );
-}
+});
+
+HeroSection.displayName = 'HeroSection';
+
+export default HeroSection;
