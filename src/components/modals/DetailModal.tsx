@@ -31,6 +31,7 @@ export default function CardDetailModal({ title, details, imageSrc = "", ariaLab
       // Reset states when closing
       setIsExpanding(false);
       setShowContent(false);
+      return undefined;
     }
   }, [isOpen]);
 
@@ -40,11 +41,12 @@ export default function CardDetailModal({ title, details, imageSrc = "", ariaLab
     }
   }, [imageSrc]);
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     setShowContent(false);
     setTimeout(() => {
       setIsOpen(false);
     }, 300);
+    return;
   };
 
   return (

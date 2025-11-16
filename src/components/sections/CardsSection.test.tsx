@@ -32,9 +32,14 @@ describe('CardsSection', () => {
 
     // Mock getBoundingClientRect
     Element.prototype.getBoundingClientRect = jest.fn(() => ({
-      top: 0,
-      height: 2000,
+      x: 0,
+      y: 0,
       width: 1000,
+      height: 2000,
+      top: 0,
+      right: 1000,
+      bottom: 2000,
+      left: 0,
     }));
   });
 

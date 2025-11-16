@@ -1,7 +1,7 @@
 // Performance optimization utilities
 
 // Throttle function to limit how often a function can be called
-export const throttle = <T extends (...args: unknown[]) => unknown>(func: T, limit: number) => {
+export const throttle = <T extends (...args: any[]) => any>(func: T, limit: number) => {
   let inThrottle: boolean;
   return function(this: unknown, ...args: Parameters<T>) {
     if (!inThrottle) {
@@ -13,7 +13,7 @@ export const throttle = <T extends (...args: unknown[]) => unknown>(func: T, lim
 };
 
 // Debounce function to delay execution until after a wait period
-export const debounce = <T extends (...args: unknown[]) => unknown>(func: T, wait: number) => {
+export const debounce = <T extends (...args: any[]) => any>(func: T, wait: number) => {
   let timeout: NodeJS.Timeout;
   return function(this: unknown, ...args: Parameters<T>) {
     const later = () => {
@@ -73,7 +73,7 @@ export const createResizeObserver = (
 };
 
 // Memoization utility for expensive calculations
-export const memoize = <T extends (...args: unknown[]) => unknown>(fn: T) => {
+export const memoize = <T extends (...args: any[]) => any>(fn: T) => {
   const cache = new Map<string, ReturnType<T>>();
 
   return (...args: Parameters<T>): ReturnType<T> => {

@@ -1,4 +1,17 @@
-import DOMPurify from 'isomorphic-dompurify';
+// Simple HTML sanitization function
+const sanitizeHtml = (html: string): string => {
+  // Remove HTML tags and decode HTML entities
+  return html
+    .replace(/<script[^>]*>.*?<\/script>/gi, '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .trim();
+};
 
 // Email validation regex
 export const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -25,7 +38,7 @@ export const validateName = (name: string): { isValid: boolean; sanitized: strin
   }
 
   // Sanitize the name to prevent XSS
-  const sanitizedName = DOMPurify.sanitize(trimmedName);
+  const sanitizedName = sanitizeHtml(trimmedName);
 
   return { isValid: true, sanitized: sanitizedName };
 };
@@ -43,7 +56,7 @@ export const validateEmail = (email: string): { isValid: boolean; sanitized: str
   }
 
   // Sanitize the email to prevent XSS
-  const sanitizedEmail = DOMPurify.sanitize(trimmedEmail);
+  const sanitizedEmail = sanitizeHtml(trimmedEmail);
 
   return { isValid: true, sanitized: sanitizedEmail };
 };
@@ -65,7 +78,7 @@ export const validateMessage = (message: string): { isValid: boolean; sanitized:
   }
 
   // Sanitize the message to prevent XSS
-  const sanitizedMessage = DOMPurify.sanitize(trimmedMessage);
+  const sanitizedMessage = sanitizeHtml(trimmedMessage);
 
   return { isValid: true, sanitized: sanitizedMessage };
 };

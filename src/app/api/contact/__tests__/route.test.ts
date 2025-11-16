@@ -3,11 +3,16 @@ import { NextRequest } from 'next/server';
 import nodemailer from 'nodemailer';
 
 // Mock nodemailer
+const mockSendMail = jest.fn().mockResolvedValue({ messageId: 'test-message-id' });
+
 jest.mock('nodemailer', () => ({
   createTransport: jest.fn().mockReturnValue({
-    sendMail: jest.fn().mockResolvedValue({ messageId: 'test-message-id' }),
+    sendMail: mockSendMail,
   }),
 }));
+
+// Type assertion for the mock
+const mockedNodemailer = nodemailer as jest.Mocked<typeof nodemailer>;
 
 // Mock environment variables
 process.env.EMAIL_USER = 'test@example.com';
@@ -50,7 +55,7 @@ describe('/api/contact', () => {
 
   it('handles server errors gracefully', async () => {
     // Mock a server error
-    nodemailer.createTransport().sendMail.mockRejectedValueOnce(new Error('Server error'));
+    mockSendMail.mockRejectedValueOnce(new Error('Server error'));
 
     const request = new NextRequest('http://localhost/api/contact', {
       method: 'POST',

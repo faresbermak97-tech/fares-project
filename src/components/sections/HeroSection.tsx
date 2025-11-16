@@ -205,6 +205,7 @@ const HeroSection = memo(() => {
 
       {/* Menu Overlay - 1/4 screen dropdown */}
       <div
+        id="main-menu"
         className={`fixed top-20 right-6 md:right-8 z-40 bg-black/90 backdrop-blur-md rounded-3xl p-8 transition-all duration-300 ${
           menuOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-4'
         }`}

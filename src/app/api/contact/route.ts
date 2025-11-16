@@ -1,16 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as nodemailer from 'nodemailer';
-import DOMPurify from 'isomorphic-dompurify';
-import rateLimit from 'express-rate-limit';
+// Simple HTML sanitization function
+const sanitizeHtml = (html: string): string => {
+  // Remove HTML tags and decode HTML entities
+  return html
+    .replace(/<script[^>]*>.*?<\/script>/gi, '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .trim();
+};
+// Note: express-rate-limit is not compatible with Next.js API routes
+// We'll implement a simple in-memory rate limit instead
 
-// Rate limiting configuration
-const rateLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  max: 5, // limit each IP to 5 requests per windowMs
-  message: { error: 'Too many requests, please try again later.' },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
+// Simple in-memory rate limiting implementation
+// In production, consider using a more robust solution with Redis or a database
 
 // Helper function to validate email format
 const isValidEmail = (email: string): boolean => {
@@ -30,7 +38,7 @@ export async function POST(request: NextRequest) {
     // Apply rate limiting
     // Note: In production, you might want to use a proper rate limiting solution
     // that works with Next.js API routes, like using a database or Redis
-    const ip = request.ip || 'unknown';
+    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
 
     // Check if we have rate limiting data for this IP
     // This is a simplified in-memory implementation
@@ -98,9 +106,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Sanitize inputs to prevent XSS
-    const sanitizedName = DOMPurify.sanitize(name.trim());
-    const sanitizedEmail = DOMPurify.sanitize(email.trim());
-    const sanitizedMessage = DOMPurify.sanitize(message.trim());
+    const sanitizedName = sanitizeHtml(name.trim());
+    const sanitizedEmail = sanitizeHtml(email.trim());
+    const sanitizedMessage = sanitizeHtml(message.trim());
 
     // Create a transporter object using SMTP transport
     const transporter = nodemailer.createTransport({
