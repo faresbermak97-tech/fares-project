@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import OptimizedImage from '@/components/shared/OptimizedImage';
 
-export default function AboutSection() {
+const AboutSection = memo(() => {
   const [lineAnimated, setLineAnimated] = useState(false);
 
   useEffect(() => {
@@ -68,7 +68,7 @@ export default function AboutSection() {
             <div className="relative overflow-hidden rounded-2xl shadow-2xl animate-fade-in-right">
               <OptimizedImage
                 src="/about me pic.jpeg"
-                alt="Fares Bermak - Professional Profile"
+                alt="Portrait of Fares Bermak, remote administrative professional"
                 className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
                 width={800}
                 height={600}
@@ -78,11 +78,15 @@ export default function AboutSection() {
             </div>
 
             {/* Decorative Element */}
-            <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-[#4D64FF] rounded-full opacity-20 blur-3xl"></div>
-            <div className="absolute -top-6 -left-6 w-32 h-32 bg-[#4D64FF] rounded-full opacity-20 blur-3xl"></div>
+            <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-[#4D64FF] rounded-full opacity-20 blur-3xl" aria-hidden="true"></div>
+            <div className="absolute -top-6 -left-6 w-32 h-32 bg-[#4D64FF] rounded-full opacity-20 blur-3xl" aria-hidden="true"></div>
           </div>
         </div>
       </div>
     </section>
   );
-}
+});
+
+AboutSection.displayName = 'AboutSection';
+
+export default AboutSection;

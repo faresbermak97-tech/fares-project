@@ -1,9 +1,9 @@
 // Performance optimization utilities
 
 // Throttle function to limit how often a function can be called
-export const throttle = <T extends (...args: any[]) => any>(func: T, limit: number) => {
+export const throttle = <T extends (...args: unknown[]) => unknown>(func: T, limit: number) => {
   let inThrottle: boolean;
-  return function(this: any, ...args: Parameters<T>) {
+  return function(this: unknown, ...args: Parameters<T>) {
     if (!inThrottle) {
       func.apply(this, args);
       inThrottle = true;
@@ -13,9 +13,9 @@ export const throttle = <T extends (...args: any[]) => any>(func: T, limit: numb
 };
 
 // Debounce function to delay execution until after a wait period
-export const debounce = <T extends (...args: any[]) => any>(func: T, wait: number) => {
+export const debounce = <T extends (...args: unknown[]) => unknown>(func: T, wait: number) => {
   let timeout: NodeJS.Timeout;
-  return function(this: any, ...args: Parameters<T>) {
+  return function(this: unknown, ...args: Parameters<T>) {
     const later = () => {
       clearTimeout(timeout);
       func(...args);
@@ -73,17 +73,17 @@ export const createResizeObserver = (
 };
 
 // Memoization utility for expensive calculations
-export const memoize = <T extends (...args: any[]) => any>(fn: T) => {
-  const cache = new Map();
+export const memoize = <T extends (...args: unknown[]) => unknown>(fn: T) => {
+  const cache = new Map<string, ReturnType<T>>();
 
   return (...args: Parameters<T>): ReturnType<T> => {
     const key = JSON.stringify(args);
 
     if (cache.has(key)) {
-      return cache.get(key);
+      return cache.get(key) as ReturnType<T>;
     }
 
-    const result = fn(...args);
+    const result = fn(...args) as ReturnType<T>;
     cache.set(key, result);
 
     return result;

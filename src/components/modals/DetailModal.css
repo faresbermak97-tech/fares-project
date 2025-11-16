@@ -1,3 +1,6 @@
+/* DetailModal.css */
+
+/* Modal overlay - using only transform and opacity for better performance */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -10,8 +13,10 @@
   transition-property: opacity;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 300ms;
+  will-change: opacity; /* GPU acceleration */
 }
 
+/* Modal container */
 .modal-container {
   position: fixed;
   inset: 0;
@@ -23,6 +28,7 @@
   pointer-events: auto;
 }
 
+/* Modal content - using only transform and opacity for better performance */
 .modal-content {
   position: relative;
   width: 100%;
@@ -30,10 +36,11 @@
   border-radius: 2rem;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   transform: var(--tw-transform);
-  transition-property: all;
+  transition-property: transform, opacity;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 500ms;
   pointer-events: auto;
+  will-change: transform, opacity; /* GPU acceleration */
 }
 
 .modal-content::before {
@@ -52,13 +59,12 @@
   inset: 0;
   border-radius: 2rem;
   opacity: 0.4;
-}
-
-.modal-content::after {
   background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  will-change: opacity; /* GPU acceleration */
 }
 
+/* Close button - using only transform for better performance */
 .close-button {
   position: absolute;
   top: 1.5rem;
@@ -72,10 +78,11 @@
   background-color: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(0, 0, 0, 0.5);
-  transition-property: all;
+  transition-property: transform, background-color;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 300ms;
   color: white;
+  will-change: transform; /* GPU acceleration */
 }
 
 .close-button:hover {
@@ -83,12 +90,14 @@
   transform: scale(1.1);
 }
 
+/* Modal body */
 .modal-body {
   position: relative;
   z-index: 10;
   padding: 2rem 3rem;
 }
 
+/* Modal header */
 .modal-header {
   margin-bottom: 1.5rem;
 }
@@ -108,6 +117,7 @@
   border-radius: 9999px;
 }
 
+/* Modal details */
 .modal-details {
   display: flex;
   flex-direction: column;
@@ -133,6 +143,7 @@
   line-height: 1.6;
 }
 
+/* Background image styles */
 .modal-background-image-blurred {
   filter: blur(40px) brightness(0.4);
 }
@@ -154,35 +165,7 @@
   transition-delay: 100ms;
 }
 
-.detail-item-3 {
-  transition-delay: 150ms;
-}
-
-.detail-item-4 {
-  transition-delay: 200ms;
-}
-
-.detail-item-5 {
-  transition-delay: 250ms;
-}
-
-.detail-item-6 {
-  transition-delay: 300ms;
-}
-
-.detail-item-7 {
-  transition-delay: 350ms;
-}
-
-.detail-item-8 {
-  transition-delay: 400ms;
-}
-
-.detail-item-9 {
-  transition-delay: 450ms;
-}
-
-/* Background image classes - these will be generated dynamically */
+/* Background image classes */
 .modal-background-image-RemoteVirtualAssistancejpg {
   background-image: url('/Remote Virtual Assistance.jpg');
 }
@@ -200,12 +183,15 @@
   background-image: var(--modal-bg-image, none);
 }
 
+/* Optimized pulse animation with GPU acceleration */
 @keyframes pulse {
   0%, 100% {
     opacity: 1;
+    transform: translateZ(0); /* Force GPU acceleration */
   }
   50% {
-    opacity: .5;
+    opacity: 0.5;
+    transform: translateZ(0); /* Force GPU acceleration */
   }
 }
 

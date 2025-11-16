@@ -34,9 +34,3 @@ const preloadImage = (src: string) => {
   });
 };
 
-// Note: Font preloading is now handled by Next.js through next/font/google in layout.tsx
-// This function is kept for compatibility but no longer does manual font preloading
-export const preloadFonts = () => {
-  // Font preloading is handled by Next.js automatically
-  console.log('Font preloading handled by Next.js');
-};

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, memo, useCallback } from 'react';
 import { gsap } from 'gsap';
 import OptimizedImage from '@/components/shared/OptimizedImage';
 import { performanceMonitor, withPerformanceMonitoring } from '@/utils/performanceMonitor';
-import { throttle, debounce } from '@/utils/optimization';
+import { throttle } from '@/utils/optimization';
 
 const HeroSection = memo(() => {
   const textRef = useRef<HTMLDivElement>(null);
@@ -108,19 +108,19 @@ const HeroSection = memo(() => {
             </div>
           </div>
           <div className="flex items-center gap-3 md:gap-4">
-            <a href="#work" className="group relative flex flex-col items-center">
+            <a href="#work" className="group relative flex flex-col items-center" aria-label="Navigate to work section">
               <div className="bg-black/60 backdrop-blur-md rounded-full px-5 py-2 transition-all hover:bg-black/80">
                 <span className="text-base md:text-lg text-white">Work</span>
               </div>
               <span className="mt-2 w-1.5 h-1.5 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
             </a>
-            <a href="#about" className="group relative flex flex-col items-center">
+            <a href="#about" className="group relative flex flex-col items-center" aria-label="Navigate to about section">
               <div className="bg-black/60 backdrop-blur-md rounded-full px-5 py-2 transition-all hover:bg-black/80">
                 <span className="text-base md:text-lg text-white group-hover:animate-shake inline-block">About</span>
               </div>
               <span className="mt-2 w-1.5 h-1.5 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
             </a>
-            <a href="#contact" className="group relative flex flex-col items-center">
+            <a href="#contact" className="group relative flex flex-col items-center" aria-label="Navigate to contact section">
               <div className="bg-black/60 backdrop-blur-md rounded-full px-5 py-2 transition-all hover:bg-black/80">
                 <span className="text-base md:text-lg text-white group-hover:animate-shake inline-block">Contact</span>
               </div>
@@ -150,7 +150,8 @@ const HeroSection = memo(() => {
               <div>Algeria</div>
             </div>
             <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center flex-shrink-0 animate-spin-slow">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-labelledby="globe-title">
+                <title id="globe-title">Global location indicator</title>
                 <circle cx="12" cy="12" r="10" stroke="black" strokeWidth="1.5"/>
                 <path d="M2 12h20M12 2c2.5 2.5 4 6 4 10s-1.5 7.5-4 10M12 2C9.5 4.5 8 8 8 12s1.5 7.5 4 10" stroke="black" strokeWidth="1.5"/>
               </svg>
@@ -169,7 +170,8 @@ const HeroSection = memo(() => {
         {/* Scroll Indicator - Middle Right */}
         <div className="absolute right-6 md:right-12 lg:right-16 top-1/2 -translate-y-1/2 z-20 hidden sm:block">
           <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center animate-bounce-slow">
-            <svg width="24" height="24" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" className="md:w-[30px] md:h-[30px]">
+            <svg width="24" height="24" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" className="md:w-[30px] md:h-[30px]" aria-labelledby="scroll-title">
+              <title id="scroll-title">Scroll down indicator</title>
               <path d="M15 8L15 22M15 22L21 16M15 22L9 16" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
@@ -192,7 +194,9 @@ const HeroSection = memo(() => {
         className={`fixed top-6 right-6 md:top-8 md:right-8 z-50 w-14 h-14 rounded-full bg-black flex flex-col items-center justify-center gap-1.5 transition-all duration-300 ${
           scrollY > 100 ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'
         }`}
-        aria-label="Menu"
+        aria-label={menuOpen ? "Close menu" : "Open menu"}
+        aria-expanded={menuOpen}
+        aria-controls="main-menu"
       >
         <span className="w-6 h-0.5 bg-white rounded-full"></span>
         <span className="w-6 h-0.5 bg-white rounded-full"></span>

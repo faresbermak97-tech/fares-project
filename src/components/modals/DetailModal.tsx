@@ -8,9 +8,10 @@ interface CardDetailModalProps {
   title: string;
   details: string[];
   imageSrc?: string; // Made optional with ?
+  ariaLabel?: string;
 }
 
-export default function CardDetailModal({ title, details, imageSrc = "" }: CardDetailModalProps) {
+export default function CardDetailModal({ title, details, imageSrc = "", ariaLabel }: CardDetailModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanding, setIsExpanding] = useState(false);
   const [showContent, setShowContent] = useState(false);
@@ -52,6 +53,7 @@ export default function CardDetailModal({ title, details, imageSrc = "" }: CardD
       <button
         onClick={() => setIsOpen(true)}
         className="group relative inline-flex items-center gap-2 px-6 py-2 rounded-full bg-black/70 hover:bg-black/80 backdrop-blur-md border border-black/50 hover:border-black/70 transition-all duration-300 text-white text-sm font-medium"
+        aria-label={ariaLabel || `View details about ${title}`}
       >
         <span>Detail</span>
         <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -68,6 +70,7 @@ export default function CardDetailModal({ title, details, imageSrc = "" }: CardD
               showContent ? 'opacity-100 z-[60]' : 'opacity-0 z-[60]'
             }`}
             onClick={handleClose}
+            aria-label="Close modal"
           />
 
           {/* Expanding Image Background */}
@@ -127,8 +130,9 @@ export default function CardDetailModal({ title, details, imageSrc = "" }: CardD
               {/* Close Button */}
               <button
                 onClick={handleClose}
-                title="Close"
+                title="Close modal"
                 className="sticky top-4 left-full z-20 p-3 rounded-full bg-black/70 hover:bg-black/80 backdrop-blur-lg border border-black/50 transition-all duration-300 text-white hover:scale-110 ml-auto mr-4"
+                aria-label="Close modal"
               >
                 <X size={24} />
               </button>
@@ -144,21 +148,21 @@ export default function CardDetailModal({ title, details, imageSrc = "" }: CardD
                 </div>
 
                 {/* Details List */}
-                <div className="space-y-4 pb-4">
+                <ul className="space-y-4 pb-4" role="list">
                   {details.map((detail, idx) => (
-                    <div
+                    <li
                       key={idx}
                       className={`text-white/90 flex items-start gap-3 transition-all duration-500 ${
                         showContent ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
                       } detail-item-${idx}`}
                     >
-                      <span className="text-white/60 text-lg leading-relaxed mt-0.5">•</span>
+                      <span className="text-white/60 text-lg leading-relaxed mt-0.5" aria-hidden="true">•</span>
                       <p className="text-base md:text-lg leading-relaxed">
                         {detail}
                       </p>
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
 
               {/* Scrollbar styling is now in DetailModal.css */}

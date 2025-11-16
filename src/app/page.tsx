@@ -34,7 +34,7 @@ export default function Home() {
   const [lineAnimated, setLineAnimated] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });
-  
+
   // Apply transform to button based on position
   useEffect(() => {
     if (buttonRef.current) {
@@ -73,10 +73,10 @@ export default function Home() {
     const handleScroll = () => {
       setScrollY(window.scrollY);
     };
-    
+
     // Use debounced version of scroll handler for better performance
     const debouncedScrollHandler = debounce(handleScroll, 10);
-    
+
     window.addEventListener('scroll', debouncedScrollHandler, { passive: true });
     return () => window.removeEventListener('scroll', debouncedScrollHandler);
   }, []);
@@ -234,7 +234,7 @@ export default function Home() {
       if (!lastTime) lastTime = timestamp;
       const deltaTime = timestamp - lastTime;
       lastTime = timestamp;
-      
+
       // Use time-based animation for smoother movement
       scrollPosition -= 0.15 * deltaTime; // Increased speed from 0.05 to 0.15
       if (textElement) {
@@ -242,7 +242,7 @@ export default function Home() {
         const parallaxEffect = scrollY * 0.15;
         const totalTransform = scrollPosition - parallaxEffect;
         textElement.style.transform = `translateX(${totalTransform}px)`;
-        
+
         // Reset position when text has scrolled completely
         if (Math.abs(scrollPosition) > textElement.scrollWidth / 2) {
           scrollPosition = 0;
@@ -257,16 +257,19 @@ export default function Home() {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-    
+
     // Store ScrollTrigger instances for cleanup
     const scrollTriggers: ScrollTrigger[] = [];
-    
+
+    // Store animation instances for cleanup
+    const animations: gsap.core.Tween[] = [];
+
     // Animate text + image on scroll
     slidesRef.current.forEach((slide, index) => {
       if (!slide) return;
       const text = slide.querySelector(".slide-text") as HTMLElement;
       const img = slide.querySelector(".slide-img") as HTMLElement;
-      
+
       // Create and store text animation
       const textAnimation = gsap.to(text, {
         opacity: 0,
@@ -276,10 +279,13 @@ export default function Home() {
         force3D: true,
         transformPerspective: 1000
       });
-      
+
+      // Store animation instance
+      animations.push(textAnimation);
+
       // Store animation in manager
       animationManager.add(`text-${index}`, textAnimation);
-      
+
       const textTrigger = ScrollTrigger.create({
         trigger: slide,
         start: () => {
@@ -308,7 +314,7 @@ export default function Home() {
         }
       });
       scrollTriggers.push(textTrigger);
-      
+
       // Create and store image animation
       const imgAnimation = gsap.to(img, {
         opacity: 0,
@@ -318,10 +324,13 @@ export default function Home() {
         force3D: true,
         transformPerspective: 1000
       });
-      
+
+      // Store animation instance
+      animations.push(imgAnimation);
+
       // Store animation in manager
       animationManager.add(`img-${index}`, imgAnimation);
-      
+
       const imgTrigger = ScrollTrigger.create({
         trigger: slide,
         start: () => {
@@ -351,7 +360,7 @@ export default function Home() {
       });
       scrollTriggers.push(imgTrigger);
     });
-    
+
     // Create progress line animation
     const progressAnimation = gsap.to(progressLineRef.current, {
       height: "0%",
@@ -359,10 +368,13 @@ export default function Home() {
       ease: "none",
       force3D: true
     });
-    
+
+    // Store animation instance
+    animations.push(progressAnimation);
+
     // Store animation in manager
     animationManager.add('progress-line', progressAnimation);
-    
+
     // Create and store progress line animation
     const progressTrigger = ScrollTrigger.create({
       trigger: sectionRef.current,
@@ -379,19 +391,19 @@ export default function Home() {
       }
     });
     scrollTriggers.push(progressTrigger);
-    
+
     // Create batch animation timeline for better performance
     const batchTimeline = gsap.timeline({
       paused: true,
       force3D: true
     });
-    
+
     // Add animations to timeline
     slidesRef.current.forEach((slide, index) => {
       if (!slide) return;
       const text = slide.querySelector(".slide-text") as HTMLElement;
       const img = slide.querySelector(".slide-img") as HTMLElement;
-      
+
       if (text) {
         batchTimeline.to(text, {
           opacity: 1,
@@ -402,7 +414,7 @@ export default function Home() {
           transformPerspective: 1000
         }, index * 0.1);
       }
-      
+
       if (img) {
         batchTimeline.to(img, {
           opacity: 1,
@@ -414,17 +426,34 @@ export default function Home() {
         }, index * 0.1);
       }
     });
-    
+
     // Store timeline in manager
     animationManager.addTimeline('batch-animations', batchTimeline);
-    
-    // Cleanup function to kill all ScrollTriggers and animations
+
+    // Enhanced cleanup function to kill all ScrollTriggers and animations
     return () => {
+      // Kill all ScrollTrigger instances first
       scrollTriggers.forEach(trigger => trigger.kill());
-      ScrollTrigger.refresh();
-      
-      // Clean up animations
+
+      // Kill all GSAP animations directly
+      gsap.killTweensOf(".slide-text");
+      gsap.killTweensOf(".slide-img");
+      gsap.killTweensOf(progressLineRef.current);
+
+      // Kill all stored animation instances
+      animations.forEach(animation => animation.kill());
+
+      // Clear all animation timelines
+      gsap.globalTimeline.clear();
+
+      // Clean up animations from manager
       animationManager.cleanup();
+
+      // Refresh ScrollTrigger to ensure proper cleanup
+      ScrollTrigger.refresh();
+
+      // Kill any remaining ScrollTrigger instances that might not be in our array
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
   }, []);
 
@@ -436,7 +465,9 @@ export default function Home() {
         className={`fixed top-6 right-6 md:top-8 md:right-8 z-50 w-14 h-14 rounded-full bg-black flex flex-col items-center justify-center gap-1.5 transition-all duration-300 ${
           scrollY > 100 ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'
         }`}
-        aria-label="Menu"
+        aria-label={menuOpen ? "Close menu" : "Open menu"}
+        aria-expanded={menuOpen}
+        aria-controls="main-menu"
       >
         <span className="w-6 h-0.5 bg-white rounded-full"></span>
         <span className="w-6 h-0.5 bg-white rounded-full"></span>
@@ -445,9 +476,12 @@ export default function Home() {
 
       {/* Menu Overlay - 1/4 screen dropdown */}
       <div
+        id="main-menu"
         className={`fixed top-20 right-6 md:right-8 z-40 bg-black/90 backdrop-blur-md rounded-3xl p-8 transition-all duration-300 ${
           menuOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-4'
         }`}
+        role="navigation"
+        aria-label="Main navigation"
       >
         <div className="flex flex-col items-start gap-6">
           <a
@@ -479,6 +513,7 @@ export default function Home() {
         <div
           className="fixed inset-0 z-30"
           onClick={() => setMenuOpen(false)}
+          aria-label="Close menu"
         />
       )}
 
@@ -566,7 +601,7 @@ export default function Home() {
             ref={textRef}
             className="text-[18vw] sm:text-[15vw] md:text-[12vw] lg:text-[10vw] font-extrabold text-white/90 leading-none whitespace-nowrap inline-block will-change-transform tracking-tighter transition-opacity duration-500 hover:text-white hover:opacity-100"
           >
-            Fares Bermak — Fares Bermak — Fares Bermak — Fares Bermak — Fares Bermak — Fares Bermak — Fares Bermak — Fares Bermak — Fares Bermak —
+            Fares Bermak — Fares Bermak — Fares Bermak — Fares Bermak — Fares Bermak — Fares Bermak — Fares Bermak — Fares Bermak —
           </div>
         </div>
       </section>
@@ -584,7 +619,7 @@ export default function Home() {
                   </span>
                 </h2>
               </div>
-              
+
               <div className="overflow-hidden">
                 <div className="space-y-6 animate-fade-in-up animation-delay-200">
                   <p className="text-base md:text-lg lg:text-xl text-gray-700 leading-relaxed">
@@ -606,7 +641,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              
+
             </div> {/* This closes the "space-y-8" container */}
 
             {/* Right Side - Image */}
@@ -622,7 +657,7 @@ export default function Home() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>
-              
+
               {/* Decorative Element */}
               <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-[#4D64FF] rounded-full opacity-20 blur-3xl"></div>
               <div className="absolute -top-6 -left-6 w-32 h-32 bg-[#4D64FF] rounded-full opacity-20 blur-3xl"></div>
@@ -697,9 +732,9 @@ export default function Home() {
       }}
     >
       <div className="slide-img">
-        <OptimizedImage 
-          src={s.img} 
-          alt={s.highlight} 
+        <OptimizedImage
+          src={s.img}
+          alt={s.highlight}
           width={500}
           height={400}
           className="w-full h-full rounded-2xl shadow-xl transition-transform duration-300 hover:scale-105"
@@ -712,10 +747,10 @@ export default function Home() {
           <span className="accent">{s.highlight}</span>
         </h2>
         <p>{s.text}</p>
-        
+
         {/* ADD THIS: Detail Button */}
         <div className="mt-8">
-          <DetailModal 
+          <DetailModal
             title={s.highlight}
             details={s.details}
           />
@@ -723,7 +758,7 @@ export default function Home() {
       </div>
     </div>
   ))}
-</section>    
+</section>
 
 
 

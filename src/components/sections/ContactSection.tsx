@@ -1,12 +1,13 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, memo } from 'react';
 import OptimizedImage from '@/components/shared/OptimizedImage';
+import { throttle } from '@/utils/optimization';
 
 interface FormStatus {
   type: 'success' | 'error' | null;
   message: string;
 }
 
-export default function ContactSection() {
+const ContactSection = memo(() => {
   const [lineAnimated, setLineAnimated] = useState(false);
   const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });
   const [currentTime, setCurrentTime] = useState('');
@@ -85,7 +86,7 @@ export default function ContactSection() {
               <div className="hidden lg:block absolute right-8 xl:right-12 top-0">
                 <button
                   ref={buttonRef}
-                  onClick={() => {
+                  onClick={(_e: React.MouseEvent<HTMLButtonElement>) => {
                     const contactForm = document.getElementById('contact-form');
                     if (contactForm) {
                       contactForm.classList.remove('hidden');
@@ -95,15 +96,15 @@ export default function ContactSection() {
                       }
                     }
                   }}
-                  onMouseMove={(e) => {
+                  onMouseMove={throttle((e: React.MouseEvent<HTMLButtonElement>) => {
                     const btn = buttonRef.current;
                     if (!btn) return;
                     const rect = btn.getBoundingClientRect();
                     const x = Math.max(-40, Math.min(40, e.clientX - rect.left - rect.width / 2));
                     const y = Math.max(-10, Math.min(10, e.clientY - rect.top - rect.height / 2));
                     setButtonPosition({ x: x * 0.8, y: y * 0.5 });
-                  }}
-                  onMouseLeave={() => {
+                  }, 16)}
+                  onMouseLeave={(_e: React.MouseEvent<HTMLButtonElement>) => {
                     setButtonPosition({ x: 0, y: 0 });
                   }}
                   className={`contact-button w-40 h-40 lg:w-44 lg:h-44 rounded-full bg-[#4D64FF] hover:bg-[#3d50cc] flex items-center justify-center text-base lg:text-lg text-white transition-all duration-300 cursor-pointer hover:scale-105 ${buttonPosition.x !== 0 || buttonPosition.y !== 0 ? 'button-moved' : ''}`}
@@ -140,7 +141,7 @@ export default function ContactSection() {
 
                 {/* Mobile button */}
                 <button
-                  onClick={() => {
+                  onClick={(_e: React.MouseEvent<HTMLButtonElement>) => {
                     const contactForm = document.getElementById('contact-form');
                     if (contactForm) {
                       contactForm.classList.remove('hidden');
@@ -350,4 +351,8 @@ export default function ContactSection() {
       </div>
     </>
   );
-}
+});
+
+ContactSection.displayName = 'ContactSection';
+
+export default ContactSection;

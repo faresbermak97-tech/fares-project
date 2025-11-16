@@ -40,10 +40,10 @@ const CardsSection = () => {
   const getCardClasses = (cardIndex: number) => {
     // Card 1: Starts immediately, scales down 0-33%
     const card1Progress = Math.min(scrollProgress * 3, 1);
-    
+
     // Card 2: Starts at 33%, fully revealed at 66%
     const card2Progress = Math.min(Math.max((scrollProgress - 0.33) * 3, 0), 1);
-    
+
     // Card 3: Starts ONLY after card 2 is fully revealed (at 66%)
     const card3Progress = Math.min(Math.max((scrollProgress - 0.66) * 3, 0), 1);
 
@@ -107,7 +107,7 @@ const CardsSection = () => {
   return (
     <div ref={sectionRef} className="cards-section relative bg-gray-50 full-height">
       {/* Sticky container */}
-      <div 
+      <div
         ref={containerRef}
         className="sticky top-0 h-screen w-full overflow-hidden"
       >
@@ -131,7 +131,7 @@ const CardsSection = () => {
 
                   {/* Detail Button */}
                   <div className="pl-1 md:pl-2">
-                    <CardDetailModal 
+                    <CardDetailModal
                       title={card.title}
                       details={card.details}
                       imageSrc={card.image}
@@ -142,10 +142,13 @@ const CardsSection = () => {
                 {/* Right Image */}
                 <div className="content-right flex-1 relative overflow-hidden min-h-[300px] lg:min-h-0">
                   <div className="absolute inset-4 lg:inset-8">
-                    <img 
+                    <OptimizedImage
                       src={card.image}
                       alt={card.title}
+                      width={500}
+                      height={400}
                       className="w-full h-full object-cover rounded-2xl shadow-xl"
+                      style={{ objectFit: "cover" }}
                     />
                   </div>
                   <div className="absolute top-4 right-4 lg:top-8 lg:right-8 text-white text-6xl lg:text-9xl font-bold opacity-20 select-none">

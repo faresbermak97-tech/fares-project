@@ -59,10 +59,15 @@ export default function ContactFormModal({ isOpen, onClose, onSubmit }: ContactF
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="contact-form-title"
+    >
       <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 md:p-8">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">Get in Touch</h2>
+          <h2 id="contact-form-title" className="text-2xl font-bold text-gray-900">Get in Touch</h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -74,7 +79,7 @@ export default function ContactFormModal({ isOpen, onClose, onSubmit }: ContactF
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
               Name
@@ -86,6 +91,7 @@ export default function ContactFormModal({ isOpen, onClose, onSubmit }: ContactF
               value={formData.name}
               onChange={handleChange}
               required
+              aria-describedby={formStatus.type === 'error' ? 'form-error' : undefined}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4D64FF] focus:border-transparent"
             />
           </div>
@@ -101,6 +107,7 @@ export default function ContactFormModal({ isOpen, onClose, onSubmit }: ContactF
               value={formData.email}
               onChange={handleChange}
               required
+              aria-describedby={formStatus.type === 'error' ? 'form-error' : undefined}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4D64FF] focus:border-transparent"
             />
           </div>
@@ -116,16 +123,22 @@ export default function ContactFormModal({ isOpen, onClose, onSubmit }: ContactF
               onChange={handleChange}
               required
               rows={5}
+              aria-describedby={formStatus.type === 'error' ? 'form-error' : undefined}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4D64FF] focus:border-transparent"
             />
           </div>
 
           {formStatus.type && (
-            <div className={`p-3 rounded-lg ${
-              formStatus.type === 'success' 
-                ? 'bg-green-100 text-green-800' 
-                : 'bg-red-100 text-red-800'
-            }`}>
+            <div 
+              id="form-error"
+              className={`p-3 rounded-lg ${
+                formStatus.type === 'success'
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-red-100 text-red-800'
+              }`}
+              role="alert"
+              aria-live="polite"
+            >
               {formStatus.message}
             </div>
           )}

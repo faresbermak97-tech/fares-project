@@ -1,0 +1,5 @@
+<img
+                      src={card.image}
+                      alt={card.title}
+                      className="w-full h-full object-cover rounded-2xl shadow-xl"
+                    />

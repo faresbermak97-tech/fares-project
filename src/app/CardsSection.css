@@ -1,73 +1,44 @@
 /* CardsSection.css */
 
-.full-height {
-  height: 400vh;
-}
-
-.card-dimensions {
-  width: calc(100% - 2cm);
-  height: calc(100% - 4cm);
-  max-width: 1400px;
-}
-
 /* Base card styles */
 .card {
   opacity: 1;
   overflow: visible;
 }
 
-/* Card overflow style */
-.card-overflow-visible {
-  overflow: visible;
-}
+/* Card animation states - using only transform and opacity for better performance */
+.card-1-progress-0 { transform: translateY(0%) scale(1); z-index: 1; }
+.card-1-progress-1 { transform: translateY(0%) scale(0.995); z-index: 1; }
+.card-1-progress-2 { transform: translateY(0%) scale(0.99); z-index: 1; }
+.card-1-progress-3 { transform: translateY(0%) scale(0.985); z-index: 1; }
+.card-1-progress-4 { transform: translateY(0%) scale(0.98); z-index: 1; }
+.card-1-progress-5 { transform: translateY(0%) scale(0.975); z-index: 1; }
+.card-1-progress-6 { transform: translateY(0%) scale(0.97); z-index: 1; }
+.card-1-progress-7 { transform: translateY(0%) scale(0.965); z-index: 1; }
+.card-1-progress-8 { transform: translateY(0%) scale(0.96); z-index: 1; }
+.card-1-progress-9 { transform: translateY(0%) scale(0.955); z-index: 1; }
+.card-1-progress-10 { transform: translateY(0%) scale(0.95); z-index: 1; }
 
-.card-1 {
-  z-index: 1;
-}
+.card-2-progress-0 { transform: translateY(100%) scale(1); z-index: 3; }
+.card-2-progress-1 { transform: translateY(90%) scale(0.995); z-index: 3; }
+.card-2-progress-2 { transform: translateY(80%) scale(0.99); z-index: 3; }
+.card-2-progress-3 { transform: translateY(70%) scale(0.985); z-index: 3; }
+.card-2-progress-4 { transform: translateY(60%) scale(0.98); z-index: 3; }
+.card-2-progress-5 { transform: translateY(50%) scale(0.975); z-index: 3; }
+.card-2-progress-6 { transform: translateY(40%) scale(0.97); z-index: 3; }
+.card-2-progress-7 { transform: translateY(30%) scale(0.965); z-index: 3; }
+.card-2-progress-8 { transform: translateY(20%) scale(0.96); z-index: 3; }
+.card-2-progress-9 { transform: translateY(10%) scale(0.955); z-index: 3; }
+.card-2-progress-10 { transform: translateY(0%) scale(0.95); z-index: 2; }
 
-.card-2 {
-  z-index: 2;
-}
-
-.card-3 {
-  z-index: 3;
-}
-
-/* Card 1 animation states */
-.card-1-progress-0 { transform: scale(1) translateY(0%); z-index: 1; }
-.card-1-progress-1 { transform: scale(0.995) translateY(0%); z-index: 1; }
-.card-1-progress-2 { transform: scale(0.99) translateY(0%); z-index: 1; }
-.card-1-progress-3 { transform: scale(0.985) translateY(0%); z-index: 1; }
-.card-1-progress-4 { transform: scale(0.98) translateY(0%); z-index: 1; }
-.card-1-progress-5 { transform: scale(0.975) translateY(0%); z-index: 1; }
-.card-1-progress-6 { transform: scale(0.97) translateY(0%); z-index: 1; }
-.card-1-progress-7 { transform: scale(0.965) translateY(0%); z-index: 1; }
-.card-1-progress-8 { transform: scale(0.96) translateY(0%); z-index: 1; }
-.card-1-progress-9 { transform: scale(0.955) translateY(0%); z-index: 1; }
-.card-1-progress-10 { transform: scale(0.95) translateY(0%); z-index: 1; }
-
-/* Card 2 animation states */
-.card-2-progress-0 { transform: scale(1) translateY(100%); z-index: 3; }
-.card-2-progress-1 { transform: scale(0.995) translateY(90%); z-index: 3; }
-.card-2-progress-2 { transform: scale(0.99) translateY(80%); z-index: 3; }
-.card-2-progress-3 { transform: scale(0.985) translateY(70%); z-index: 3; }
-.card-2-progress-4 { transform: scale(0.98) translateY(60%); z-index: 3; }
-.card-2-progress-5 { transform: scale(0.975) translateY(50%); z-index: 3; }
-.card-2-progress-6 { transform: scale(0.97) translateY(40%); z-index: 3; }
-.card-2-progress-7 { transform: scale(0.965) translateY(30%); z-index: 3; }
-.card-2-progress-8 { transform: scale(0.96) translateY(20%); z-index: 3; }
-.card-2-progress-9 { transform: scale(0.955) translateY(10%); z-index: 3; }
-.card-2-progress-10 { transform: scale(0.95) translateY(0%); z-index: 2; }
-
-/* Card 3 animation states */
-.card-3-progress-0 { transform: scale(1) translateY(100%); z-index: 2; }
-.card-3-progress-1 { transform: scale(1) translateY(90%); z-index: 2; }
-.card-3-progress-2 { transform: scale(1) translateY(80%); z-index: 2; }
-.card-3-progress-3 { transform: scale(1) translateY(70%); z-index: 2; }
-.card-3-progress-4 { transform: scale(1) translateY(60%); z-index: 2; }
-.card-3-progress-5 { transform: scale(1) translateY(50%); z-index: 2; }
-.card-3-progress-6 { transform: scale(1) translateY(40%); z-index: 2; }
-.card-3-progress-7 { transform: scale(1) translateY(30%); z-index: 2; }
-.card-3-progress-8 { transform: scale(1) translateY(20%); z-index: 2; }
-.card-3-progress-9 { transform: scale(1) translateY(10%); z-index: 2; }
-.card-3-progress-10 { transform: scale(1) translateY(0%); z-index: 3; }
+.card-3-progress-0 { transform: translateY(100%) scale(1); z-index: 2; }
+.card-3-progress-1 { transform: translateY(90%) scale(1); z-index: 2; }
+.card-3-progress-2 { transform: translateY(80%) scale(1); z-index: 2; }
+.card-3-progress-3 { transform: translateY(70%) scale(1); z-index: 2; }
+.card-3-progress-4 { transform: translateY(60%) scale(1); z-index: 2; }
+.card-3-progress-5 { transform: translateY(50%) scale(1); z-index: 2; }
+.card-3-progress-6 { transform: translateY(40%) scale(1); z-index: 2; }
+.card-3-progress-7 { transform: translateY(30%) scale(1); z-index: 2; }
+.card-3-progress-8 { transform: translateY(20%) scale(1); z-index: 2; }
+.card-3-progress-9 { transform: translateY(10%) scale(1); z-index: 2; }
+.card-3-progress-10 { transform: translateY(0%) scale(1); z-index: 3; }

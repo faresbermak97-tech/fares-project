@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { preloadAnimationAssets, preloadFonts } from '@/utils/preloader';
+import { preloadAnimationAssets } from '@/utils/preloader';
 
 const greetings = [
   'Hello',
@@ -25,7 +25,6 @@ export default function Preloader() {
     const initPreloading = async () => {
       try {
         await preloadAnimationAssets();
-        preloadFonts();
       } catch (error) {
         console.error('Error preloading resources:', error);
       }

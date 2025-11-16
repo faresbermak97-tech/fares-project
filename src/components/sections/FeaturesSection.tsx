@@ -6,6 +6,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import OptimizedImage from '@/components/shared/OptimizedImage';
 import DetailModal from '@/components/modals/DetailModal';
 import { prefersReducedMotion, monitorAnimationPerformance, animationManager } from '@/utils/animation';
+import { throttle } from '@/utils/optimization';
 
 export default function FeaturesSection() {
   const [activeService, setActiveService] = useState(0);
@@ -66,12 +67,21 @@ export default function FeaturesSection() {
       const translateY = (progress - 0.5) * 40; // -20px to +20px
       imageEl.style.transform = `translateY(${translateY}px)`;
     };
+
+    // Apply throttling to scroll event (approximately 60fps)
+    const throttledOnScroll = throttle(onScroll, 16);
+    const throttledOnResize = throttle(onScroll, 100);
+
+    // Initial call
     onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
+
+    // Add throttled event listeners
+    window.addEventListener('scroll', throttledOnScroll, { passive: true });
+    window.addEventListener('resize', throttledOnResize);
+
     return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      window.removeEventListener('scroll', throttledOnScroll);
+      window.removeEventListener('resize', throttledOnResize);
     };
   }, []);
 
@@ -374,7 +384,7 @@ export default function FeaturesSection() {
           <div className="slide-img">
             <OptimizedImage
               src={s.img}
-              alt={s.highlight}
+              alt={`${s.highlight} service illustration`}
               width={500}
               height={400}
               className="w-full h-full rounded-2xl shadow-xl transition-transform duration-300 hover:scale-105"
@@ -393,6 +403,7 @@ export default function FeaturesSection() {
               <DetailModal
                 title={s.highlight}
                 details={s.details}
+                ariaLabel={`View details about ${s.highlight}`}
               />
             </div>
           </div>

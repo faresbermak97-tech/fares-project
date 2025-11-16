@@ -1,22 +1,7 @@
-
 /* Hero image positioning */
 .hero-image {
   object-position: center 20%;
 }
-
-/* Button transform */
-.contact-button {
-  transform: translateY(-50%);
-}
-
-/* Button movement - will be handled via JavaScript */
-.button-moved {
-  /* This class will be used to indicate the button is moved */
-  position: relative;
-}
-
-/* Transition delays */
-/* Only keep transition delays that are used in the component */
 
 /* Timeline dots positions */
 .timeline-dot-top-1 {
@@ -30,5 +15,3 @@
 .timeline-dot-top-3 {
   top: 83.33%;
 }
-
-/* Unused transition delays removed */
