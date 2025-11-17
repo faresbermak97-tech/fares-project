@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useCurrentTime } from '@/hooks/useCurrentTime';
 
 export default function HeroSection() {
@@ -58,7 +58,7 @@ export default function HeroSection() {
       <button
         onClick={() => setMenuOpen(!menuOpen)}
         aria-label="Toggle navigation menu"
-        aria-expanded={menuOpen}
+        aria-expanded={menuOpen.toString()}
         aria-controls="mobile-menu"
         className="fixed top-6 right-6 md:top-8 md:right-8 z-50 w-14 h-14 rounded-full bg-black flex flex-col items-center justify-center gap-1.5 transition-all duration-300 opacity-0 -translate-y-4 pointer-events-none"
       >
