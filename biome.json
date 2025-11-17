@@ -1,18 +1,21 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
   "vcs": {
-    "enabled": false,
+    "enabled": true,
     "clientKind": "git",
-    "useIgnoreFile": false
+    "useIgnoreFile": true
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": ["dist", ".next", "node_modules", "build", "src/generated/**"],
-    "include": ["src/**/*.ts", "src/**/*.tsx"]
+    "ignore": ["dist", ".next", "node_modules", "build", "src/generated/**", "public/**"],
+    "include": ["src/**/*.{ts,tsx,js,jsx}"]
   },
   "formatter": {
     "enabled": true,
-    "indentStyle": "space"
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100,
+    "lineEnding": "lf"
   },
   "organizeImports": {
     "enabled": true
@@ -21,11 +24,65 @@
     "enabled": true,
     "rules": {
       "recommended": true,
+      "complexity": {
+        "noExcessiveCognitiveComplexity": "warn",
+        "noExtraBooleanCast": "error",
+        "noMultipleSpacesInRegularExpressionLiterals": "error",
+        "noUselessCatch": "error",
+        "noWith": "error",
+        "useLiteralKeys": "error"
+      },
       "correctness": {
-        "noUnusedVariables": "off"
+        "noConstAssign": "error",
+        "noConstantCondition": "error",
+        "noEmptyCharacterClassInRegex": "error",
+        "noEmptyPattern": "error",
+        "noGlobalObjectCalls": "error",
+        "noInvalidConstructorSuper": "error",
+        "noInvalidUseBeforeDeclaration": "error",
+        "noNewSymbol": "error",
+        "noSelfAssign": "error",
+        "noSetterReturn": "error",
+        "noUndeclaredVariables": "error",
+        "noUnreachable": "error",
+        "noUnreachableSuper": "error",
+        "noUnusedVariables": "warn"
+      },
+      "style": {
+        "noArguments": "error",
+        "noVar": "error",
+        "useConst": "error",
+        "useShorthandFunctionType": "error"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "warn",
+        "noAsyncPromiseExecutor": "error",
+        "noCatchAssign": "error",
+        "noClassAssign": "error",
+        "noCompareNegZero": "error",
+        "noControlCharactersInRegex": "error",
+        "noDebugger": "error",
+        "noDuplicateCase": "error",
+        "noDuplicateClassMembers": "error",
+        "noDuplicateObjectKeys": "error",
+        "noDuplicateParameters": "error",
+        "noEmptyBlockStatements": "error",
+        "noExplicitAny": "warn",
+        "noFunctionAssign": "error",
+        "noGlobalIsNan": "error",
+        "noGlobalObjectCalls": "error",
+        "noImportAssign": "error",
+        "noMisleadingCharacterClass": "error",
+        "noPrototypeBuiltins": "error",
+        "noRedeclare": "error",
+        "noShadowRestrictedNames": "error",
+        "noUnsafeNegation": "error",
+        "useGetterReturn": "error",
+        "useValidTypeof": "error"
       },
       "nursery": {
-        "noImgElement": "off"
+        "noImgElement": "off",
+        "useSortedClasses": "error"
       },
       "a11y": {
         "noAutofocus": "off",
@@ -47,6 +104,15 @@
     }
   },
   "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "jsxQuoteStyle": "double",
+      "semicolons": "always",
+      "trailingComma": "es5",
+      "bracketSpacing": true
+    }
+  },
+  "typescript": {
     "formatter": {
       "quoteStyle": "double"
     }

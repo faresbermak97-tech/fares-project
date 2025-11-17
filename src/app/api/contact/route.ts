@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import { contactFormSchema, sanitizeEmailSubject, sanitizeText } from '@/lib/validation';
+import { serverEnv } from '@/lib/env';
 
 // In-memory rate limiting as fallback if Redis is not available
 const inMemoryRateLimit: Record<string, { count: number; resetTime: number }> = {};
@@ -120,15 +121,15 @@ export async function POST(request: NextRequest) {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.EMAIL_USER, // Your Gmail address
-        pass: process.env.EMAIL_PASS, // Your Gmail password or app password
+        user: serverEnv.emailUser,
+        pass: serverEnv.emailPass,
       },
     });
 
     // Email options with sanitized data
     const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_TO || 'faresbermak97@gmail.com', // Use environment variable if available
+      from: serverEnv.emailUser,
+      to: serverEnv.emailTo,
       subject: sanitizeEmailSubject(`Contact from ${safeName}`),
       text: `Name: ${safeName}\nEmail: ${email}\n\nMessage:\n${safeMessage}`,
       html: `
@@ -149,7 +150,7 @@ export async function POST(request: NextRequest) {
 
     // Send a confirmation email to the sender (optional)
     await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+      from: serverEnv.emailUser,
       to: email, // Sender's email
       subject: sanitizeEmailSubject('Thank you for contacting Fares Bermak'),
       text: `Hi ${safeName},
