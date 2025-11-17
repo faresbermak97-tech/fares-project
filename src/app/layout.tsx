@@ -33,8 +33,8 @@ export default function RootLayout({
       </head>
       <body suppressHydrationWarning className="antialiased">
         {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics GA_ID={process.env.NEXT_PUBLIC_GA_ID} />}
-        <PerformanceMonitor />
-        <PerformanceDashboard />
+        {process.env.NODE_ENV === "development" && <PerformanceMonitor />}
+        {process.env.NODE_ENV === "development" && <PerformanceDashboard />}
         <ErrorBoundary>
           <ClientBody>{children}</ClientBody>
         </ErrorBoundary>
