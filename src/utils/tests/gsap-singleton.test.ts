@@ -42,6 +42,9 @@ describe('GSAP Singleton', () => {
 
   describe('cleanupScrollTriggers', () => {
     it('should kill all ScrollTrigger instances', () => {
+      // Add mock elements to the DOM
+      document.body.innerHTML = '<div class="test"></div><div class="test2"></div>';
+
       // Create some ScrollTrigger instances
       ScrollTrigger.create({
         trigger: '.test',
@@ -56,6 +59,9 @@ describe('GSAP Singleton', () => {
 
       cleanupScrollTriggers();
       expect(ScrollTrigger.getAll()).toHaveLength(0);
+
+      // Clean up the DOM
+      document.body.innerHTML = '';
     });
   });
 

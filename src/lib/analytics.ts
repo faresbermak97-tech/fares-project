@@ -89,14 +89,3 @@ export function trackPageView(url: string): void {
     page_path: url,
   });
 }
-
-// Extend Window interface for TypeScript
-declare global {
-  interface Window {
-    gtag: (
-      command: string,
-      targetId: string,
-      config?: Record<string, any>
-    ) => void;
-  }
-}

@@ -62,6 +62,8 @@ export default function FeaturesSection() {
   }, []);
 
   useEffect(() => {
+    if (!isClient) return;
+
     // Register GSAP plugins
     gsap.registerPlugin(ScrollTrigger);
 
@@ -130,24 +132,26 @@ export default function FeaturesSection() {
     });
 
     // Animate progress line while scrolling
-    const progressTrigger = ScrollTrigger.create({
-      trigger: sectionRef.current,
-      start: "top center",
-      end: "bottom center",
-      scrub: true,
-      onUpdate: (self) => {
-        gsap.set(progressLineRef.current, {
-          height: `${self.progress * 100}%`,
-        });
-      }
-    });
-    triggers.push(progressTrigger);
+    if (progressLineRef.current) {
+      const progressTrigger = ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: "top center",
+        end: "bottom center",
+        scrub: true,
+        onUpdate: (self) => {
+          gsap.set(progressLineRef.current, {
+            height: `${self.progress * 100}%`,
+          });
+        }
+      });
+      triggers.push(progressTrigger);
+    }
 
     // Cleanup function
     return () => {
       triggers.forEach(trigger => trigger.kill());
     };
-  }, []);
+  }, [isClient]);
 
   if (!isClient) {
     // Return a simplified version for server-side rendering

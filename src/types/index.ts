@@ -32,3 +32,10 @@ export interface FeatureSlide {
 }
 
 export type TimeZone = 'Africa/Algiers' | 'UTC' | string;
+
+declare global {
+  interface Window {
+    dataLayer: any[];
+    gtag: (...args: any[]) => void;
+  }
+}

@@ -8,18 +8,16 @@ global.fetch = jest.fn();
 
 // Helper function to create a mock Response
 const mockResponse = (ok: boolean, data: any) => {
-  return Promise.resolve(
-    new Response(JSON.stringify(data), {
-      status: ok ? 200 : 400,
-      headers: { 'Content-Type': 'application/json' }
-    })
-  );
+  return new Response(JSON.stringify(data), {
+    status: ok ? 200 : 500,
+    headers: { 'Content-Type': 'application/json' },
+  });
 };
 
 describe('ContactSection', () => {
   beforeEach(() => {
     // Mock the global fetch function to simulate a successful API response
-    global.fetch = jest.fn(() => mockResponse(true, { message: 'Success' }));
+    global.fetch = jest.fn(() => Promise.resolve(mockResponse(true, { message: 'Success' })));
     // Ensure fetch is reset for other tests
     jest.clearAllMocks();
   });
@@ -139,7 +137,7 @@ describe('ContactSection', () => {
     fireEvent.click(screen.getByRole('button', { name: /send message/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/failed to send/i)).toBeInTheDocument();
+      expect(screen.getByText(/An unexpected error occurred/i)).toBeInTheDocument();
     });
   });
 });

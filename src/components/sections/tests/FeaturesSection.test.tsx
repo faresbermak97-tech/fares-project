@@ -38,7 +38,7 @@ describe('FeaturesSection', () => {
 
   it('displays learn more buttons', () => {
     render(<FeaturesSection />);
-    const buttons = screen.getAllByRole('button', { name: /Learn more/i });
+    const buttons = screen.getAllByRole('button', { name: /View details about/i });
     expect(buttons.length).toBeGreaterThan(0);
   });
 });

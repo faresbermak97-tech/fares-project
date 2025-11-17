@@ -158,20 +158,21 @@ async function handlePost(request: NextRequest): Promise<NextResponse> {
     throw new RateLimitError('Too many requests. Please try again later.', {
       headers: {
         'X-RateLimit-Remaining': remaining.toString(),
-        'Retry-After': retryAfterSeconds.toString()
-      }
+        'Retry-After': retryAfterSeconds.toString(),
+      } as Record<string, string>,
     });
   }
 
   // Parse request body with error handling
-  let body: any = {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let body: any;
   try {
     body = await request.json();
   } catch (err) {
     logger.warn('Invalid JSON in contact form submission', { ip });
     return NextResponse.json(
       { error: 'Invalid JSON in request body' },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
