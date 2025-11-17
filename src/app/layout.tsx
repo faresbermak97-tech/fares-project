@@ -4,6 +4,9 @@ import "./globals.css";
 import ClientBody from "./ClientBody";
 import Script from "next/script";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+import PerformanceMonitor from "@/components/PerformanceMonitor";
+import PerformanceDashboard from "@/components/PerformanceDashboard";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -30,7 +33,11 @@ export default function RootLayout({
       </head>
       <body suppressHydrationWarning className="antialiased">
         {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics GA_ID={process.env.NEXT_PUBLIC_GA_ID} />}
-        <ClientBody>{children}</ClientBody>
+        <PerformanceMonitor />
+        <PerformanceDashboard />
+        <ErrorBoundary>
+          <ClientBody>{children}</ClientBody>
+        </ErrorBoundary>
       </body>
     </html>
   );

@@ -40,9 +40,6 @@ const nextConfig = {
     minimumCacheTTL: 60,
   },
 
-  // Enable SWC minification
-  swcMinify: true,
-
   // React strict mode
   reactStrictMode: true,
 
@@ -56,11 +53,13 @@ const nextConfig = {
   // Output configuration for production
   output: 'standalone',
 
+  // Server external packages
+  serverExternalPackages: ['nodemailer'],
+
   // Experimental features
   experimental: {
     optimizeCss: true,
     optimizePackageImports: ['lucide-react'],
-    serverComponentsExternalPackages: ['nodemailer'],
   },
 
   // Headers for security and performance
