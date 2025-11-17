@@ -43,8 +43,7 @@ describe('Logger', () => {
       });
       expect(console.debug).toHaveBeenCalledWith(
         '[DEBUG] test debug',
-        '
-Context:',
+        '\nContext:',
         { key: 'value' }
       );
     });

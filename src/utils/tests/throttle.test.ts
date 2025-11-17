@@ -63,7 +63,9 @@ describe('throttle', () => {
     const throttledFn = throttle(mockFn, 0);
 
     throttledFn();
+    jest.advanceTimersByTime(0);
     throttledFn();
+    jest.advanceTimersByTime(0);
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 });

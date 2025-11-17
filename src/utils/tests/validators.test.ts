@@ -29,8 +29,7 @@ describe('Validators', () => {
     });
 
     it('should replace newlines with spaces', () => {
-      expect(sanitizeText('line1
-line2')).toBe('line1 line2');
+      expect(sanitizeText('line1\n\nline2')).toBe('line1 line2');
     });
 
     it('should trim whitespace', () => {
@@ -44,8 +43,7 @@ line2')).toBe('line1 line2');
 
   describe('sanitizeEmailSubject', () => {
     it('should remove newlines', () => {
-      expect(sanitizeEmailSubject('subject
-injection')).toBe('subjectinjection');
+      expect(sanitizeEmailSubject('subject\n\ninjection')).toBe('subjectinjection');
     });
 
     it('should remove non-ASCII characters', () => {
@@ -65,7 +63,7 @@ injection')).toBe('subjectinjection');
   describe('isValidName', () => {
     it('should validate correct names', () => {
       expect(isValidName('John Doe')).toBe(true);
-      expect(isValidName('Mary-Jane O'Connor')).toBe(true);
+      expect(isValidName("Mary-Jane O'Connor")).toBe(true);
       expect(isValidName('Jean-Luc')).toBe(true);
     });
 

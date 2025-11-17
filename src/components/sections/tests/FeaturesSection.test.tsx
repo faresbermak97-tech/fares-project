@@ -11,7 +11,7 @@ describe('FeaturesSection', () => {
   it('renders feature cards', () => {
     render(<FeaturesSection />);
     expect(screen.getByText(/Web Development/i)).toBeInTheDocument();
-    expect(screen.getByText(/UI/UX Design/i)).toBeInTheDocument();
+    expect(screen.getByText(/UI\/UX Design/i)).toBeInTheDocument();
     expect(screen.getByText(/Performance/i)).toBeInTheDocument();
   });
 

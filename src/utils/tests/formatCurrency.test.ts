@@ -14,7 +14,9 @@ describe('formatCurrency', () => {
   });
 
   it('should format with different locale', () => {
-    expect(formatCurrency(1234.56, 'de-DE', 'EUR')).toBe('1.234,56 €');
+    const result = formatCurrency(1234.56, 'de-DE', 'EUR');
+    // The exact spacing may vary based on the environment
+    expect(result).toMatch(/^1\.234,56\s€$/);
   });
 
   it('should handle decimal places correctly', () => {
