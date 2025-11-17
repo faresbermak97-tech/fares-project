@@ -122,7 +122,7 @@ const CardsSection = () => {
           {cardData.map((card, index) => (
             <div
               key={card.id}
-              ref={el => cardRefs.current[index] = el}
+              ref={el => { cardRefs.current[index] = el; }}
               className={`card absolute ${card.bgColor} rounded-3xl shadow-2xl transition-all duration-300 ease-out card-dimensions ${getCardClasses(index)}`}
             >
               <div className="card-content h-full flex flex-col lg:flex-row overflow-hidden rounded-3xl">

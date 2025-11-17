@@ -1,36 +1,30 @@
-import { Response } from 'express';
+import { NextResponse } from 'next/server';
 import { AppError } from './errors';
 import { errorHandler } from './errorHandler';
 
 /**
  * Handles errors in API routes
  */
-export function apiErrorHandler(error: Error, res: Response): void {
+export function apiErrorHandler(error: Error): NextResponse {
+  // Log the error
+  errorHandler.handleError(error);
+  
   if (error instanceof AppError) {
-    res.status(error.statusCode).json({
+    return NextResponse.json({
       error: {
         name: error.name,
         message: error.message,
         ...(error.context && { context: error.context }),
       },
-    });
+    }, { status: error.statusCode });
   } else {
-    res.status(500).json({
+    return NextResponse.json({
       error: {
         name: 'InternalServerError',
         message: 'An unexpected error occurred',
       },
-    });
+    }, { status: 500 });
   }
-
-  // Log the error
-  errorHandler.handleError(error, {
-    path: res.req?.path,
-    method: res.req?.method,
-    body: res.req?.body,
-    query: res.req?.query,
-    params: res.req?.params,
-  });
 }
 
 /**
@@ -65,15 +59,15 @@ export function wrapFunction<T extends (...args: any[]) => any>(
 }
 
 /**
- * React error boundary fallback component
+ * Error information object for client-side error handling
  */
-export function ErrorFallback({ error }: { error: Error }) {
+export function getErrorInfo(error: Error) {
   errorHandler.handleError(error);
-
-  return (
-    <div className="error-boundary">
-      <h2>Something went wrong</h2>
-      <p>{error.message}</p>
-    </div>
-  );
+  
+  return {
+    error: {
+      name: error.name,
+      message: error.message
+    }
+  };
 }

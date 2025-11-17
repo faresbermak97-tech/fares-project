@@ -6,15 +6,20 @@ import ContactSection from '../ContactSection';
 // Mock fetch
 global.fetch = jest.fn();
 
+// Helper function to create a mock Response
+const mockResponse = (ok: boolean, data: any) => {
+  return Promise.resolve(
+    new Response(JSON.stringify(data), {
+      status: ok ? 200 : 400,
+      headers: { 'Content-Type': 'application/json' }
+    })
+  );
+};
+
 describe('ContactSection', () => {
   beforeEach(() => {
     // Mock the global fetch function to simulate a successful API response
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve({ message: 'Success' }),
-      })
-    );
+    global.fetch = jest.fn(() => mockResponse(true, { message: 'Success' }));
     // Ensure fetch is reset for other tests
     jest.clearAllMocks();
   });
@@ -54,10 +59,9 @@ describe('ContactSection', () => {
 
   it('submits form with valid data', async () => {
     const user = userEvent.setup();
-    (global.fetch as jest.Mock).mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({ success: true, message: 'Sent!' }),
-    });
+    (global.fetch as jest.Mock).mockResolvedValueOnce(
+      mockResponse(true, { success: true, message: 'Sent!' })
+    );
     render(<ContactSection />);
 
     // Open form
@@ -86,13 +90,12 @@ describe('ContactSection', () => {
 
   it('displays success message after submission', async () => {
     const user = userEvent.setup();
-    (global.fetch as jest.Mock).mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
+    (global.fetch as jest.Mock).mockResolvedValueOnce(
+      mockResponse(true, {
         success: true,
         message: 'Your message has been sent successfully!'
-      }),
-    });
+      })
+    );
     render(<ContactSection />);
 
     // Open the modal using the fixed query
@@ -122,10 +125,9 @@ describe('ContactSection', () => {
 
   it('displays error message on failure', async () => {
     const user = userEvent.setup();
-    (global.fetch as jest.Mock).mockResolvedValueOnce({
-      ok: false,
-      json: async () => ({ error: 'Failed to send' }),
-    });
+    (global.fetch as jest.Mock).mockResolvedValueOnce(
+      mockResponse(false, { error: 'Failed to send' })
+    );
     render(<ContactSection />);
 
     fireEvent.click(screen.getAllByRole('button', { name: /get in touch/i })[0]);

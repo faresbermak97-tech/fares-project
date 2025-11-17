@@ -36,13 +36,23 @@ error: error.message,
 }
 // Handle rate limit errors
 if (error instanceof RateLimitError) {
+const headers: Record<string, string> = {};
+
+// Use context headers if available
+if (error.context && error.context.headers) {
+Object.assign(headers, error.context.headers);
+}
+
+// Default retry-after if not provided
+if (!headers['Retry-After']) {
+headers['Retry-After'] = '3600';
+}
+
 return NextResponse.json(
 { error: error.message },
 {
 status: 429,
-headers: {
-'Retry-After': '3600',
-},
+headers,
 }
 );
 }

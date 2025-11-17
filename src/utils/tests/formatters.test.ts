@@ -28,13 +28,13 @@ describe('Formatters', () => {
 
     it('should format Date object', () => {
       const date = new Date('2023-01-01');
-      const result = formatDate(date);
+      const result = formatDate(date.toISOString());
       expect(result).toMatch(/^(January|February|March|April|May|June|July|August|September|October|November|December) \d{1,2}, \d{4}$/);
     });
 
     it('should format date with custom locale', () => {
       const date = new Date('2023-01-01');
-      const result = formatDate(date, 'fr-FR');
+      const result = formatDate(date.toISOString(), 'fr-FR');
       expect(typeof result).toBe('string');
       expect(result.length).toBeGreaterThan(0);
     });

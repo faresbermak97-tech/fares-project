@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
-import { MouseEvent, KeyboardEvent } from 'react';
+import { MouseEvent } from 'react';
 
 interface DetailModalProps {
   title: string;
@@ -34,7 +34,7 @@ export default function DetailModal({ title, icon, details }: DetailModalProps) 
     }
 
     // Handle tab key to trap focus
-    const handleTabKey = (e: KeyboardEvent<HTMLDivElement>) => {
+    const handleTabKey = (e: KeyboardEvent) => {
       if (e.key !== 'Tab') return;
 
       const modalElement = modalRef.current;
@@ -62,7 +62,7 @@ export default function DetailModal({ title, icon, details }: DetailModalProps) 
     };
 
     // Handle ESC key to close modal
-    const handleEscapeKey = (e: KeyboardEvent<HTMLDivElement>) => {
+    const handleEscapeKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setIsOpen(false);
       }
@@ -117,7 +117,7 @@ export default function DetailModal({ title, icon, details }: DetailModalProps) 
         >
           <div
             className="relative w-full max-w-xl rounded-4xl shadow-2xl transform transition-all duration-500 scale-100 opacity-100"
-            onClick={(e: MouseEvent<HTMLDivElement>) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
           >
             {/* Liquid Glass Background */}
             <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-3xl rounded-4xl border border-white/40" />

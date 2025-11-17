@@ -39,6 +39,7 @@
     "@testing-library/user-event": "^14.5.2",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.17.50",
+    "@types/nodemailer": "^7.0.3",
     "@types/react": "^18.3.22",
     "@types/react-dom": "^18.3.7",
     "critters": "^0.0.23",

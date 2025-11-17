@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import DetailModal from '@/components/DetailModal';
@@ -55,12 +55,15 @@ export default function FeaturesSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const slidesRef = useRef<HTMLDivElement[]>([]);
   const progressLineRef = useRef<HTMLDivElement>(null);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     // Register GSAP plugins
-    if (!gsap.plugins.ScrollTrigger) {
-      gsap.registerPlugin(ScrollTrigger);
-    }
+    gsap.registerPlugin(ScrollTrigger);
 
     // Store all ScrollTrigger instances for cleanup
     const triggers: ScrollTrigger[] = [];
@@ -145,6 +148,29 @@ export default function FeaturesSection() {
       triggers.forEach(trigger => trigger.kill());
     };
   }, []);
+
+  if (!isClient) {
+    // Return a simplified version for server-side rendering
+    return (
+      <section id="features" className="triple-section" role="region" aria-labelledby="features-heading">
+        <h2 id="features-heading" className="sr-only">Features</h2>
+        {features.map((s, i) => (
+          <div key={i} className={`slide ${s.reverse ? "reverse" : ""}`}>
+            <div className="slide-img">
+              <img src={s.img} alt={s.highlight} />
+            </div>
+            <div className="divider" />
+            <div className="slide-text">
+              <h2>
+                <span className="accent">{s.highlight}</span>
+              </h2>
+              <p>{s.text}</p>
+            </div>
+          </div>
+        ))}
+      </section>
+    );
+  }
 
   return (
     <section id="features" className="triple-section" ref={sectionRef} role="region" aria-labelledby="features-heading">

@@ -54,7 +54,7 @@ super(`${resource} not found`, 404, true);
 * Error for rate limiting
 */
 export class RateLimitError extends AppError {
-constructor(message: string = 'Too many requests') {
-super(message, 429, true);
+constructor(message: string = 'Too many requests', context?: Record<string, unknown>) {
+super(message, 429, true, context);
 }
 }
