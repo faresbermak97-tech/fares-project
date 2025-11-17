@@ -2,11 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useCurrentTime } from '@/hooks/useCurrentTime';
-
-interface FormStatus {
-  type: 'success' | 'error' | null;
-  message: string;
-}
+import { FormStatus, Position, ContactFormData } from '@/types';
 
 export default function ContactSection() {
   const [formStatus, setFormStatus] = useState<FormStatus>({
@@ -15,7 +11,7 @@ export default function ContactSection() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lineAnimated, setLineAnimated] = useState(false);
-  const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });
+  const [buttonPosition, setButtonPosition] = useState<Position>({ x: 0, y: 0 });
   const buttonRef = useRef<HTMLButtonElement>(null);
   const currentTime = useCurrentTime();
 
@@ -53,9 +49,11 @@ export default function ContactSection() {
     setIsSubmitting(true);
 
     const formData = new FormData(e.currentTarget);
-    const name = formData.get('name') as string;
-    const email = formData.get('email') as string;
-    const message = formData.get('message') as string;
+    const contactData: ContactFormData = {
+      name: formData.get('name') as string,
+      email: formData.get('email') as string,
+      message: formData.get('message') as string
+    };
 
     try {
       const response = await fetch('/api/contact', {
@@ -63,7 +61,7 @@ export default function ContactSection() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, email, message }),
+        body: JSON.stringify(contactData),
       });
 
       const data = await response.json();
@@ -161,7 +159,7 @@ export default function ContactSection() {
                 <button
                   ref={buttonRef}
                   onClick={openContactForm}
-                  onMouseMove={(e) => {
+                  onMouseMove={(e: React.MouseEvent<HTMLButtonElement>) => {
                     const btn = buttonRef.current;
                     if (!btn) return;
                     const rect = btn.getBoundingClientRect();

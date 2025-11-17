@@ -17,7 +17,7 @@ export default function HeroSection() {
     let lastTime = 0;
     let animationId: number;
 
-    const scroll = (timestamp: number) => {
+    const scroll = (timestamp: DOMHighResTimeStamp) => {
       if (!lastTime) lastTime = timestamp;
       const deltaTime = timestamp - lastTime;
       lastTime = timestamp;

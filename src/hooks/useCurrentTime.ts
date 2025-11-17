@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
+import { TimeZone } from '@/types';
 
-export function useCurrentTime(timeZone = 'Africa/Algiers') {
+export function useCurrentTime(timeZone: TimeZone = 'Africa/Algiers') {
   const [currentTime, setCurrentTime] = useState('');
 
   useEffect(() => {

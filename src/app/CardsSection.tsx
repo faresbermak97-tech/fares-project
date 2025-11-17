@@ -1,13 +1,23 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './CardsSection.css';
 import DetailModal from '@/components/DetailModal';
+import { CardData } from '@/types';
 
 const CardsSection = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const sectionRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  // Function to update card progress using CSS custom properties
+  const updateCardProgress = useCallback((cardIndex: number, progress: number) => {
+    const card = cardRefs.current[cardIndex];
+    if (card) {
+      card.style.setProperty('--progress', String(progress));
+    }
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,22 +47,23 @@ const CardsSection = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Calculate card positions based on scroll progress
-  const getCardClasses = (cardIndex: number) => {
+  // Update card progress when scroll progress changes
+  useEffect(() => {
     const card1Progress = Math.min(scrollProgress * 3, 1);
     const card2Progress = Math.min(Math.max((scrollProgress - 0.33) * 3, 0), 1);
     const card3Progress = Math.min(Math.max((scrollProgress - 0.66) * 3, 0), 1);
 
-    if (cardIndex === 0) {
-      return `card-1 card-1-progress-${Math.round(card1Progress * 10)}`;
-    } else if (cardIndex === 1) {
-      return `card-2 card-2-progress-${Math.round(card2Progress * 10)}`;
-    } else {
-      return `card-3 card-3-progress-${Math.round(card3Progress * 10)}`;
-    }
+    updateCardProgress(0, card1Progress);
+    updateCardProgress(1, card2Progress);
+    updateCardProgress(2, card3Progress);
+  }, [scrollProgress, updateCardProgress]);
+
+  // Get card classes (no longer calculating progress classes)
+  const getCardClasses = (cardIndex: number) => {
+    return `card-${cardIndex + 1}`;
   };
 
-  const cardData = [
+  const cardData: CardData[] = [
     {
       id: 1,
       title: 'Virtual Assistant & Admin Support',
@@ -111,6 +122,7 @@ const CardsSection = () => {
           {cardData.map((card, index) => (
             <div
               key={card.id}
+              ref={el => cardRefs.current[index] = el}
               className={`card absolute ${card.bgColor} rounded-3xl shadow-2xl transition-all duration-300 ease-out card-dimensions ${getCardClasses(index)}`}
             >
               <div className="card-content h-full flex flex-col lg:flex-row overflow-hidden rounded-3xl">

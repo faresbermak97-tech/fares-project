@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { ContactFormData } from '@/types';
 
 export const contactFormSchema = z.object({
   name: z.string()
@@ -19,12 +20,13 @@ export const contactFormSchema = z.object({
     .trim()
 });
 
-export type ContactFormData = z.infer<typeof contactFormSchema>;
+// Use ContactFormData from types/index.ts instead
 
 // Sanitization functions
 export function sanitizeEmailSubject(text: string): string {
   return text
-    .replace(/[
+    .replace(/[
+
 ]/g, '') // Remove newlines (header injection)
     .replace(/[^ -~]/g, '') // Remove non-ASCII
     .substring(0, 100); // Limit length
