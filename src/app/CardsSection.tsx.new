@@ -1,6 +1,4 @@
-'use client';
-
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import './CardsSection.css';
 import DetailModal from '@/components/DetailModal';
 
@@ -8,9 +6,22 @@ const CardsSection = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const sectionRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  // Throttle function to limit scroll handler execution
+  const throttle = useCallback((func: Function, limit: number) => {
+    let inThrottle: boolean;
+    return function(this: any, ...args: any[]) {
+      if (!inThrottle) {
+        func.apply(this, args);
+        inThrottle = true;
+        setTimeout(() => inThrottle = false, limit);
+      }
+    };
+  }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScroll = throttle(() => {
       if (!sectionRef.current) return;
       const section = sectionRef.current;
       const rect = section.getBoundingClientRect();
@@ -30,27 +41,50 @@ const CardsSection = () => {
       } else {
         setScrollProgress(1);
       }
-    };
+    }, 16); // ~60fps
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll(); // Initial check
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [throttle]);
 
-  // Calculate card positions based on scroll progress
-  const getCardClasses = (cardIndex: number) => {
-    const card1Progress = Math.min(scrollProgress * 3, 1);
-    const card2Progress = Math.min(Math.max((scrollProgress - 0.33) * 3, 0), 1);
-    const card3Progress = Math.min(Math.max((scrollProgress - 0.66) * 3, 0), 1);
+  // Memoize card progress calculations to avoid recalculating on every render
+  const cardProgress = useMemo(() => {
+    return {
+      card1Progress: Math.min(scrollProgress * 3, 1),
+      card2Progress: Math.min(Math.max((scrollProgress - 0.33) * 3, 0), 1),
+      card3Progress: Math.min(Math.max((scrollProgress - 0.66) * 3, 0), 1)
+    };
+  }, [scrollProgress]);
 
-    if (cardIndex === 0) {
-      return `card-1 card-1-progress-${Math.round(card1Progress * 10)}`;
-    } else if (cardIndex === 1) {
-      return `card-2 card-2-progress-${Math.round(card2Progress * 10)}`;
-    } else {
-      return `card-3 card-3-progress-${Math.round(card3Progress * 10)}`;
-    }
-  };
+  // Update CSS custom properties when progress changes
+  useEffect(() => {
+    // Calculate scale and translateY values
+    const card1Scale = 1 - (0.05 * cardProgress.card1Progress);
+    const card1Y = 0;
+
+    const card2Scale = 1 - (0.05 * cardProgress.card2Progress);
+    const card2Y = 100 - (100 * cardProgress.card2Progress);
+
+    const card3Scale = 1; // Card 3 doesn't scale
+    const card3Y = 100 - (100 * cardProgress.card3Progress);
+
+    // Update CSS custom properties for each card
+    cardRefs.current.forEach((card, index) => {
+      if (!card) return;
+
+      if (index === 0) {
+        card.style.setProperty('--card-1-scale', card1Scale.toString());
+        card.style.setProperty('--card-1-y', `${card1Y}%`);
+      } else if (index === 1) {
+        card.style.setProperty('--card-2-scale', card2Scale.toString());
+        card.style.setProperty('--card-2-y', `${card2Y}%`);
+      } else if (index === 2) {
+        card.style.setProperty('--card-3-scale', card3Scale.toString());
+        card.style.setProperty('--card-3-y', `${card3Y}%`);
+      }
+    });
+  }, [cardProgress]);
 
   const cardData = [
     {
@@ -103,7 +137,7 @@ const CardsSection = () => {
   return (
     <div ref={sectionRef} className="cards-section relative bg-gray-50 full-height">
       {/* Sticky container */}
-      <div 
+      <div
         ref={containerRef}
         className="sticky top-0 h-screen w-full overflow-hidden"
       >
@@ -111,7 +145,8 @@ const CardsSection = () => {
           {cardData.map((card, index) => (
             <div
               key={card.id}
-              className={`card absolute ${card.bgColor} rounded-3xl shadow-2xl transition-all duration-300 ease-out card-dimensions ${getCardClasses(index)}`}
+              ref={(el) => (cardRefs.current[index] = el)}
+              className={`card absolute ${card.bgColor} rounded-3xl shadow-2xl transition-all duration-300 ease-out card-dimensions card-${index + 1}`}
             >
               <div className="card-content h-full flex flex-col lg:flex-row overflow-hidden rounded-3xl">
                 {/* Left Content */}
@@ -127,7 +162,7 @@ const CardsSection = () => {
 
                   {/* Detail Button */}
                   <div className="pl-1 md:pl-2">
-                    <DetailModal 
+                    <DetailModal
                       title={card.title}
                       details={card.details}
                     />
@@ -137,7 +172,7 @@ const CardsSection = () => {
                 {/* Right Image */}
                 <div className="content-right flex-1 relative overflow-hidden min-h-[300px] lg:min-h-0">
                   <div className="absolute inset-4 lg:inset-8">
-                    <img 
+                    <img
                       src={card.image}
                       alt={card.title}
                       className="w-full h-full object-cover rounded-2xl shadow-xl"
