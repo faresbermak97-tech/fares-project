@@ -25,9 +25,7 @@ export const contactFormSchema = z.object({
 // Sanitization functions
 export function sanitizeEmailSubject(text: string): string {
   return text
-    .replace(/[
-
-]/g, '') // Remove newlines (header injection)
+    .replace(/[\r\n]/g, '') // Remove newlines (header injection)
     .replace(/[^ -~]/g, '') // Remove non-ASCII
     .substring(0, 100); // Limit length
 }

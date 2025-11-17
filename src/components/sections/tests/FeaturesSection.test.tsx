@@ -5,21 +5,29 @@ import FeaturesSection from '../FeaturesSection';
 describe('FeaturesSection', () => {
   it('renders the section title', () => {
     render(<FeaturesSection />);
-    expect(screen.getByText(/Features/i)).toBeInTheDocument();
+    // Check for the section element with id="features"
+    expect(screen.getByRole('region', { name: /features/i })).toBeInTheDocument();
   });
 
   it('renders feature cards', () => {
     render(<FeaturesSection />);
-    expect(screen.getByText(/Web Development/i)).toBeInTheDocument();
-    expect(screen.getByText(/UI\/UX Design/i)).toBeInTheDocument();
-    expect(screen.getByText(/Performance/i)).toBeInTheDocument();
+    // Use getAllByText for terms that appear multiple times
+    expect(screen.getAllByText(/Workflow Automation/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Organization/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Communication/i).length).toBeGreaterThan(0);
   });
 
   it('displays feature descriptions', () => {
     render(<FeaturesSection />);
-    expect(screen.getByText(/Creating responsive web applications/i)).toBeInTheDocument();
-    expect(screen.getByText(/Designing user interfaces/i)).toBeInTheDocument();
-    expect(screen.getByText(/Optimizing application performance/i)).toBeInTheDocument();
+    // Use more specific selectors for descriptions
+    const paragraphs = screen.getAllByText(/I design smart automations that eliminate repetitive manual tasks/i);
+    expect(paragraphs.length).toBeGreaterThan(0);
+    
+    const orgParagraphs = screen.getAllByText(/I bring structure to your digital workspace by creating clear systems/i);
+    expect(orgParagraphs.length).toBeGreaterThan(0);
+    
+    const commParagraphs = screen.getAllByText(/Smooth communication is the backbone of any remote team/i);
+    expect(commParagraphs.length).toBeGreaterThan(0);
   });
 
   it('renders feature icons', () => {

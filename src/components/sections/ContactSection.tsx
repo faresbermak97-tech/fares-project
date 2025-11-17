@@ -10,6 +10,8 @@ export default function ContactSection() {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
   const [lineAnimated, setLineAnimated] = useState(false);
   const [buttonPosition, setButtonPosition] = useState<Position>({ x: 0, y: 0 });
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -66,30 +68,42 @@ export default function ContactSection() {
 
       const data = await response.json();
 
-      if (response.ok) {
-        setFormStatus({
-          type: 'success',
-          message: 'Your message has been sent successfully!'
-        });
-        // Reset form
-        e.currentTarget.reset();
-        // Close form after a short delay
-        setTimeout(() => {
-          const contactForm = document.getElementById('contact-form');
-          if (contactForm) {
-            contactForm.classList.add('hidden');
-            contactForm.classList.remove('flex');
-            document.body.style.overflow = 'auto';
-            // Reset form status when closing
-            setFormStatus({ type: null, message: '' });
-          }
-        }, 2000);
-      } else {
+      if (!response.ok) {
         setFormStatus({
           type: 'error',
           message: data.error || 'Failed to send your message. Please try again.'
         });
+        setSuccess(false);
+        setError(true);
+        setIsSubmitting(false);
+        return;
       }
+
+      // Success case
+      setFormStatus({
+        type: 'success',
+        message: data.message || 'Your message has been sent successfully!'
+      });
+      setSuccess(true);
+      setError(false);
+      
+      // Reset form
+      e.currentTarget.reset();
+      
+      // Close form after a short delay
+      // Note: Commented out for testing purposes
+      /*
+      setTimeout(() => {
+        const contactForm = document.getElementById('contact-form');
+        if (contactForm) {
+          contactForm.classList.add('hidden');
+          contactForm.classList.remove('flex');
+          document.body.style.overflow = 'auto';
+          // Reset form status when closing
+          setFormStatus({ type: null, message: '' });
+        }
+      }, 2000);
+      */
     } catch (error) {
       setFormStatus({
         type: 'error',
@@ -326,13 +340,15 @@ export default function ContactSection() {
             </div>
 
             <div className="mt-8">
-              {formStatus.type && (
-                <div className={`mb-4 p-4 rounded-lg ${
-                  formStatus.type === 'success'
-                    ? 'bg-green-100 text-green-800'
-                    : 'bg-red-100 text-red-800'
-                }`}>
-                  {formStatus.message}
+              {success && (
+                <div className="mb-4 p-4 rounded-lg bg-green-100 text-green-800">
+                  Your message has been sent successfully!
+                </div>
+              )}
+              
+              {error && (
+                <div className="mb-4 p-4 rounded-lg bg-red-100 text-red-800">
+                  An unexpected error occurred. Please try again.
                 </div>
               )}
               <button

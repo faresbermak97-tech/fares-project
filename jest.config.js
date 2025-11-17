@@ -7,19 +7,13 @@ const createJestConfig = nextJest({
 
 // Add any custom config to be passed to Jest
 const customJestConfig = {
-  testEnvironment: 'jsdom',
-  transform: {
-    '^.+\\.(ts|tsx|js|jsx)$': 'ts-jest',
-  },
-  transformIgnorePatterns: [
-    '/node_modules/(?!same-runtime)/'
-  ],
-  moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
-    '^next/server$': '<rootDir>/__mocks__/next/server.js',
-    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
-  },
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  moduleNameMapper: {
+    // Handle module aliases (this will be automatically configured for you based on your tsconfig.json paths)
+    '^@/(.*)$': '<rootDir>/src/$1',
+    '^next/script$': '<rootDir>/__mocks__/next/script.js',
+  },
+  testEnvironment: 'jest-environment-jsdom',
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.d.ts',
@@ -39,7 +33,15 @@ const customJestConfig = {
     '**/__tests__/**/*.test.[jt]s?(x)',
     '**/?(*.)+(spec|test).[jt]s?(x)',
   ],
-};
+}
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
-module.exports = createJestConfig(customJestConfig)
+module.exports = async () => {
+  const asyncConfig = await createJestConfig(customJestConfig)();
+  // Add this line to modify the default Next.js ignore pattern
+  asyncConfig.transformIgnorePatterns = [
+    '/node_modules/(?!lucide-react|gsap|same-runtime)',
+    '^.+\.module\.(css|sass|scss)$',
+  ];
+  return asyncConfig;
+}

@@ -44,7 +44,19 @@ describe('/api/contact', () => {
     const data = await response.json();
 
     expect(response.status).toBe(400);
-    expect(data.error).toBe('Missing required fields');
+    expect(data.error).toBe('Validation failed');
+    expect(data.details).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          field: 'email',
+          message: expect.stringContaining('Invalid input')
+        }),
+        expect.objectContaining({
+          field: 'message',
+          message: expect.stringContaining('Invalid input')
+        })
+      ])
+    );
   });
 
   it('handles server errors gracefully', async () => {

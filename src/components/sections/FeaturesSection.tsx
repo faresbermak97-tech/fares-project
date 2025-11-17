@@ -147,7 +147,8 @@ export default function FeaturesSection() {
   }, []);
 
   return (
-    <section id="features" className="triple-section" ref={sectionRef}>
+    <section id="features" className="triple-section" ref={sectionRef} role="region" aria-labelledby="features-heading">
+      <h2 id="features-heading" className="sr-only">Features</h2>
       {/* fixed center timeline */}
       <div className="timeline-line">
         <div className="timeline-progress" ref={progressLineRef}></div>

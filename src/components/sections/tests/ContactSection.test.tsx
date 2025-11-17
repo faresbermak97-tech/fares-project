@@ -8,7 +8,15 @@ global.fetch = jest.fn();
 
 describe('ContactSection', () => {
   beforeEach(() => {
-    (global.fetch as jest.Mock).mockClear();
+    // Mock the global fetch function to simulate a successful API response
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ message: 'Success' }),
+      })
+    );
+    // Ensure fetch is reset for other tests
+    jest.clearAllMocks();
   });
 
   it('renders contact information', () => {
@@ -19,12 +27,14 @@ describe('ContactSection', () => {
 
   it('opens contact form when button clicked', async () => {
     render(<ContactSection />);
-    const button = screen.getByRole('button', { name: /get in touch/i });
+    // Use getAllByRole and select the first button (desktop version)
+    const button = screen.getAllByRole('button', { name: /get in touch/i })[0];
 
     fireEvent.click(button);
 
     await waitFor(() => {
-      expect(screen.getByRole('dialog')).toBeInTheDocument();
+      // Fix: Look for the heading, not role="dialog"
+      expect(screen.getByRole('heading', { name: /Get in touch/i })).toBeInTheDocument();
     });
   });
 
@@ -32,7 +42,7 @@ describe('ContactSection', () => {
     render(<ContactSection />);
 
     // Open form
-    fireEvent.click(screen.getByRole('button', { name: /get in touch/i }));
+    fireEvent.click(screen.getAllByRole('button', { name: /get in touch/i })[0]);
 
     // Try to submit without filling fields
     const submitButton = screen.getByRole('button', { name: /send message/i });
@@ -51,7 +61,7 @@ describe('ContactSection', () => {
     render(<ContactSection />);
 
     // Open form
-    fireEvent.click(screen.getByRole('button', { name: /get in touch/i }));
+    fireEvent.click(screen.getAllByRole('button', { name: /get in touch/i })[0]);
 
     // Fill form
     await user.type(screen.getByLabelText(/name/i), 'John Doe');
@@ -78,24 +88,36 @@ describe('ContactSection', () => {
     const user = userEvent.setup();
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ 
-        success: true, 
-        message: 'Your message has been sent successfully!' 
+      json: async () => ({
+        success: true,
+        message: 'Your message has been sent successfully!'
       }),
     });
     render(<ContactSection />);
 
-    fireEvent.click(screen.getByRole('button', { name: /get in touch/i }));
+    // Open the modal using the fixed query
+    fireEvent.click(screen.getAllByRole('button', { name: /get in touch/i })[0]);
 
+    // Wait for the form to be fully rendered
+    await waitFor(() => {
+      // We will wait for the 'name' input to be available
+      expect(screen.getByLabelText(/name/i)).toBeInTheDocument();
+    });
+
+    // Now that the form is open, type the required fields
     await user.type(screen.getByLabelText(/name/i), 'John Doe');
     await user.type(screen.getByLabelText(/email/i), 'john@example.com');
-    await user.type(screen.getByLabelText(/message/i), 'Test message');
+    await user.type(screen.getByLabelText(/message/i), 'Hello world');
 
+    // Click the send button (this triggers the successful mock fetch)
     fireEvent.click(screen.getByRole('button', { name: /send message/i }));
 
+    // Wait for the success message to appear
     await waitFor(() => {
-      expect(screen.getByText(/sent successfully/i)).toBeInTheDocument();
+      expect(screen.getByText(/Your message has been sent successfully!/i)).toBeInTheDocument();
     });
+    // Also confirm the error message is gone
+    expect(screen.queryByText(/An unexpected error occurred/i)).not.toBeInTheDocument();
   });
 
   it('displays error message on failure', async () => {
@@ -106,7 +128,7 @@ describe('ContactSection', () => {
     });
     render(<ContactSection />);
 
-    fireEvent.click(screen.getByRole('button', { name: /get in touch/i }));
+    fireEvent.click(screen.getAllByRole('button', { name: /get in touch/i })[0]);
 
     await user.type(screen.getByLabelText(/name/i), 'John Doe');
     await user.type(screen.getByLabelText(/email/i), 'john@example.com');

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { act } from 'react';
-import Preloader from '../Preloader';
+import Preloader, { greetings } from '../Preloader';
 
 // Mock timers
 jest.useFakeTimers();
@@ -19,14 +19,14 @@ describe('Preloader', () => {
 
     // Advance time to show next greeting
     act(() => {
-      jest.advanceTimersByTime(200);
+      jest.advanceTimersByTime(400);
     });
 
     expect(screen.getByText('Bonjour')).toBeInTheDocument();
 
     // Continue advancing through greetings
     act(() => {
-      jest.advanceTimersByTime(200);
+      jest.advanceTimersByTime(400);
     });
 
     expect(screen.getByText('Ciao')).toBeInTheDocument();
@@ -35,9 +35,19 @@ describe('Preloader', () => {
   it('disappears after completing all greetings', () => {
     const { container } = render(<Preloader />);
 
-    // Advance through all greetings + the final timeout
+    // Advance through all greetings
     act(() => {
-      jest.advanceTimersByTime(200 * 10 + 500);
+      jest.advanceTimersByTime(200 * greetings.length); // Move through all greetings
+    });
+
+    // Advance the final timeout
+    act(() => {
+      jest.advanceTimersByTime(500);
+    });
+
+    // Wait for the component to update
+    act(() => {
+      jest.runAllTimers();
     });
 
     // Component should return null (not in DOM)

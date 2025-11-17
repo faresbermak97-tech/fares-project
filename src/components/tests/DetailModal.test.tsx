@@ -14,13 +14,13 @@ describe('DetailModal', () => {
 
   it('renders trigger button', () => {
     render(<DetailModal {...mockProps} />);
-    expect(screen.getByRole('button', { name: /detail/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /learn more about test service/i })).toBeInTheDocument();
   });
 
   it('opens modal when trigger button clicked', () => {
     render(<DetailModal {...mockProps} />);
 
-    fireEvent.click(screen.getByRole('button', { name: /detail/i }));
+    fireEvent.click(screen.getByRole('button', { name: /learn more about test service/i }));
 
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
@@ -28,7 +28,7 @@ describe('DetailModal', () => {
   it('displays title in modal', () => {
     render(<DetailModal {...mockProps} />);
 
-    fireEvent.click(screen.getByRole('button', { name: /detail/i }));
+    fireEvent.click(screen.getByRole('button', { name: /learn more about test service/i }));
 
     expect(screen.getByText('Test Service')).toBeInTheDocument();
   });
@@ -36,7 +36,7 @@ describe('DetailModal', () => {
   it('displays all detail items', () => {
     render(<DetailModal {...mockProps} />);
 
-    fireEvent.click(screen.getByRole('button', { name: /detail/i }));
+    fireEvent.click(screen.getByRole('button', { name: /learn more about test service/i }));
 
     mockProps.details.forEach(detail => {
       expect(screen.getByText(detail)).toBeInTheDocument();
@@ -47,7 +47,7 @@ describe('DetailModal', () => {
     render(<DetailModal {...mockProps} />);
 
     // Open modal
-    fireEvent.click(screen.getByRole('button', { name: /detail/i }));
+    fireEvent.click(screen.getByRole('button', { name: /learn more about test service/i }));
     expect(screen.getByRole('dialog')).toBeInTheDocument();
 
     // Close modal
@@ -59,34 +59,37 @@ describe('DetailModal', () => {
 
   it('closes modal when backdrop clicked', () => {
     render(<DetailModal {...mockProps} />);
-
-    fireEvent.click(screen.getByRole('button', { name: /detail/i }));
-
-    // Click backdrop (not the modal content)
-    const backdrop = screen.getByRole('dialog').parentElement?.previousElementSibling;
+    
+    // Open modal first
+    fireEvent.click(screen.getByRole('button', { name: /learn more about test service/i }));
+    
+    // Find and click the backdrop
+    const backdrop = document.querySelector('[aria-hidden="true"]');
     if (backdrop) {
       fireEvent.click(backdrop);
     }
-
+    
+    // Modal should be closed
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
   it('closes modal when Escape key pressed', () => {
     render(<DetailModal {...mockProps} />);
-
-    fireEvent.click(screen.getByRole('button', { name: /detail/i }));
-    expect(screen.getByRole('dialog')).toBeInTheDocument();
-
+    
+    // Open modal first
+    fireEvent.click(screen.getByRole('button', { name: /learn more about test service/i }));
+    
     // Press Escape
-    fireEvent.keyDown(window, { key: 'Escape', code: 'Escape' });
-
+    fireEvent.keyDown(document, { key: 'Escape', code: 'Escape' });
+    
+    // Modal should be closed
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
   it('traps focus within modal when open', () => {
     render(<DetailModal {...mockProps} />);
 
-    fireEvent.click(screen.getByRole('button', { name: /detail/i }));
+    fireEvent.click(screen.getByRole('button', { name: /learn more about test service/i }));
 
     const dialog = screen.getByRole('dialog');
     const closeButton = within(dialog).getByRole('button', { name: /close/i });

@@ -163,14 +163,33 @@ async function handlePost(request: NextRequest): Promise<NextResponse> {
     });
   }
 
-  // Parse request body
-  const body = await request.json();
+  // Parse request body with error handling
+  let body: any = {};
+  try {
+    body = await request.json();
+  } catch (err) {
+    logger.warn('Invalid JSON in contact form submission', { ip });
+    return NextResponse.json(
+      { error: 'Invalid JSON in request body' },
+      { status: 400 }
+    );
+  }
 
   // Validate with Zod schema
   const validation = contactFormSchema.safeParse(body);
 
   if (!validation.success) {
-    throw validation.error;
+    logger.warn('Invalid contact form data', { ip, issues: validation.error.issues });
+    return NextResponse.json(
+      { 
+        error: 'Validation failed',
+        details: validation.error.issues.map(issue => ({
+          field: issue.path[0],
+          message: issue.message
+        }))
+      },
+      { status: 400 }
+    );
   }
 
   const { name, email, message } = validation.data;

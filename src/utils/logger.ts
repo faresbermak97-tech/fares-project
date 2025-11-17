@@ -34,11 +34,7 @@ class Logger {
    * @param context - Additional context data
    */
   public debug(message: string, context?: Record<string, any>): void {
-    if (context) {
-      console.debug(`[DEBUG] ${message}`, "\nContext:", context);
-    } else {
-      console.debug(`[DEBUG] ${message}`);
-    }
+    this.log(LogLevel.DEBUG, message, context);
   }
 
   /**
@@ -103,11 +99,15 @@ class Logger {
 
     // Log to console
     const logMethod = this.getConsoleMethod(level);
-    logMethod(
-      `[${LogLevel[level]}] ${message}`,
-      context ? 'Context:' : '',
-      context || ''
-    );
+    if (level === LogLevel.DEBUG && context) {
+      logMethod(`[${LogLevel[level]}] ${message}`, "\nContext:", context);
+    } else {
+      logMethod(
+        `[${LogLevel[level]}] ${message}`,
+        context ? 'Context:' : '',
+        context || ''
+      );
+    }
   }
 
   private getConsoleMethod(level: LogLevel): Console['log'] {

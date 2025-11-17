@@ -16,10 +16,10 @@ if (error instanceof ZodError) {
 return NextResponse.json(
 {
 error: 'Validation failed',
-details: error.errors.map(e => ({
+details: error.issues ? error.issues.map(e => ({
 field: e.path.join('.'),
 message: e.message,
-})),
+})) : [],
 },
 { status: 400 }
 );
@@ -48,7 +48,7 @@ headers: {
 }
 // Unknown errors - don't expose details
 return NextResponse.json(
-{ error: 'An unexpected error occurred. Please try again later.' },
+{ error: 'Failed to send your message. Please try again later.' },
 { status: 500 }
 );
 }
