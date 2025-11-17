@@ -18,8 +18,10 @@ export const greetings = [
 export default function Preloader() {
   const [index, setIndex] = useState(0);
   const [showPreloader, setShowPreloader] = useState(true);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
     let currentIndex = 0;
     
     const interval = setInterval(() => {
@@ -36,6 +38,17 @@ export default function Preloader() {
   }, []);
 
   if (!showPreloader) return null;
+
+  // Return a static version for server-side rendering
+  if (!isClient) {
+    return (
+      <div className="fixed inset-0 z-[9999] bg-black flex items-center justify-center" suppressHydrationWarning={true}>
+        <div className="text-white text-4xl md:text-6xl font-bold">
+          {greetings[0]}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-[9999] bg-black flex items-center justify-center" suppressHydrationWarning={true}>
