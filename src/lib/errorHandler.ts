@@ -8,9 +8,9 @@ export interface ErrorReport {
   userId?: string;
   userAgent?: string;
   ip?: string;
-  body?: any;
-  query?: any;
-  params?: any;
+  body?: unknown;
+  query?: unknown;
+  params?: unknown;
 }
 
 class ErrorHandler {

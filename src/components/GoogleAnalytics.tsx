@@ -33,7 +33,9 @@ export default function GoogleAnalytics({ GA_ID }: { GA_ID: string }) {
       <Script id="google-analytics" strategy="afterInteractive">
         {`
           window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
+          if (typeof window.gtag !== 'function') {
+            window.gtag = function(){window.dataLayer.push(arguments);};
+          }
           gtag('js', new Date());
           gtag('config', '${GA_ID}', {
             page_title: document.title,

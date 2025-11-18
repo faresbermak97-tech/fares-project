@@ -1,3 +1,5 @@
+import type { Metric } from 'web-vitals';
+
 // Analytics module with dynamic imports for web-vitals
 type AnalyticsEvent = {
   name: string;
@@ -10,7 +12,7 @@ type AnalyticsEvent = {
 /**
 * Sends analytics data to Google Analytics
 */
-function sendToGoogleAnalytics(metric: any): void {
+function sendToGoogleAnalytics(metric: Metric): void {
   if (typeof window === "undefined" || !window.gtag) return;
   const event: AnalyticsEvent = {
     name: metric.name,
@@ -31,7 +33,7 @@ function sendToGoogleAnalytics(metric: any): void {
 /**
 * Sends analytics data to console in development
 */
-function logToConsole(metric: any): void {
+function logToConsole(metric: Metric): void {
   if (process.env.NODE_ENV === "development") {
     console.log("[Web Vitals]", {
       name: metric.name,
@@ -44,7 +46,7 @@ function logToConsole(metric: any): void {
 /**
 * Reports Web Vitals metrics
 */
-export function reportWebVitals(metric: any): void {
+export function reportWebVitals(metric: Metric): void {
   logToConsole(metric);
   sendToGoogleAnalytics(metric);
 }
@@ -64,7 +66,7 @@ export function initWebVitals(): void {
       getLCP(reportWebVitals);
       getTTFB(reportWebVitals);
     })
-    .catch((error) => {
+    .catch(() => {
       console.warn("Web Vitals tracking disabled: web-vitals package not installed");
     });
 }
@@ -74,7 +76,7 @@ export function initWebVitals(): void {
 */
 export function trackEvent(
   eventName: string,
-  params?: Record<string, any>
+  params?: Record<string, unknown>
 ): void {
   if (typeof window === "undefined" || !window.gtag) return;
   window.gtag("event", eventName, params);

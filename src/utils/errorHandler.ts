@@ -4,7 +4,7 @@
 export interface ErrorContext {
   component?: string;
   action?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface ErrorReport {
@@ -72,15 +72,16 @@ class ErrorHandler {
    * @param context - Default context for errors
    * @returns Wrapped function
    */
-  public wrapFunction<T extends (...args: any[]) => any>(
+  public wrapFunction<T extends (...args: unknown[]) => unknown>(
     fn: T,
     context: ErrorContext = {}
-  ): (...args: Parameters<T>) => ReturnType<T> | void {
+  ): (...args: Parameters<T>) => ReturnType<T> | undefined {
     return (...args: Parameters<T>) => {
       try {
-        return fn(...args);
+        return fn(...args) as ReturnType<T>;
       } catch (error) {
         this.handleError(error as Error, context);
+        return undefined;
       }
     };
   }

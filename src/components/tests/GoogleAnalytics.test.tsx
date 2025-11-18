@@ -4,13 +4,39 @@ import GoogleAnalytics from '../GoogleAnalytics';
 
 // Mock Next.js Script component
 jest.mock('next/script', () => {
-  return function MockScript({ src, id, children, strategy }: any) {
+  return function MockScript({
+    src,
+    id,
+    children,
+    strategy,
+    dangerouslySetInnerHTML,
+  }: {
+    src: string;
+    id?: string;
+    children?: React.ReactNode;
+    strategy?: string;
+    dangerouslySetInnerHTML?: { __html: string };
+  }) {
+    // If dangerouslySetInnerHTML is provided, execute it
+    if (dangerouslySetInnerHTML && dangerouslySetInnerHTML.__html) {
+      // Create a function from the string and execute it
+      // This is a simplified execution and might not cover all edge cases
+      // but should work for gtag initialization.
+      try {
+        // eslint-disable-next-line no-eval
+        eval(dangerouslySetInnerHTML.__html);
+      } catch (e) {
+        console.error("Error executing dangerouslySetInnerHTML in mock Script:", e);
+      }
+    }
+
     return (
+      // eslint-disable-next-line @next/next/no-sync-scripts
       <script
         data-testid={id || 'script'}
         src={src}
         data-strategy={strategy}
-        dangerouslySetInnerHTML={{ __html: children || '' }}
+        dangerouslySetInnerHTML={dangerouslySetInnerHTML}
       />
     );
   };
@@ -31,7 +57,10 @@ jest.mock('next/navigation', () => ({
 describe('GoogleAnalytics', () => {
   // Add this: Mock gtag before each test
   beforeEach(() => {
-    window.gtag = jest.fn();
+    window.dataLayer = []; // Initialize dataLayer
+    window.gtag = jest.fn(function(...args: any[]) {
+      window.dataLayer.push(...args); // Push arguments to dataLayer
+    });
     document.head.innerHTML = '';
     document.body.innerHTML = '';
   });

@@ -30,7 +30,7 @@ describe('GSAP Singleton', () => {
 
     it('should not register plugins on server', () => {
       const originalWindow = global.window;
-      delete (global as any).window;
+      delete (global as Record<string, unknown>).window;
 
       const registerPluginSpy = jest.spyOn(gsap, 'registerPlugin');
       initGSAP();

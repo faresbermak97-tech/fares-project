@@ -12,7 +12,7 @@ export interface LogEntry {
   level: LogLevel;
   message: string;
   timestamp: Date;
-  context?: Record<string, any>;
+  context?: Record<string, unknown>;
 }
 
 class Logger {
@@ -33,7 +33,7 @@ class Logger {
    * @param message - Message to log
    * @param context - Additional context data
    */
-  public debug(message: string, context?: Record<string, any>): void {
+  public debug(message: string, context?: Record<string, unknown>): void {
     this.log(LogLevel.DEBUG, message, context);
   }
 
@@ -42,7 +42,7 @@ class Logger {
    * @param message - Message to log
    * @param context - Additional context data
    */
-  public info(message: string, context?: Record<string, any>): void {
+  public info(message: string, context?: Record<string, unknown>): void {
     this.log(LogLevel.INFO, message, context);
   }
 
@@ -51,7 +51,7 @@ class Logger {
    * @param message - Message to log
    * @param context - Additional context data
    */
-  public warn(message: string, context?: Record<string, any>): void {
+  public warn(message: string, context?: Record<string, unknown>): void {
     this.log(LogLevel.WARN, message, context);
   }
 
@@ -60,7 +60,7 @@ class Logger {
    * @param message - Message to log
    * @param context - Additional context data
    */
-  public error(message: string, context?: Record<string, any>): void {
+  public error(message: string, context?: Record<string, unknown>): void {
     this.log(LogLevel.ERROR, message, context);
   }
 
@@ -79,7 +79,7 @@ class Logger {
     this.logs = [];
   }
 
-  private log(level: LogLevel, message: string, context?: Record<string, any>): void {
+  private log(level: LogLevel, message: string, context?: Record<string, unknown>): void {
     if (level < this.currentLogLevel) {
       return;
     }

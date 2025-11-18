@@ -35,7 +35,7 @@ export type TimeZone = 'Africa/Algiers' | 'UTC' | string;
 
 declare global {
   interface Window {
-    dataLayer: any[];
-    gtag: (...args: any[]) => void;
+    dataLayer: Record<string, unknown>[];
+    gtag: (...args: unknown[]) => void;
   }
 }

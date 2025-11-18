@@ -65,15 +65,15 @@ return NextResponse.json(
 /**
 * Wraps an API handler with error handling
 */
-export function withErrorHandler<T extends (...args: any[]) => Promise<NextResponse>>(
-handler: T,
-context: string
-): T {
-return (async (...args: Parameters<T>) => {
-try {
-return await handler(...args);
-} catch (error) {
-return handleApiError(error, context);
-}
-}) as T;
+export function withErrorHandler<Args extends unknown[], R>(
+  handler: (...args: Args) => Promise<NextResponse<R>>,
+  context: string
+): (...args: Args) => Promise<NextResponse<R>> {
+  return (async (...args: Args) => {
+    try {
+      return await handler(...args);
+    } catch (error) {
+      return handleApiError(error, context) as NextResponse<R>;
+    }
+  });
 }

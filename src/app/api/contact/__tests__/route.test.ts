@@ -1,5 +1,6 @@
 import { POST } from '../route';
 import { NextRequest } from 'next/server';
+import nodemailer from 'nodemailer';
 
 // Mock nodemailer
 jest.mock('nodemailer', () => ({
@@ -13,6 +14,9 @@ process.env.EMAIL_USER = 'test@example.com';
 process.env.EMAIL_PASS = 'test-password';
 
 describe('/api/contact', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
   it('returns success for valid form data', async () => {
     const request = new NextRequest('http://localhost/api/contact', {
       method: 'POST',
@@ -61,8 +65,7 @@ describe('/api/contact', () => {
 
   it('handles server errors gracefully', async () => {
     // Mock a server error
-    const nodemailer = require('nodemailer');
-    nodemailer.createTransport().sendMail.mockRejectedValueOnce(new Error('Server error'));
+    (nodemailer.createTransport().sendMail as jest.Mock).mockRejectedValueOnce(new Error('Server error'));
 
     const request = new NextRequest('http://localhost/api/contact', {
       method: 'POST',

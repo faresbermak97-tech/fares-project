@@ -30,13 +30,16 @@ export function apiErrorHandler(error: Error): NextResponse {
 /**
  * Wraps async route handlers to catch errors
  */
-export function asyncHandler<T>(
-  fn: (...args: any[]) => Promise<T>
-): (...args: any[]) => Promise<T> {
-  return (...args: any[]) => {
-    const next = args[args.length - 1];
-    return Promise.resolve(fn(...args)).catch(next);
-  };
+export function asyncHandler<T extends (...args: unknown[]) => Promise<NextResponse>>(
+  fn: T
+): T {
+  return (async (...args: Parameters<T>): Promise<NextResponse> => {
+    try {
+      return await fn(...args);
+    } catch (error) {
+      return apiErrorHandler(error);
+    }
+  }) as T;
 }
 
 /**
@@ -45,15 +48,16 @@ export function asyncHandler<T>(
  * @param context - Default context for errors
  * @returns Wrapped function
  */
-export function wrapFunction<T extends (...args: any[]) => any>(
+export function wrapFunction<T extends (...args: unknown[]) => unknown>(
   fn: T,
   context?: Record<string, unknown>
-): (...args: Parameters<T>) => ReturnType<T> | void {
+): (...args: Parameters<T>) => ReturnType<T> | undefined {
   return (...args: Parameters<T>) => {
     try {
-      return fn(...args);
+      return fn(...args) as ReturnType<T>;
     } catch (error) {
       errorHandler.handleError(error as Error, context);
+      return undefined;
     }
   };
 }

@@ -3,11 +3,83 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import ContactSection from '../ContactSection';
 
+interface MockedResponse extends Partial<Response> {
+  json: () => Promise<any>;
+  ok: boolean;
+  status: number;
+  headers: Headers;
+  redirected: boolean;
+  statusText: string;
+  type: ResponseType;
+  clone: () => Response;
+  text: () => Promise<string>;
+  arrayBuffer: () => Promise<ArrayBuffer>;
+  blob: () => Promise<Blob>;
+  formData: () => Promise<FormData>;
+}
+
+// Mock the global Response object
+global.Response = jest.fn((body, init) => ({
+  json: () => Promise.resolve(JSON.parse(body ? String(body) : '{}')),
+  ok: init?.status ? (init.status >= 200 && init.status < 300) : true,
+  status: init?.status || 200,
+  headers: new Headers(init?.headers), // Add headers property
+  // Add other missing properties/methods if needed by the test or TypeScript
+  get redirected(): boolean { return false; },
+  get statusText(): string { return String(this.status); },
+  get type(): ResponseType { return 'default'; },
+  clone(): Response { return new Response(body, { status: this.status, headers: this.headers }); },
+  text(): Promise<string> { return Promise.resolve(body ? String(body) : ''); },
+  arrayBuffer(): Promise<ArrayBuffer> { return Promise.resolve(new ArrayBuffer(0)); },
+  blob(): Promise<Blob> { return Promise.resolve(new Blob()); },
+  formData(): Promise<FormData> { return Promise.resolve(new FormData()); },
+})) as jest.Mock<MockedResponse>;
+
+// Add static methods to the mock
+Object.assign(global.Response, {
+  error: jest.fn(() => new Response(null, { status: 500 })),
+  json: jest.fn((data, init) => new Response(JSON.stringify(data), init)),
+  redirect: jest.fn((url, status) => new Response(null, { headers: { Location: url }, status })),
+});
+
+interface MockedHeaders extends Partial<Headers> {
+  append: (name: string, value: string) => void;
+  delete: (name: string) => void;
+  get: (name: string) => string | null;
+  has: (name: string) => boolean;
+  set: (name: string, value: string) => void;
+  [Symbol.iterator]: () => IterableIterator<[string, string]>;
+}
+
+// Mock global.Headers as well
+global.Headers = jest.fn(function(init?: HeadersInit) {
+  const headers = new Map<string, string>();
+  if (init) {
+    if (Array.isArray(init)) {
+      init.forEach(([key, value]) => headers.set(key.toLowerCase(), value));
+    } else if (init instanceof Headers) {
+      init.forEach((value, key) => headers.set(key.toLowerCase(), value));
+    } else {
+      for (const key in init) {
+        headers.set(key.toLowerCase(), init[key]);
+      }
+    }
+  }
+  return {
+    append: (name: string, value: string) => headers.set(name.toLowerCase(), value),
+    delete: (name: string) => headers.delete(name.toLowerCase()),
+    get: (name: string) => headers.get(name.toLowerCase()),
+    has: (name: string) => headers.has(name.toLowerCase()),
+    set: (name: string, value: string) => headers.set(name.toLowerCase(), value),
+    [Symbol.iterator]: () => headers[Symbol.iterator](),
+  };
+}) as jest.Mock<MockedHeaders>;
+
 // Mock fetch
 global.fetch = jest.fn();
 
 // Helper function to create a mock Response
-const mockResponse = (ok: boolean, data: any) => {
+const mockResponse = (ok: boolean, data: Record<string, unknown>) => {
   return new Response(JSON.stringify(data), {
     status: ok ? 200 : 500,
     headers: { 'Content-Type': 'application/json' },

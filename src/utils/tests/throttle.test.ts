@@ -46,9 +46,12 @@ describe('throttle', () => {
   });
 
   it('should maintain correct context', () => {
+    interface ContextWithNumberValue {
+      value: number;
+    }
     const obj = {
       value: 42,
-      method: jest.fn(function(this: any) {
+      method: jest.fn(function(this: ContextWithNumberValue) {
         return this.value;
       }),
     };
