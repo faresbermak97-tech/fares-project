@@ -164,7 +164,6 @@ async function handlePost(request: NextRequest): Promise<NextResponse> {
   }
 
   // Parse request body with error handling
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let body: any;
   try {
     body = await request.json();
