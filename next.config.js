@@ -64,7 +64,9 @@ const nextConfig = {
   // Experimental features
   experimental: {
     optimizeCss: true,
-    optimizePackageImports: ["lucide-react"],
+    optimizePackageImports: ['lucide-react', 'gsap'],
+    // Add this for better performance
+    scrollRestoration: true,
   },
 
   // Headers for security and performance

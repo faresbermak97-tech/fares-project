@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { act } from 'react';
 import Preloader, { greetings } from '../Preloader';
 
@@ -32,25 +32,23 @@ describe('Preloader', () => {
     expect(screen.getByText('Ciao')).toBeInTheDocument();
   });
 
-  it('disappears after completing all greetings', () => {
+  it('disappears after completing all greetings', async () => {
     const { container } = render(<Preloader />);
-
-    // Advance through all greetings
+    // Advance through all greetings (10 * 400ms = 4000ms)
     act(() => {
-      jest.advanceTimersByTime(200 * greetings.length); // Move through all greetings
+      jest.advanceTimersByTime(4000);
     });
-
-    // Advance the final timeout
+    // Wait for cleanup timeout (200ms)
     act(() => {
-      jest.advanceTimersByTime(500);
+      jest.advanceTimersByTime(200);
     });
-
-    // Wait for the component to update
+    // Run all timers
     act(() => {
       jest.runAllTimers();
     });
-
-    // Component should return null (not in DOM)
-    expect(container.firstChild).toBeNull();
+    // Wait for next tick
+    await waitFor(() => {
+      expect(container.firstChild).toBeNull();
+    });
   });
 });

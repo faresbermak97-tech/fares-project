@@ -37,7 +37,12 @@ export function asyncHandler<T extends (...args: unknown[]) => Promise<NextRespo
     try {
       return await fn(...args);
     } catch (error) {
-      return apiErrorHandler(error);
+      if (error instanceof Error) {
+        return apiErrorHandler(error);
+      }
+      // Handle cases where the thrown value is not an Error object
+      const errorMessage = typeof error === 'string' ? error : 'An unknown error occurred';
+      return apiErrorHandler(new Error(errorMessage));
     }
   }) as T;
 }

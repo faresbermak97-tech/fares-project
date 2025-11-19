@@ -22,8 +22,8 @@ describe('ErrorHandler', () => {
       const errors = errorHandler.getErrors();
 
       expect(errors).toHaveLength(1);
-      expect(errors[0].error).toBe(error);
-      expect(errors[0].context).toEqual(context);
+      expect(errors[0]!.error).toBe(error);
+      expect(errors[0]!.context).toEqual(context);
     });
 
     it('should log error to console', () => {
@@ -42,7 +42,7 @@ describe('ErrorHandler', () => {
 
       const storedErrors = errorHandler.getErrors();
       expect(storedErrors).toHaveLength(100);
-      expect(storedErrors[0].error.message).toBe('Error 5');
+      expect(storedErrors[0]!.error.message).toBe('Error 5');
     });
   });
 

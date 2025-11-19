@@ -17,6 +17,10 @@
   --progress: 0;
   --scale: calc(1 - var(--progress) * 0.05);
   transition: transform 0.3s ease-out;
+  /* ADD THIS: */
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 /* Card-specific transforms using --progress variable */

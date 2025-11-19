@@ -53,7 +53,7 @@ describe('Logger', () => {
       const logs = logger.getLogs();
 
       expect(logs).toHaveLength(1);
-      expect(logs[0].level).toBe(LogLevel.INFO);
+      expect(logs[0]!.level).toBe(LogLevel.INFO);
       expect(console.info).toHaveBeenCalledWith('[INFO] test info', '', '');
     });
 
@@ -62,7 +62,7 @@ describe('Logger', () => {
       const logs = logger.getLogs();
 
       expect(logs).toHaveLength(1);
-      expect(logs[0].level).toBe(LogLevel.WARN);
+      expect(logs[0]!.level).toBe(LogLevel.WARN);
       expect(console.warn).toHaveBeenCalledWith('[WARN] test warning', '', '');
     });
 
@@ -71,7 +71,7 @@ describe('Logger', () => {
       const logs = logger.getLogs();
 
       expect(logs).toHaveLength(1);
-      expect(logs[0].level).toBe(LogLevel.ERROR);
+      expect(logs[0]!.level).toBe(LogLevel.ERROR);
       expect(console.error).toHaveBeenCalledWith('[ERROR] test error', '', '');
     });
   });
@@ -83,7 +83,7 @@ describe('Logger', () => {
 
       const logs = logger.getLogs();
       expect(logs).toHaveLength(1000);
-      expect(logs[0].message).toBe('Log 5');
+      expect(logs[0]!.message).toBe('Log 5');
     });
 
     it('should clear all logs', () => {
