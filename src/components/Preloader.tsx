@@ -7,9 +7,9 @@ export const greetings = [
   'Bonjour',
   'Ciao',
   'Hola',
-  'مرحبا', // Arabic
-  'Привет', // Russian
-  'こんにちは', // Japanese
+  'مرحبا',
+  'Привет',
+  'こんにちは',
   'Guten Tag',
   'Olá',
   'Namaste',
@@ -22,6 +22,14 @@ export default function Preloader() {
 
   useEffect(() => {
     setIsClient(true);
+    
+    // CRITICAL FIX: Prevent scroll during preload
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    
+    // CRITICAL FIX: Ensure we're at top
+    window.scrollTo(0, 0);
+    
     let currentIndex = 0;
     
     const interval = setInterval(() => {
@@ -30,19 +38,32 @@ export default function Preloader() {
         setIndex(currentIndex);
       } else {
         clearInterval(interval);
-        setShowPreloader(false); // <-- REQUIRED FOR TEST
+        
+        // CRITICAL FIX: Delay hiding to ensure page is ready
+        setTimeout(() => {
+          setShowPreloader(false);
+          // Restore scroll after a frame
+          requestAnimationFrame(() => {
+            document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
+            window.scrollTo(0, 0); // Ensure top position
+          });
+        }, 200);
       }
-    }, 400); // match your test timing EXACTLY
+    }, 400);
     
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    };
   }, []);
 
   if (!showPreloader) return null;
 
-  // Return a static version for server-side rendering
   if (!isClient) {
     return (
-      <div className="fixed inset-0 z-[9999] bg-black flex items-center justify-center" suppressHydrationWarning={true}>
+      <div className="fixed inset-0 z-[9999] bg-black flex items-center justify-center">
         <div className="text-white text-4xl md:text-6xl font-bold">
           {greetings[0]}
         </div>
@@ -51,7 +72,7 @@ export default function Preloader() {
   }
 
   return (
-    <div className="fixed inset-0 z-[9999] bg-black flex items-center justify-center" suppressHydrationWarning={true}>
+    <div className="fixed inset-0 z-[9999] bg-black flex items-center justify-center">
       <div className="text-white text-4xl md:text-6xl font-bold">
         {greetings[index]}
       </div>
