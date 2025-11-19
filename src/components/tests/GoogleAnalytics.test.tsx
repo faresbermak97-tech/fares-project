@@ -35,7 +35,7 @@ describe('GoogleAnalytics', () => {
     // Set up a mock dataLayer and gtag function
     window.dataLayer = [];
     window.gtag = jest.fn((...args: any[]) => {
-      window.dataLayer.push(args);
+      window.dataLayer.push(args as any);
     });
   });
 
