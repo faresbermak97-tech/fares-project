@@ -5,7 +5,6 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import DetailModal from '@/components/DetailModal';
 
-// Feature data
 const features = [
   {
     highlight: "Workflow Automation",
@@ -56,33 +55,56 @@ export default function FeaturesSection() {
   const slidesRef = useRef<HTMLDivElement[]>([]);
   const progressLineRef = useRef<HTMLDivElement>(null);
   const [isClient, setIsClient] = useState(false);
+  const [gsapReady, setGsapReady] = useState(false);
 
+  // CRITICAL FIX: Initialize client state
   useEffect(() => {
     setIsClient(true);
   }, []);
 
+  // CRITICAL FIX: Initialize GSAP with proper cleanup
   useEffect(() => {
     if (!isClient) return;
 
-    // Register GSAP plugins
+    // Register plugins
     gsap.registerPlugin(ScrollTrigger);
+    
+    // CRITICAL FIX: Wait for DOM to be ready
+    const initTimeout = setTimeout(() => {
+      setGsapReady(true);
+    }, 100);
 
-    // Store all ScrollTrigger instances for cleanup
+    return () => {
+      clearTimeout(initTimeout);
+    };
+  }, [isClient]);
+
+  // CRITICAL FIX: Separate GSAP animation setup
+  useEffect(() => {
+    if (!isClient || !gsapReady) return;
+
     const triggers: ScrollTrigger[] = [];
 
-    // Animate text + image on scroll
-    slidesRef.current.forEach((slide) => {
-      if (!slide) return;
+    // CRITICAL FIX: Ensure elements exist before animating
+    const validSlides = slidesRef.current.filter(slide => slide !== null);
+    
+    if (validSlides.length === 0) return;
+
+    validSlides.forEach((slide, slideIndex) => {
       const text = slide.querySelector(".slide-text") as HTMLElement;
       const img = slide.querySelector(".slide-img") as HTMLElement;
+
+      if (!text || !img) return;
+
+      // Set initial state
+      gsap.set(text, { opacity: 0, x: 60 });
+      gsap.set(img, { opacity: 0, x: -60 });
 
       // Text animation
       const textTrigger = ScrollTrigger.create({
         trigger: slide,
-        start: () => {
-          const index = slidesRef.current.indexOf(slide);
-          return `${index * 100}vh center`;
-        },
+        start: `${slideIndex * 100}vh center`,
+        end: `${(slideIndex + 1) * 100}vh center`,
         toggleActions: "play none none reverse",
         onEnter: () => {
           gsap.to(text, {
@@ -106,10 +128,8 @@ export default function FeaturesSection() {
       // Image animation
       const imgTrigger = ScrollTrigger.create({
         trigger: slide,
-        start: () => {
-          const index = slidesRef.current.indexOf(slide);
-          return `${index * 100}vh center`;
-        },
+        start: `${slideIndex * 100}vh center`,
+        end: `${(slideIndex + 1) * 100}vh center`,
         toggleActions: "play none none reverse",
         onEnter: () => {
           gsap.to(img, {
@@ -131,30 +151,32 @@ export default function FeaturesSection() {
       triggers.push(imgTrigger);
     });
 
-    // Animate progress line while scrolling
-    if (progressLineRef.current) {
+    // Progress line animation
+    if (progressLineRef.current && sectionRef.current) {
       const progressTrigger = ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top center",
         end: "bottom center",
         scrub: true,
         onUpdate: (self) => {
-          gsap.set(progressLineRef.current, {
-            height: `${self.progress * 100}%`,
-          });
+          if (progressLineRef.current) {
+            gsap.set(progressLineRef.current, {
+              height: `${self.progress * 100}%`,
+            });
+          }
         }
       });
       triggers.push(progressTrigger);
     }
 
-    // Cleanup function
+    // CRITICAL FIX: Cleanup function
     return () => {
       triggers.forEach(trigger => trigger.kill());
     };
-  }, [isClient]);
+  }, [isClient, gsapReady]);
 
+  // Server-side rendering fallback
   if (!isClient) {
-    // Return a simplified version for server-side rendering
     return (
       <section id="features" className="triple-section" role="region" aria-labelledby="features-heading">
         <h2 id="features-heading" className="sr-only">Features</h2>
@@ -179,11 +201,11 @@ export default function FeaturesSection() {
   return (
     <section id="features" className="triple-section" ref={sectionRef} role="region" aria-labelledby="features-heading">
       <h2 id="features-heading" className="sr-only">Features</h2>
-      {/* fixed center timeline */}
+      
+      {/* Timeline elements */}
       <div className="timeline-line">
         <div className="timeline-progress" ref={progressLineRef}></div>
       </div>
-      {/* glowing dots */}
       <div className="timeline-dot timeline-dot-top-1"></div>
       <div className="timeline-dot timeline-dot-top-2"></div>
       <div className="timeline-dot timeline-dot-top-3"></div>
@@ -205,8 +227,6 @@ export default function FeaturesSection() {
               <span className="accent">{s.highlight}</span>
             </h2>
             <p>{s.text}</p>
-
-            {/* Detail Button */}
             <div className="mt-8">
               <DetailModal
                 title={s.highlight}
