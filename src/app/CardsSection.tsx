@@ -7,11 +7,12 @@ import { CardData } from '@/types';
 
 const CardsSection = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isInitialized, setIsInitialized] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Function to update card progress using CSS custom properties
+  // CRITICAL FIX: Initialize card progress immediately
   const updateCardProgress = useCallback((cardIndex: number, progress: number) => {
     const card = cardRefs.current[cardIndex];
     if (card) {
@@ -19,20 +20,33 @@ const CardsSection = () => {
     }
   }, []);
 
+  // CRITICAL FIX: Initialize on mount
   useEffect(() => {
+    // Initialize all cards to 0 progress
+    cardRefs.current.forEach((_, index) => {
+      updateCardProgress(index, 0);
+    });
+    
+    // Mark as initialized after a frame
+    requestAnimationFrame(() => {
+      setIsInitialized(true);
+    });
+  }, [updateCardProgress]);
+
+  // CRITICAL FIX: Handle scroll with proper initialization check
+  useEffect(() => {
+    if (!isInitialized) return;
+    
     const handleScroll = () => {
       if (!sectionRef.current) return;
+      
       const section = sectionRef.current;
       const rect = section.getBoundingClientRect();
       const windowHeight = window.innerHeight;
-
-      // Calculate when section enters viewport
       const sectionTop = rect.top;
       const sectionHeight = rect.height;
 
-      // Start animation when section top hits viewport top
       if (sectionTop <= 0 && sectionTop > -sectionHeight + windowHeight) {
-        // Calculate progress (0 to 1)
         const progress = Math.abs(sectionTop) / (sectionHeight - windowHeight);
         setScrollProgress(Math.min(Math.max(progress, 0), 1));
       } else if (sectionTop > 0) {
@@ -42,13 +56,25 @@ const CardsSection = () => {
       }
     };
 
+    // CRITICAL FIX: Check initial position immediately
+    handleScroll();
+    
+    // CRITICAL FIX: Use passive listener for better performance
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Initial check
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    
+    // CRITICAL FIX: Also check on resize
+    window.addEventListener('resize', handleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, [isInitialized]);
 
   // Update card progress when scroll progress changes
   useEffect(() => {
+    if (!isInitialized) return;
+    
     const card1Progress = Math.min(scrollProgress * 3, 1);
     const card2Progress = Math.min(Math.max((scrollProgress - 0.33) * 3, 0), 1);
     const card3Progress = Math.min(Math.max((scrollProgress - 0.66) * 3, 0), 1);
@@ -56,9 +82,8 @@ const CardsSection = () => {
     updateCardProgress(0, card1Progress);
     updateCardProgress(1, card2Progress);
     updateCardProgress(2, card3Progress);
-  }, [scrollProgress, updateCardProgress]);
+  }, [scrollProgress, updateCardProgress, isInitialized]);
 
-  // Get card classes (no longer calculating progress classes)
   const getCardClasses = (cardIndex: number) => {
     return `card-${cardIndex + 1}`;
   };
@@ -113,7 +138,6 @@ const CardsSection = () => {
 
   return (
     <div ref={sectionRef} className="cards-section relative bg-gray-50 full-height">
-      {/* Sticky container */}
       <div 
         ref={containerRef}
         className="sticky top-0 h-screen w-full overflow-hidden"
@@ -126,27 +150,20 @@ const CardsSection = () => {
               className={`card absolute ${card.bgColor} rounded-3xl shadow-2xl transition-all duration-300 ease-out card-dimensions ${getCardClasses(index)}`}
             >
               <div className="card-content h-full flex flex-col lg:flex-row overflow-hidden rounded-3xl">
-                {/* Left Content */}
                 <div className="content-left flex-1 p-6 md:p-12 lg:p-16 flex flex-col justify-center relative z-10">
-
                   <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">
                     {card.title}
                   </h2>
-
                   <p className="text-base md:text-lg text-gray-700 mb-6 md:mb-8 max-w-xl leading-relaxed pl-1 md:pl-2">
                     {card.description}
                   </p>
-
-                  {/* Detail Button */}
                   <div className="pl-1 md:pl-2">
                     <DetailModal 
                       title={card.title}
                       details={card.details}
                     />
                   </div>
-
                 </div>
-                {/* Right Image */}
                 <div className="content-right flex-1 relative overflow-hidden min-h-[300px] lg:min-h-0">
                   <div className="absolute inset-4 lg:inset-8">
                     <img 
