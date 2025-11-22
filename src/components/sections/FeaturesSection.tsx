@@ -175,16 +175,20 @@ export default function FeaturesSection() {
       triggers.forEach(trigger => trigger.kill());
       
       // Reset GSAP animations
-      slidesRef.current.forEach(slide => {
-        if (slide) {
-          gsap.killTweensOf(slide.querySelector('.slide-text'));
-          gsap.killTweensOf(slide.querySelector('.slide-img'));
-        }
-      });
+      const slides = slidesRef.current;
+      if (slides) {
+        slides.forEach(slide => {
+          if (slide) {
+            gsap.killTweensOf(slide.querySelector('.slide-text'));
+            gsap.killTweensOf(slide.querySelector('.slide-img'));
+          }
+        });
+      }
       
       // Kill progress line animation
-      if (progressLineRef.current) {
-        gsap.killTweensOf(progressLineRef.current);
+      const progressLine = progressLineRef.current;
+      if (progressLine) {
+        gsap.killTweensOf(progressLine);
       }
     };
   }, [isClient, gsapReady]);

@@ -103,7 +103,7 @@ function CardsSection() {
     const card3Progress = Math.min(Math.max((scrollProgress - 0.66) * 3, 0), 1);
 
     const progress = [card1Progress, card2Progress, card3Progress][cardIndex];
-    const scale = 1 - (progress * 0.05);
+    const scale = 1 - ((progress || 0) * 0.05);
 
     if (cardIndex === 0) {
       return {
@@ -208,12 +208,12 @@ function CardsSection() {
 
               <div className="relative z-10 p-8 md:p-12">
                 <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-                  {cardData[activeModal - 1].title}
+                  {cardData[activeModal ? activeModal - 1 : 0]?.title}
                 </h2>
                 <div className="h-1 w-24 bg-gradient-to-r from-white/60 to-transparent rounded-full mb-6" />
 
                 <ul className="space-y-3">
-                  {cardData[activeModal - 1].details.map((detail, idx) => (
+                  {cardData[activeModal ? activeModal - 1 : 0]?.details.map((detail, idx) => (
                     <li key={idx} className="text-white/90 flex items-start gap-3">
                       <span className="text-white/60 text-lg leading-relaxed mt-0.5">•</span>
                       <p className="text-base md:text-lg leading-relaxed">{detail}</p>

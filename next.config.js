@@ -69,15 +69,8 @@ const nextConfig = {
     scrollRestoration: true,
   },
   
-  // Turbopack configuration
-  turbo: {
-    rules: {
-      '*.svg': {
-        loaders: ['@svgr/webpack'],
-        as: '*.js',
-      },
-    },
-  },
+  // Turbopack configuration was removed as it's not supported in Next.js 15.5.6
+  // SVG handling is now done through webpack configuration
 
   // Headers for security and performance
   async headers() {

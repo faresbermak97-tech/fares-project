@@ -16,6 +16,7 @@ interface FormStatus {
 export default function ContactCurtainSection() {
   const [currentTime, setCurrentTime] = useState('');
   const [isVisible, setIsVisible] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -27,6 +28,8 @@ export default function ContactCurtainSection() {
   });
 
   useEffect(() => {
+    setIsMounted(true);
+
     const updateTime = () => {
       const time = new Date().toLocaleTimeString('en-US', {
         timeZone: 'Africa/Algiers',
@@ -43,6 +46,8 @@ export default function ContactCurtainSection() {
   }, []);
 
   useEffect(() => {
+    if (!isMounted) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -58,7 +63,7 @@ export default function ContactCurtainSection() {
     if (section) observer.observe(section);
 
     return () => observer.disconnect();
-  }, []);
+  }, [isMounted]);
 
   const openContactForm = () => {
     const form = document.getElementById('contact-form');
@@ -83,7 +88,7 @@ export default function ContactCurtainSection() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     // Validation
     if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
       setFormStatus({
@@ -158,21 +163,23 @@ export default function ContactCurtainSection() {
     <>
       {/* Curtain Transition */}
       <div className="relative h-32 bg-[#F7FAFC] overflow-hidden">
-        <div 
-          className={`absolute inset-0 bg-[#1A202C] transition-all duration-1000 ease-[cubic-bezier(0.76,0,0.24,1)] ${
-            isVisible ? 'translate-y-0' : '-translate-y-full'
+        <div
+          className={`absolute inset-0 bg-[#1A202C] transition-all duration-1000 ${
+            isMounted && isVisible ? 'translate-y-0' : '-translate-y-full'
           }`}
           style={{
-            clipPath: isVisible 
-              ? 'ellipse(200% 100% at 50% 100%)' 
+            transitionTimingFunction: 'cubic-bezier(0.76,0,0.24,1)',
+            clipPath: isMounted && isVisible
+              ? 'ellipse(200% 100% at 50% 100%)'
               : 'ellipse(200% 100% at 50% 0%)'
           }}
+          suppressHydrationWarning={true}
         />
       </div>
 
       {/* Contact Section */}
-      <section 
-        id="contact-curtain" 
+      <section
+        id="contact-curtain"
         className="relative bg-[#1A202C] text-white px-6 md:px-12 py-16 md:py-24"
       >
         <div className="max-w-7xl mx-auto">
@@ -198,7 +205,7 @@ export default function ContactCurtainSection() {
           {/* Divider with Button */}
           <div className="relative mb-12">
             <div className="w-full h-px bg-white/30" />
-            
+
             <div className="absolute right-12 top-0 -translate-y-1/2">
               <button
                 onClick={openContactForm}
@@ -237,7 +244,9 @@ export default function ContactCurtainSection() {
                 </div>
                 <div>
                   <h4 className="text-xs uppercase tracking-wider text-gray-500 mb-2">Local time</h4>
-                  <p>{currentTime} GMT+1</p>
+                  <p suppressHydrationWarning={true}>
+                    {isMounted ? currentTime : '00:00 AM'} GMT+1
+                  </p>
                 </div>
               </div>
               <div>

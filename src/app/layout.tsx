@@ -1,11 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import ClientBody from "./ClientBody";
 import Script from "next/script";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-
 
 const inter = Inter({
   subsets: ["latin"],
@@ -15,7 +14,12 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Fares Bermak - Remote Virtual Assistant & Data Entry",
   description: "Professional remote virtual assistant and data entry services",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=5",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({

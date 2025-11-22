@@ -19,17 +19,20 @@ export default function CurtainPreloader() {
   const [index, setIndex] = useState(0);
   const [showPreloader, setShowPreloader] = useState(true);
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
+
     // CRITICAL FIX: Prevent all scrolling during preload
     document.body.style.overflow = 'hidden';
     document.body.style.position = 'fixed';
     document.body.style.width = '100%';
     document.documentElement.style.overflow = 'hidden';
     window.scrollTo(0, 0);
-    
+
     let currentIndex = 0;
-    
+
     // Greeting rotation: 10 greetings × 250ms = 2500ms
     const interval = setInterval(() => {
       currentIndex++;
@@ -37,15 +40,15 @@ export default function CurtainPreloader() {
         setIndex(currentIndex);
       } else {
         clearInterval(interval);
-        
+
         // CRITICAL FIX: Start curtain animation at 2500ms
         setTimeout(() => {
           setIsAnimatingOut(true);
-          
+
           // CRITICAL FIX: Wait 1200ms for curtain animation to complete
           setTimeout(() => {
             setShowPreloader(false);
-            
+
             // CRITICAL FIX: Restore scroll after preloader fully exits
             document.body.style.overflow = '';
             document.body.style.position = '';
@@ -56,7 +59,7 @@ export default function CurtainPreloader() {
         }, 100); // Small delay before curtain starts
       }
     }, 250); // Faster greeting rotation (was 400ms)
-    
+
     return () => {
       clearInterval(interval);
       // Cleanup on unmount
@@ -73,23 +76,26 @@ export default function CurtainPreloader() {
     <div className="fixed inset-0 z-[9999] pointer-events-none">
       {/* Main Curtain with Curved Bottom */}
       <div
-        className={`absolute inset-0 bg-black transition-transform duration-[1200ms] ease-[cubic-bezier(0.76,0,0.24,1)] ${
+        className={`absolute inset-0 bg-black transition-transform ${
           isAnimatingOut ? 'animate-curtain-up' : ''
         }`}
         style={{
-          clipPath: isAnimatingOut 
-            ? 'ellipse(200% 100% at 50% 0%)' 
+          transitionDuration: '1200ms',
+          transitionTimingFunction: 'cubic-bezier(0.76,0,0.24,1)',
+          clipPath: isAnimatingOut
+            ? 'ellipse(200% 100% at 50% 0%)'
             : 'none'
         }}
       >
         {/* Greeting Text */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <div 
+          <div
             className={`text-white text-4xl md:text-6xl font-bold transition-opacity duration-300 ${
               isAnimatingOut ? 'opacity-0' : 'opacity-100'
             }`}
+            suppressHydrationWarning={true}
           >
-            {greetings[index]}
+            {isMounted ? greetings[index] : greetings[0]}
           </div>
         </div>
       </div>
