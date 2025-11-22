@@ -169,6 +169,7 @@ function CardsSection() {
                         src={card.image}
                         alt={card.title}
                         className="w-full h-full object-cover rounded-2xl shadow-xl"
+                        loading="lazy"
                       />
                     </div>
                     <div className="absolute top-4 right-4 lg:top-8 lg:right-8 text-black/10 text-6xl lg:text-9xl font-bold select-none">

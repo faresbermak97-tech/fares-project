@@ -148,6 +148,8 @@ export default function HeroSection() {
           src="/hero-image.jpg"
           alt="Fares Bermak"
           className="w-full h-full object-cover hero-image"
+          loading="eager"
+          fetchPriority="high"
         />
         <div className="absolute inset-0 bg-black/5"></div>
       </div>
