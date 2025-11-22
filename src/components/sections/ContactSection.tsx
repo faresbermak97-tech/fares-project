@@ -1,10 +1,30 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
+
+interface FormData {
+  name: string;
+  email: string;
+  message: string;
+}
+
+interface FormStatus {
+  type: 'success' | 'error' | 'loading' | null;
+  message: string;
+}
 
 export default function ContactCurtainSection() {
   const [currentTime, setCurrentTime] = useState('');
   const [isVisible, setIsVisible] = useState(false);
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    email: '',
+    message: ''
+  });
+  const [formStatus, setFormStatus] = useState<FormStatus>({
+    type: null,
+    message: ''
+  });
 
   useEffect(() => {
     const updateTime = () => {
@@ -46,6 +66,9 @@ export default function ContactCurtainSection() {
       form.classList.remove('hidden');
       form.classList.add('flex');
       document.body.style.overflow = 'hidden';
+      // Reset form state when opening
+      setFormData({ name: '', email: '', message: '' });
+      setFormStatus({ type: null, message: '' });
     }
   };
 
@@ -55,6 +78,79 @@ export default function ContactCurtainSection() {
       form.classList.add('hidden');
       form.classList.remove('flex');
       document.body.style.overflow = 'auto';
+    }
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
+    // Validation
+    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
+      setFormStatus({
+        type: 'error',
+        message: 'Please fill in all fields.'
+      });
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      setFormStatus({
+        type: 'error',
+        message: 'Please enter a valid email address.'
+      });
+      return;
+    }
+
+    // Set loading state
+    setFormStatus({
+      type: 'loading',
+      message: 'Sending message...'
+    });
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setFormStatus({
+          type: 'success',
+          message: data.message || 'Message sent successfully!'
+        });
+        // Reset form
+        setFormData({ name: '', email: '', message: '' });
+        // Close form after 2 seconds
+        setTimeout(() => {
+          closeContactForm();
+        }, 2000);
+      } else {
+        setFormStatus({
+          type: 'error',
+          message: data.error || 'Failed to send message. Please try again.'
+        });
+      }
+    } catch (error) {
+      setFormStatus({
+        type: 'error',
+        message: 'Network error. Please check your connection and try again.'
+      });
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+    // Clear error when user starts typing
+    if (formStatus.type === 'error') {
+      setFormStatus({ type: null, message: '' });
     }
   };
 
@@ -168,6 +264,7 @@ export default function ContactCurtainSection() {
         <button
           onClick={closeContactForm}
           className="absolute top-12 right-12 text-white hover:opacity-60 transition-opacity text-5xl"
+          disabled={formStatus.type === 'loading'}
         >
           ×
         </button>
@@ -177,45 +274,77 @@ export default function ContactCurtainSection() {
             Get in touch
           </h3>
 
-          <div className="space-y-8">
+          <form onSubmit={handleSubmit} className="space-y-8">
             <div>
-              <label className="block text-white text-sm mb-3 uppercase tracking-wider">Name</label>
+              <label htmlFor="name" className="block text-white text-sm mb-3 uppercase tracking-wider">
+                Name
+              </label>
               <input
                 type="text"
-                className="w-full bg-transparent border-b border-white/30 text-white text-2xl py-3 focus:outline-none focus:border-[#4D64FF] transition-colors"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+                disabled={formStatus.type === 'loading'}
+                className="w-full bg-transparent border-b border-white/30 text-white text-2xl py-3 focus:outline-none focus:border-[#4D64FF] transition-colors disabled:opacity-50"
                 placeholder="Your name"
               />
             </div>
 
             <div>
-              <label className="block text-white text-sm mb-3 uppercase tracking-wider">Email</label>
+              <label htmlFor="email" className="block text-white text-sm mb-3 uppercase tracking-wider">
+                Email
+              </label>
               <input
                 type="email"
-                className="w-full bg-transparent border-b border-white/30 text-white text-2xl py-3 focus:outline-none focus:border-[#4D64FF] transition-colors"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+                disabled={formStatus.type === 'loading'}
+                className="w-full bg-transparent border-b border-white/30 text-white text-2xl py-3 focus:outline-none focus:border-[#4D64FF] transition-colors disabled:opacity-50"
                 placeholder="your@email.com"
               />
             </div>
 
             <div>
-              <label className="block text-white text-sm mb-3 uppercase tracking-wider">Message</label>
+              <label htmlFor="message" className="block text-white text-sm mb-3 uppercase tracking-wider">
+                Message
+              </label>
               <textarea
+                id="message"
+                name="message"
+                value={formData.message}
+                onChange={handleInputChange}
+                required
+                disabled={formStatus.type === 'loading'}
                 rows={5}
-                className="w-full bg-transparent border-b border-white/30 text-white text-2xl py-3 focus:outline-none focus:border-[#4D64FF] transition-colors resize-none"
+                className="w-full bg-transparent border-b border-white/30 text-white text-2xl py-3 focus:outline-none focus:border-[#4D64FF] transition-colors resize-none disabled:opacity-50"
                 placeholder="Your message..."
               />
             </div>
 
+            {/* Status Message */}
+            {formStatus.type && (
+              <div className={`p-4 rounded-lg ${
+                formStatus.type === 'success' ? 'bg-green-500/20 text-green-200' :
+                formStatus.type === 'error' ? 'bg-red-500/20 text-red-200' :
+                'bg-blue-500/20 text-blue-200'
+              }`}>
+                {formStatus.message}
+              </div>
+            )}
+
             <button
-              onClick={(e) => {
-                e.preventDefault();
-                alert('Message sent!');
-                closeContactForm();
-              }}
-              className="bg-[#4D64FF] hover:bg-[#2B6CB0] text-white px-12 py-4 rounded-full text-lg font-medium transition-colors"
+              type="submit"
+              disabled={formStatus.type === 'loading'}
+              className="bg-[#4D64FF] hover:bg-[#2B6CB0] text-white px-12 py-4 rounded-full text-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Send Message
+              {formStatus.type === 'loading' ? 'Sending...' : 'Send Message'}
             </button>
-          </div>
+          </form>
         </div>
       </div>
     </>
