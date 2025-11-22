@@ -21,13 +21,16 @@ export default function CurtainPreloader() {
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
 
   useEffect(() => {
-    // Prevent scroll during preload
+    // CRITICAL FIX: Prevent all scrolling during preload
     document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
     document.documentElement.style.overflow = 'hidden';
     window.scrollTo(0, 0);
     
     let currentIndex = 0;
     
+    // Greeting rotation: 10 greetings × 250ms = 2500ms
     const interval = setInterval(() => {
       currentIndex++;
       if (currentIndex < greetings.length) {
@@ -35,24 +38,31 @@ export default function CurtainPreloader() {
       } else {
         clearInterval(interval);
         
-        // Start curtain animation
+        // CRITICAL FIX: Start curtain animation at 2500ms
         setTimeout(() => {
           setIsAnimatingOut(true);
           
-          // Remove preloader after animation completes
+          // CRITICAL FIX: Wait 1200ms for curtain animation to complete
           setTimeout(() => {
             setShowPreloader(false);
+            
+            // CRITICAL FIX: Restore scroll after preloader fully exits
             document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.width = '';
             document.documentElement.style.overflow = '';
             window.scrollTo(0, 0);
-          }, 1200); // Match animation duration
-        }, 300);
+          }, 1200); // Match curtain animation duration
+        }, 100); // Small delay before curtain starts
       }
-    }, 400);
+    }, 250); // Faster greeting rotation (was 400ms)
     
     return () => {
       clearInterval(interval);
+      // Cleanup on unmount
       document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
       document.documentElement.style.overflow = '';
     };
   }, []);

@@ -33,7 +33,7 @@ export default function ClientBody({
           window.scrollTo(0, 0);
         });
       });
-    }, 2500);
+    }, 3800); // Match preloader timing (2500ms + 100ms + 1200ms)
     
     return () => clearTimeout(timer);
   }, []);
@@ -44,7 +44,8 @@ export default function ClientBody({
       <div 
         className="antialiased" 
         style={{ 
-          visibility: isReady ? 'visible' : 'hidden',
+          opacity: showPreloader ? 0 : 1,
+          transition: 'opacity 0.5s ease-in-out',
           minHeight: '100vh'
         }}
       >
