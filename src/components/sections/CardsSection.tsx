@@ -2,7 +2,7 @@
 
 import './CardsSection.css';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 interface CardData {
   id: number;
@@ -13,7 +13,7 @@ interface CardData {
   details: string[];
 }
 
-const CardsSection = () => {
+function CardsSection() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeModal, setActiveModal] = useState<number | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -25,7 +25,7 @@ const CardsSection = () => {
       title: 'Virtual Assistant & Admin Support',
       description: 'Complete day-to-day operational support: calendar management, inbox organization, client communications, meeting prep, and document control.',
       image: '/Remote Virtual Assistance.jpg',
-      bgColor: 'bg-[#EBF8FF]', // Light blue
+      bgColor: 'bg-gradient-to-br from-blue-400 via-blue-300 to-cyan-200', // Vibrant blue gradient
       details: [
         'Email & Calendar Management',
         'Client Communication & Follow-ups',
@@ -40,7 +40,7 @@ const CardsSection = () => {
       title: 'Data Entry & Management',
       description: 'Fast, accurate data capture with structured spreadsheets designed for analysis. 200-400+ records monthly with 99%+ accuracy.',
       image: '/Data Entry.jpg',
-      bgColor: 'bg-[#E6FFFA]', // Light teal
+      bgColor: 'bg-gradient-to-br from-emerald-400 via-teal-300 to-green-200', // Vibrant green gradient
       details: [
         'High-Volume Data Entry - 200-400+ records monthly',
         'CRM & Database Management',
@@ -55,7 +55,7 @@ const CardsSection = () => {
       title: 'IT Support Help Desk L1',
       description: 'Remote teams integration software tools, manage cloud systems, and resolve technical issues quickly.',
       image: '/IT Support Help Desk L1.png',
-      bgColor: 'bg-[#F0F9FF]', // Sky blue
+      bgColor: 'bg-gradient-to-br from-purple-400 via-violet-300 to-indigo-200', // Vibrant purple gradient
       details: [
         'Software Onboarding',
         'Basic Troubleshooting',
@@ -105,7 +105,6 @@ const CardsSection = () => {
     const progress = [card1Progress, card2Progress, card3Progress][cardIndex];
     const scale = 1 - (progress * 0.05);
 
-    // Card-specific transforms
     if (cardIndex === 0) {
       return {
         transform: `scale(${scale}) translateY(0)`,
@@ -151,7 +150,7 @@ const CardsSection = () => {
                     <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">
                       {card.title}
                     </h2>
-                    <p className="text-base md:text-lg text-gray-700 mb-6 md:mb-8 max-w-xl leading-relaxed">
+                    <p className="text-base md:text-lg text-gray-800 mb-6 md:mb-8 max-w-xl leading-relaxed font-medium">
                       {card.description}
                     </p>
                     <button
@@ -172,7 +171,7 @@ const CardsSection = () => {
                         className="w-full h-full object-cover rounded-2xl shadow-xl"
                       />
                     </div>
-                    <div className="absolute top-4 right-4 lg:top-8 lg:right-8 text-gray-900/10 text-6xl lg:text-9xl font-bold select-none">
+                    <div className="absolute top-4 right-4 lg:top-8 lg:right-8 text-black/10 text-6xl lg:text-9xl font-bold select-none">
                       0{card.id}
                     </div>
                   </div>
