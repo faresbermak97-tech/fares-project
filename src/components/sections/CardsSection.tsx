@@ -13,7 +13,7 @@ interface CardData {
   details: string[];
 }
 
-export default function CardsSection() {
+function CardsSection() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeModal, setActiveModal] = useState<number | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -70,7 +70,7 @@ export default function CardsSection() {
   useEffect(() => {
     const handleScroll = () => {
       if (!sectionRef.current) return;
-      
+
       const section = sectionRef.current;
       const rect = section.getBoundingClientRect();
       const windowHeight = window.innerHeight;
@@ -90,7 +90,7 @@ export default function CardsSection() {
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', handleScroll, { passive: true });
-    
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
@@ -104,7 +104,7 @@ export default function CardsSection() {
 
     const progress = [card1Progress, card2Progress, card3Progress][cardIndex];
     const scale = 1 - (progress * 0.05);
-    
+
     // Card-specific transforms
     if (cardIndex === 0) {
       return {
@@ -166,7 +166,7 @@ export default function CardsSection() {
                   </div>
                   <div className="flex-1 relative overflow-hidden min-h-[300px] lg:min-h-0">
                     <div className="absolute inset-4 lg:inset-8">
-                      <img 
+                      <img
                         src={card.image}
                         alt={card.title}
                         className="w-full h-full object-cover rounded-2xl shadow-xl"
@@ -191,12 +191,12 @@ export default function CardsSection() {
             onClick={() => setActiveModal(null)}
           />
           <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 pointer-events-none">
-            <div 
+            <div
               className="relative w-full max-w-xl pointer-events-auto"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-3xl rounded-[2rem] border border-white/40" />
-              
+
               <button
                 onClick={() => setActiveModal(null)}
                 className="absolute top-6 right-6 z-20 p-3 rounded-full bg-black/70 hover:bg-black/80 backdrop-blur-lg border border-black/50 transition-all duration-300 text-white hover:scale-110"
@@ -211,7 +211,7 @@ export default function CardsSection() {
                   {cardData[activeModal - 1].title}
                 </h2>
                 <div className="h-1 w-24 bg-gradient-to-r from-white/60 to-transparent rounded-full mb-6" />
-                
+
                 <ul className="space-y-3">
                   {cardData[activeModal - 1].details.map((detail, idx) => (
                     <li key={idx} className="text-white/90 flex items-start gap-3">
@@ -228,3 +228,5 @@ export default function CardsSection() {
     </>
   );
 }
+
+export default CardsSection;

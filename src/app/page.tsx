@@ -1,6 +1,6 @@
 import HeroSection from '@/components/sections/HeroSection';
 import AboutSection from '@/components/sections/AboutSection';
-import CardsSection from '@/components/sections/CardsSection';
+import CardsSection from '@/components/sections/CardsSectionNew';
 import FeaturesSection from '@/components/sections/FeaturesSection';
 import ContactSection from '@/components/sections/ContactSection';
 
