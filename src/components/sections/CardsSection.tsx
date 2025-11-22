@@ -1,5 +1,7 @@
 'use client';
 
+import './CardsSection.css';
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 interface CardData {
