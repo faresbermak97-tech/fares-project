@@ -13,7 +13,7 @@ interface CardData {
   details: string[];
 }
 
-function CardsSection() {
+const CardsSection = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeModal, setActiveModal] = useState<number | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
