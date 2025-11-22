@@ -171,7 +171,21 @@ export default function FeaturesSection() {
 
     // CRITICAL FIX: Cleanup function
     return () => {
+      // Kill all triggers
       triggers.forEach(trigger => trigger.kill());
+      
+      // Reset GSAP animations
+      slidesRef.current.forEach(slide => {
+        if (slide) {
+          gsap.killTweensOf(slide.querySelector('.slide-text'));
+          gsap.killTweensOf(slide.querySelector('.slide-img'));
+        }
+      });
+      
+      // Kill progress line animation
+      if (progressLineRef.current) {
+        gsap.killTweensOf(progressLineRef.current);
+      }
     };
   }, [isClient, gsapReady]);
 

@@ -14,36 +14,7 @@ async function rateLimit(identifier: string): Promise<{
   remaining: number;
   resetTime: number;
 }> {
-  // Check if Redis is available (environment variables set)
-  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
-    try {
-      // Dynamic import to avoid errors if Redis package is not installed
-      const { Redis } = await import('@upstash/redis');
-      const redis = new Redis({
-        url: process.env.UPSTASH_REDIS_REST_URL,
-        token: process.env.UPSTASH_REDIS_REST_TOKEN,
-      });
-
-      const key = `rate_limit:contact:${identifier}`;
-      const limit = 5; // 5 requests
-      const window = 3600; // 1 hour in seconds
-
-      const requests = await redis.incr(key);
-
-      if (requests === 1) {
-        await redis.expire(key, window);
-      }
-
-      return {
-        success: requests <= limit,
-        remaining: Math.max(0, limit - requests),
-        resetTime: Date.now() + (window * 1000)
-      };
-    } catch (error) {
-      logger.error('Redis rate limiting failed, falling back to in-memory:', error);
-      // Fall back to in-memory rate limiting
-    }
-  }
+  // Using in-memory rate limiting only
 
   // In-memory rate limiting (fallback)
   const limit = 5; // 5 requests
@@ -120,26 +91,7 @@ async function sendContactEmail(data: {
   // Send the email
   await transporter.sendMail(mailOptions);
 
-  // Send a confirmation email to the sender (optional)
-  await transporter.sendMail({
-    from: serverEnv.emailUser,
-    to: email, // Sender's email
-    subject: sanitizeEmailSubject('Thank you for contacting Fares Bermak'),
-    text: `Hi ${safeName},
 
-Thank you for reaching out! I've received your message and will get back to you as soon as possible.
-
-Best regards,
-Fares Bermak`,
-    html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #333;">Thank You for Contacting Me</h2>
-        <p>Hi ${safeName},</p>
-        <p>Thank you for reaching out! I've received your message and will get back to you as soon as possible.</p>
-        <p>Best regards,<br>Fares Bermak</p>
-      </div>
-    `,
-  });
 }
 
 async function handlePost(request: NextRequest): Promise<NextResponse> {

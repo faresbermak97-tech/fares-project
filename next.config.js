@@ -68,6 +68,16 @@ const nextConfig = {
     // Add this for better performance
     scrollRestoration: true,
   },
+  
+  // Turbopack configuration
+  turbo: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
+      },
+    },
+  },
 
   // Headers for security and performance
   async headers() {

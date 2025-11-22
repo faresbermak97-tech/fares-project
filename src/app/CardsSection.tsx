@@ -1,42 +1,71 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import './CardsSection.css';
-import DetailModal from '@/components/DetailModal';
-import { CardData } from '@/types';
 
-const CardsSection = () => {
+interface CardData {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  bgColor: string;
+  details: string[];
+}
+
+export default function CardsSection() {
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [activeModal, setActiveModal] = useState<number | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // CRITICAL FIX: Initialize card progress immediately
-  const updateCardProgress = useCallback((cardIndex: number, progress: number) => {
-    const card = cardRefs.current[cardIndex];
-    if (card) {
-      card.style.setProperty('--progress', String(progress));
+  const cardData: CardData[] = [
+    {
+      id: 1,
+      title: 'Virtual Assistant & Admin Support',
+      description: 'Complete day-to-day operational support: calendar management, inbox organization, client communications, meeting prep, and document control.',
+      image: '/Remote Virtual Assistance.jpg',
+      bgColor: 'bg-[#EBF8FF]', // Light blue
+      details: [
+        'Email & Calendar Management',
+        'Client Communication & Follow-ups',
+        'Document Organization',
+        'Meeting Preparation & Support',
+        'Task & Project Management',
+        'Travel & Event Coordination'
+      ]
+    },
+    {
+      id: 2,
+      title: 'Data Entry & Management',
+      description: 'Fast, accurate data capture with structured spreadsheets designed for analysis. 200-400+ records monthly with 99%+ accuracy.',
+      image: '/Data Entry.jpg',
+      bgColor: 'bg-[#E6FFFA]', // Light teal
+      details: [
+        'High-Volume Data Entry - 200-400+ records monthly',
+        'CRM & Database Management',
+        'Spreadsheet Development',
+        'Financial Data Entry',
+        'Report Generation',
+        'Data Quality & Cleanup'
+      ]
+    },
+    {
+      id: 3,
+      title: 'IT Support Help Desk L1',
+      description: 'Remote teams integration software tools, manage cloud systems, and resolve technical issues quickly.',
+      image: '/IT Support Help Desk L1.png',
+      bgColor: 'bg-[#F0F9FF]', // Sky blue
+      details: [
+        'Software Onboarding',
+        'Basic Troubleshooting',
+        'Cloud System Management',
+        'Tool Integration Support',
+        'Technical Documentation',
+        'Tools: Google Workspace, Office 365, Slack, Zoom, Asana'
+      ]
     }
-  }, []);
+  ];
 
-  // CRITICAL FIX: Initialize on mount
   useEffect(() => {
-    // Initialize all cards to 0 progress
-    cardRefs.current.forEach((_, index) => {
-      updateCardProgress(index, 0);
-    });
-    
-    // Mark as initialized after a frame
-    requestAnimationFrame(() => {
-      setIsInitialized(true);
-    });
-  }, [updateCardProgress]);
-
-  // CRITICAL FIX: Handle scroll with proper initialization check
-  useEffect(() => {
-    if (!isInitialized) return;
-    
     const handleScroll = () => {
       if (!sectionRef.current) return;
       
@@ -56,133 +85,144 @@ const CardsSection = () => {
       }
     };
 
-    // CRITICAL FIX: Check initial position immediately
     handleScroll();
-    
-    // CRITICAL FIX: Use passive listener for better performance
     window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    // CRITICAL FIX: Also check on resize
     window.addEventListener('resize', handleScroll, { passive: true });
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
     };
-  }, [isInitialized]);
+  }, []);
 
-  // Update card progress when scroll progress changes
-  useEffect(() => {
-    if (!isInitialized) return;
-    
+  const getCardStyle = (cardIndex: number) => {
     const card1Progress = Math.min(scrollProgress * 3, 1);
     const card2Progress = Math.min(Math.max((scrollProgress - 0.33) * 3, 0), 1);
     const card3Progress = Math.min(Math.max((scrollProgress - 0.66) * 3, 0), 1);
 
-    updateCardProgress(0, card1Progress);
-    updateCardProgress(1, card2Progress);
-    updateCardProgress(2, card3Progress);
-  }, [scrollProgress, updateCardProgress, isInitialized]);
-
-  const getCardClasses = (cardIndex: number) => {
-    return `card-${cardIndex + 1}`;
+    const progress = [card1Progress, card2Progress, card3Progress][cardIndex];
+    const scale = 1 - (progress * 0.05);
+    
+    // Card-specific transforms
+    if (cardIndex === 0) {
+      return {
+        transform: `scale(${scale}) translateY(0)`,
+        zIndex: 1,
+        opacity: 1
+      };
+    } else if (cardIndex === 1) {
+      const translateY = (1 - card2Progress) * 100;
+      return {
+        transform: `scale(${scale}) translateY(${translateY}%)`,
+        zIndex: 2,
+        opacity: 1
+      };
+    } else {
+      const translateY = (1 - card3Progress) * 100;
+      return {
+        transform: `scale(1) translateY(${translateY}%)`,
+        zIndex: 3,
+        opacity: 1
+      };
+    }
   };
 
-  const cardData: CardData[] = [
-    {
-      id: 1,
-      title: 'Virtual Assistant & Admin Support',
-      description: 'Complete day-to-day operational support: calendar management, inbox organization, client communications, meeting prep, and document control. I keep your operations smooth so you can focus on strategy, not admin overhead.',
-      image: '/Remote Virtual Assistance.jpg',
-      bgColor: 'bg-pink-300',
-      details: [
-        'Email & Calendar Management - Organize inbox, schedule meetings across time zones, send reminders, ensure no conflicts',
-        'Client Communication & Follow-ups - Manage routine emails, payment reminders, onboarding, maintain conversation logs',
-        'Document Organization - Structure Google Drive/Dropbox, create naming conventions, organize files by project',
-        'Meeting Preparation & Support - Prepare agendas, compile documents, take notes, distribute action items',
-        'Task & Project Management - Manage Asana/Trello boards, update statuses, send progress reminders',
-        'Travel & Event Coordination - Book flights/hotels, manage itineraries, coordinate logistics'
-      ]
-    },
-    {
-      id: 2,
-      title: 'Data Entry & Management',
-      description: 'Fast, accurate data capture with structured spreadsheets designed for analysis. I process 200-400+ records monthly with 99%+ accuracy. Invoice data, CRM updates, financial records—I deliver clean datasets using Excel and Google Sheets.',
-      image: '/Data Entry.jpg',
-      bgColor: 'bg-blue-300',
-      details: [
-        'High-Volume Data Entry - 200-400+ records monthly, invoice data, customer records, inventory lists, expense logs with validation checks',
-        'CRM & Database Management - Input/update records in HubSpot, Salesforce, Pipedrive; clean duplicates, maintain consistency',
-        'Spreadsheet Development - Custom Excel/Google Sheets templates with formulas, pivot tables, validation rules, automated calculations',
-        'Financial Data Entry - Enter invoice data, expense records, transaction details into QuickBooks or spreadsheets for accountant review',
-        'Report Generation - Compile data into clear reports with summaries, charts, insights (operational, sales, expense reports)',
-        'Data Quality & Cleanup - Audit databases, identify errors, remove duplicates, standardize formatting, implement validation rules'
-      ]
-    },
-    {
-      id: 3,
-      title: 'IT Support Help Desk L1',
-      description: 'I help remote teams integrate software tools, manage cloud systems, and resolve technical issues quickly. From automation setup to day-to-day IT support, I make your systems efficient and dependable.',
-      image: '/IT Support Help Desk L1.png',
-      bgColor: 'bg-purple-300',
-      details: [
-        'Software Onboarding - Set up accounts, configure permissions, walk new team members through tools and access',
-        'Basic Troubleshooting - Password resets, access issues, connectivity problems, software conflicts—resolved quickly to keep your team productive',
-        'Cloud System Management - Help manage Google Workspace, Microsoft 365, configure sharing settings, organize cloud storage',
-        'Tool Integration Support - Assist with connecting apps (Zapier setups, Google Workspace integrations) and document workflows',
-        'Technical Documentation - Create simple guides and SOPs for common technical tasks and tool usage',
-        'Tools Supported: Google Workspace, Microsoft Office 365, Slack, Zoom, Asana, Trello, QuickBooks Online, basic CRM platforms'
-      ]
-    }
-  ];
-
   return (
-    <div ref={sectionRef} className="cards-section relative bg-gray-50 full-height">
-      <div 
-        ref={containerRef}
-        className="sticky top-0 h-screen w-full overflow-hidden"
-      >
-        <div className="cards-container relative h-full w-full flex items-center justify-center p-8 md:p-16">
-          {cardData.map((card, index) => (
-            <div
-              key={card.id}
-              ref={el => { cardRefs.current[index] = el; }}
-              className={`card absolute ${card.bgColor} rounded-3xl shadow-2xl transition-all duration-300 ease-out card-dimensions ${getCardClasses(index)}`}
-            >
-              <div className="card-content h-full flex flex-col lg:flex-row overflow-hidden rounded-3xl">
-                <div className="content-left flex-1 p-6 md:p-12 lg:p-16 flex flex-col justify-center relative z-10">
-                  <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">
-                    {card.title}
-                  </h2>
-                  <p className="text-base md:text-lg text-gray-700 mb-6 md:mb-8 max-w-xl leading-relaxed pl-1 md:pl-2">
-                    {card.description}
-                  </p>
-                  <div className="pl-1 md:pl-2">
-                    <DetailModal 
-                      title={card.title}
-                      details={card.details}
-                    />
+    <>
+      <div ref={sectionRef} className="relative bg-gray-50" style={{ height: '400vh' }}>
+        <div className="sticky top-0 h-screen w-full overflow-hidden">
+          <div className="relative h-full w-full flex items-center justify-center p-8 md:p-16">
+            {cardData.map((card, index) => (
+              <div
+                key={card.id}
+                ref={el => { cardRefs.current[index] = el; }}
+                className={`absolute ${card.bgColor} rounded-3xl shadow-2xl transition-all duration-300 ease-out`}
+                style={{
+                  width: 'calc(100% - 2cm)',
+                  height: 'calc(100% - 4cm)',
+                  maxWidth: '1400px',
+                  ...getCardStyle(index)
+                }}
+              >
+                <div className="h-full flex flex-col lg:flex-row overflow-hidden rounded-3xl">
+                  <div className="flex-1 p-6 md:p-12 lg:p-16 flex flex-col justify-center relative z-10">
+                    <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">
+                      {card.title}
+                    </h2>
+                    <p className="text-base md:text-lg text-gray-700 mb-6 md:mb-8 max-w-xl leading-relaxed">
+                      {card.description}
+                    </p>
+                    <button
+                      onClick={() => setActiveModal(card.id)}
+                      className="group relative inline-flex items-center gap-2 px-6 py-2 rounded-full bg-black/70 hover:bg-black/80 backdrop-blur-md border border-black/50 hover:border-black/70 transition-all duration-300 text-white text-sm font-medium w-fit"
+                    >
+                      <span>Detail</span>
+                      <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
                   </div>
-                </div>
-                <div className="content-right flex-1 relative overflow-hidden min-h-[300px] lg:min-h-0">
-                  <div className="absolute inset-4 lg:inset-8">
-                    <img 
-                      src={card.image}
-                      alt={card.title}
-                      className="w-full h-full object-cover rounded-2xl shadow-xl"
-                    />
-                  </div>
-                  <div className="absolute top-4 right-4 lg:top-8 lg:right-8 text-white text-6xl lg:text-9xl font-bold opacity-20 select-none">
-                    0{card.id}
+                  <div className="flex-1 relative overflow-hidden min-h-[300px] lg:min-h-0">
+                    <div className="absolute inset-4 lg:inset-8">
+                      <img 
+                        src={card.image}
+                        alt={card.title}
+                        className="w-full h-full object-cover rounded-2xl shadow-xl"
+                      />
+                    </div>
+                    <div className="absolute top-4 right-4 lg:top-8 lg:right-8 text-gray-900/10 text-6xl lg:text-9xl font-bold select-none">
+                      0{card.id}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
-    </div>
-  );
-};
 
-export default CardsSection;
+      {/* Modal */}
+      {activeModal && (
+        <>
+          <div
+            className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm"
+            onClick={() => setActiveModal(null)}
+          />
+          <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 pointer-events-none">
+            <div 
+              className="relative w-full max-w-xl pointer-events-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-3xl rounded-[2rem] border border-white/40" />
+              
+              <button
+                onClick={() => setActiveModal(null)}
+                className="absolute top-6 right-6 z-20 p-3 rounded-full bg-black/70 hover:bg-black/80 backdrop-blur-lg border border-black/50 transition-all duration-300 text-white hover:scale-110"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+
+              <div className="relative z-10 p-8 md:p-12">
+                <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+                  {cardData[activeModal - 1].title}
+                </h2>
+                <div className="h-1 w-24 bg-gradient-to-r from-white/60 to-transparent rounded-full mb-6" />
+                
+                <ul className="space-y-3">
+                  {cardData[activeModal - 1].details.map((detail, idx) => (
+                    <li key={idx} className="text-white/90 flex items-start gap-3">
+                      <span className="text-white/60 text-lg leading-relaxed mt-0.5">•</span>
+                      <p className="text-base md:text-lg leading-relaxed">{detail}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+    </>
+  );
+}
