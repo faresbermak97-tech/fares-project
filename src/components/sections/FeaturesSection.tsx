@@ -1,9 +1,10 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import DetailModal from '@/components/DetailModal';
+
+import DetailModal from "@/components/DetailModal";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useEffect, useRef, useState } from "react";
 
 const features = [
   {
@@ -12,13 +13,13 @@ const features = [
     img: "/Workflow Automation.jpg",
     reverse: false,
     details: [
-      'Auto-import email purchase orders → Google Sheets with categorization',
-      'New CRM contact → Welcome email + calendar invite + task in Asana',
-      'Invoice sent → Automatic 7-day follow-up reminder if unpaid',
-      'Form submission → Data added to spreadsheet + Slack notification',
-      'Calendar event → Meeting prep doc auto-created in Google Drive',
-      'Result: 5-15 hours saved weekly per client'
-    ]
+      "Auto-import email purchase orders → Google Sheets with categorization",
+      "New CRM contact → Welcome email + calendar invite + task in Asana",
+      "Invoice sent → Automatic 7-day follow-up reminder if unpaid",
+      "Form submission → Data added to spreadsheet + Slack notification",
+      "Calendar event → Meeting prep doc auto-created in Google Drive",
+      "Result: 5-15 hours saved weekly per client",
+    ],
   },
   {
     highlight: "Organization",
@@ -26,13 +27,13 @@ const features = [
     img: "/Organization.jpg",
     reverse: true,
     details: [
-      'Google Drive/Dropbox folder structures with naming conventions',
-      'Excel/Sheets workbooks with validation, formulas, pivot tables',
-      'Project dashboards in Asana/Trello with status tracking',
-      'Standard operating procedures (SOPs) documentation',
-      'Email templates for common scenarios',
-      'Client/vendor contact databases - Find any file in under 30 seconds'
-    ]
+      "Google Drive/Dropbox folder structures with naming conventions",
+      "Excel/Sheets workbooks with validation, formulas, pivot tables",
+      "Project dashboards in Asana/Trello with status tracking",
+      "Standard operating procedures (SOPs) documentation",
+      "Email templates for common scenarios",
+      "Client/vendor contact databases - Find any file in under 30 seconds",
+    ],
   },
   {
     highlight: "Communication",
@@ -40,14 +41,14 @@ const features = [
     img: "/Communication.png",
     reverse: false,
     details: [
-      'Inbox filtering and priority flagging (Inbox Zero daily)',
-      'Client email responses with your tone/voice',
-      'Meeting scheduling across multiple time zones',
-      'Follow-up tracking to ensure no missed replies',
-      'Internal team updates via Slack/email',
-      'Cross-department coordination - Response Time: Within 4 hours'
-    ]
-  }
+      "Inbox filtering and priority flagging (Inbox Zero daily)",
+      "Client email responses with your tone/voice",
+      "Meeting scheduling across multiple time zones",
+      "Follow-up tracking to ensure no missed replies",
+      "Internal team updates via Slack/email",
+      "Cross-department coordination - Response Time: Within 4 hours",
+    ],
+  },
 ];
 
 export default function FeaturesSection() {
@@ -68,7 +69,7 @@ export default function FeaturesSection() {
 
     // Register plugins
     gsap.registerPlugin(ScrollTrigger);
-    
+
     // CRITICAL FIX: Wait for DOM to be ready
     const initTimeout = setTimeout(() => {
       setGsapReady(true);
@@ -86,8 +87,8 @@ export default function FeaturesSection() {
     const triggers: ScrollTrigger[] = [];
 
     // CRITICAL FIX: Ensure elements exist before animating
-    const validSlides = slidesRef.current.filter(slide => slide !== null);
-    
+    const validSlides = slidesRef.current.filter((slide) => slide !== null);
+
     if (validSlides.length === 0) return;
 
     validSlides.forEach((slide, slideIndex) => {
@@ -111,7 +112,7 @@ export default function FeaturesSection() {
             opacity: 1,
             x: 0,
             duration: 1,
-            ease: "power3.out"
+            ease: "power3.out",
           });
         },
         onLeaveBack: () => {
@@ -119,9 +120,9 @@ export default function FeaturesSection() {
             opacity: 0,
             x: 60,
             duration: 1,
-            ease: "power3.out"
+            ease: "power3.out",
           });
-        }
+        },
       });
       triggers.push(textTrigger);
 
@@ -136,7 +137,7 @@ export default function FeaturesSection() {
             opacity: 1,
             x: 0,
             duration: 1,
-            ease: "power3.out"
+            ease: "power3.out",
           });
         },
         onLeaveBack: () => {
@@ -144,9 +145,9 @@ export default function FeaturesSection() {
             opacity: 0,
             x: -60,
             duration: 1,
-            ease: "power3.out"
+            ease: "power3.out",
           });
-        }
+        },
       });
       triggers.push(imgTrigger);
     });
@@ -164,31 +165,33 @@ export default function FeaturesSection() {
               height: `${self.progress * 100}%`,
             });
           }
-        }
+        },
       });
       triggers.push(progressTrigger);
     }
 
+    // CRITICAL FIX: Capture refs immediately to prevent memory leaks
+    const capturedSlides = slidesRef.current;
+    const capturedProgressLine = progressLineRef.current;
+
     // CRITICAL FIX: Cleanup function
     return () => {
       // Kill all triggers
-      triggers.forEach(trigger => trigger.kill());
-      
+      triggers.forEach((trigger) => trigger.kill());
+
       // Reset GSAP animations
-      const slides = slidesRef.current;
-      if (slides) {
-        slides.forEach(slide => {
+      if (capturedSlides) {
+        capturedSlides.forEach((slide) => {
           if (slide) {
-            gsap.killTweensOf(slide.querySelector('.slide-text'));
-            gsap.killTweensOf(slide.querySelector('.slide-img'));
+            gsap.killTweensOf(slide.querySelector(".slide-text"));
+            gsap.killTweensOf(slide.querySelector(".slide-img"));
           }
         });
       }
-      
+
       // Kill progress line animation
-      const progressLine = progressLineRef.current;
-      if (progressLine) {
-        gsap.killTweensOf(progressLine);
+      if (capturedProgressLine) {
+        gsap.killTweensOf(capturedProgressLine);
       }
     };
   }, [isClient, gsapReady]);
@@ -196,12 +199,19 @@ export default function FeaturesSection() {
   // Server-side rendering fallback
   if (!isClient) {
     return (
-      <section id="features" className="triple-section" role="region" aria-labelledby="features-heading">
-        <h2 id="features-heading" className="sr-only">Features</h2>
+      <section
+        id="features"
+        className="triple-section"
+        role="region"
+        aria-labelledby="features-heading"
+      >
+        <h2 id="features-heading" className="sr-only">
+          Features
+        </h2>
         {features.map((s, i) => (
           <div key={i} className={`slide ${s.reverse ? "reverse" : ""}`}>
             <div className="slide-img">
-              <img src={s.img} alt={s.highlight} />
+              <img src={s.img} alt={s.highlight} width={500} height={500} />
             </div>
             <div className="divider" />
             <div className="slide-text">
@@ -217,9 +227,17 @@ export default function FeaturesSection() {
   }
 
   return (
-    <section id="features" className="triple-section" ref={sectionRef} role="region" aria-labelledby="features-heading">
-      <h2 id="features-heading" className="sr-only">Features</h2>
-      
+    <section
+      id="features"
+      className="triple-section"
+      ref={sectionRef}
+      role="region"
+      aria-labelledby="features-heading"
+    >
+      <h2 id="features-heading" className="sr-only">
+        Features
+      </h2>
+
       {/* Timeline elements */}
       <div className="timeline-line">
         <div className="timeline-progress" ref={progressLineRef}></div>
@@ -237,7 +255,7 @@ export default function FeaturesSection() {
           }}
         >
           <div className="slide-img">
-            <img src={s.img} alt={s.highlight} />
+            <img src={s.img} alt={s.highlight} width={500} height={500} />
           </div>
           <div className="divider" />
           <div className="slide-text">
@@ -246,10 +264,7 @@ export default function FeaturesSection() {
             </h2>
             <p>{s.text}</p>
             <div className="mt-8">
-              <DetailModal
-                title={s.highlight}
-                details={s.details}
-              />
+              <DetailModal title={s.highlight} details={s.details} />
             </div>
           </div>
         </div>

@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
-import { TimeZone } from '@/types';
+import type { TimeZone } from "@/types";
+import { useEffect, useState } from "react";
 
-export function useCurrentTime(timeZone: TimeZone = 'Africa/Algiers') {
-  const [currentTime, setCurrentTime] = useState('');
+export function useCurrentTime(timeZone: TimeZone = "Africa/Algiers") {
+  const [currentTime, setCurrentTime] = useState("");
 
   useEffect(() => {
     const updateTime = () => {
-      const time = new Date().toLocaleTimeString('en-US', {
+      const time = new Date().toLocaleTimeString("en-US", {
         timeZone,
-        hour: '2-digit',
-        minute: '2-digit',
+        hour: "2-digit",
+        minute: "2-digit",
         hour12: true,
       });
       setCurrentTime(time);

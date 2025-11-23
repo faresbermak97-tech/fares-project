@@ -1,9 +1,8 @@
 // src/components/DetailModal.tsx
-'use client';
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
-import { X } from 'lucide-react';
-import { MouseEvent } from 'react';
+import { X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 interface DetailModalProps {
   title: string;
@@ -35,7 +34,7 @@ export default function DetailModal({ title, icon, details }: DetailModalProps) 
 
     // Handle tab key to trap focus
     const handleTabKey = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab') return;
+      if (e.key !== "Tab") return;
 
       const modalElement = modalRef.current;
       if (!modalElement) return;
@@ -63,21 +62,21 @@ export default function DetailModal({ title, icon, details }: DetailModalProps) 
 
     // Handle ESC key to close modal
     const handleEscapeKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener('keydown', handleTabKey);
-    document.addEventListener('keydown', handleEscapeKey);
+    document.addEventListener("keydown", handleTabKey);
+    document.addEventListener("keydown", handleEscapeKey);
 
     // Prevent body scroll when modal is open
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
 
     return () => {
-      document.removeEventListener('keydown', handleTabKey);
-      document.removeEventListener('keydown', handleEscapeKey);
-      document.body.style.overflow = '';
+      document.removeEventListener("keydown", handleTabKey);
+      document.removeEventListener("keydown", handleEscapeKey);
+      document.body.style.overflow = "";
     };
   }, [isOpen]);
 
@@ -92,7 +91,12 @@ export default function DetailModal({ title, icon, details }: DetailModalProps) 
         className="group relative inline-flex items-center gap-2 px-6 py-2 rounded-full bg-black/70 hover:bg-black/80 backdrop-blur-md border border-black/50 hover:border-black/70 transition-all duration-300 text-white text-sm font-medium"
       >
         <span>Detail</span>
-        <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg
+          className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
       </button>
@@ -108,7 +112,7 @@ export default function DetailModal({ title, icon, details }: DetailModalProps) 
 
       {/* Modal */}
       {isOpen && (
-        <div 
+        <div
           ref={modalRef}
           className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-auto"
           role="dialog"
@@ -143,20 +147,26 @@ export default function DetailModal({ title, icon, details }: DetailModalProps) 
               {/* Header */}
               <div className="mb-6">
                 {icon && <span className="text-6xl md:text-7xl mb-2 inline-block">{icon}</span>}
-                  <h2 id="modal-title" className="text-4xl md:text-5xl font-bold text-white mb-2 leading-tight">
-                    {title}
-                  </h2>
-                  <div className="h-1 w-24 bg-gradient-to-r from-white/60 to-transparent rounded-full" />
+                <h2
+                  id="modal-title"
+                  className="text-4xl md:text-5xl font-bold text-white mb-2 leading-tight"
+                >
+                  {title}
+                </h2>
+                <div className="h-1 w-24 bg-gradient-to-r from-white/60 to-transparent rounded-full" />
               </div>
 
               {/* Details List */}
               <ul className="space-y-3">
                 {details.map((detail, idx) => (
                   <li key={idx} className="text-white/90 flex items-start gap-3">
-                    <span className="text-white/60 text-lg leading-relaxed mt-0.5" aria-hidden="true">•</span>
-                    <p className="text-base md:text-lg leading-relaxed">
-                      {detail}
-                    </p>
+                    <span
+                      className="text-white/60 text-lg leading-relaxed mt-0.5"
+                      aria-hidden="true"
+                    >
+                      •
+                    </span>
+                    <p className="text-base md:text-lg leading-relaxed">{detail}</p>
                   </li>
                 ))}
               </ul>

@@ -6,17 +6,23 @@ const requiredEnvVars = {
 
 const requiredPublicEnvVars = {
   NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+  NEXT_PUBLIC_GA_ID: process.env.NEXT_PUBLIC_GA_ID,
 } as const;
 
 export function validateEnv() {
   const missing = Object.entries(requiredEnvVars)
-    .filter(([_, value]) => !value)
+    .filter(([, value]) => !value)
     .map(([key]) => key);
 
-  if (missing.length > 0) {
+  const missingPublic = Object.entries(requiredPublicEnvVars)
+    .filter(([, value]) => !value)
+    .map(([key]) => key);
+
+  if (missing.length > 0 || missingPublic.length > 0) {
+    const allMissing = [...missing, ...missingPublic];
     throw new Error(
-      `Missing required environment variables: ${missing.join(', ')}\n` +
-      'Please check your .env.local file.'
+      `Missing required environment variables: ${allMissing.join(", ")}\n` +
+        "Please check your .env.local file."
     );
   }
 }
@@ -30,11 +36,11 @@ export const serverEnv = {
 
 // Public env vars
 export const publicEnv = {
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   gaId: process.env.NEXT_PUBLIC_GA_ID,
 } as const;
 
 // Validate on server startup
-if (typeof window === 'undefined') {
+if (typeof window === "undefined") {
   validateEnv();
 }

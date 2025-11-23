@@ -1,16 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  allowedDevOrigins: ["*.preview.same-app.com"],
-
   // Image optimization
   images: {
     unoptimized: false,
-    domains: [
-      "source.unsplash.com",
-      "images.unsplash.com",
-      "ext.same-assets.com",
-      "ugc.same-assets.com",
-    ],
     remotePatterns: [
       {
         protocol: "https",
@@ -41,7 +33,7 @@ const nextConfig = {
   },
 
   // React strict mode
-  reactStrictMode: true,
+  reactStrictMode: false,
 
   // Compiler options
   compiler: {
@@ -63,7 +55,6 @@ const nextConfig = {
 
   // Experimental features
   experimental: {
-    optimizeCss: true,
     optimizePackageImports: ['lucide-react', 'gsap'],
     // Add this for better performance
     scrollRestoration: true,
@@ -143,6 +134,12 @@ const nextConfig = {
 
   // Webpack optimizations
   webpack: (config, { dev, isServer }) => {
+    // Fix for same-runtime hydration issues
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'same-runtime/dist/jsx-dev-runtime': 'react/jsx-dev-runtime',
+    };
+
     // Production optimizations
     if (!dev && !isServer) {
       config.optimization = {

@@ -1,4 +1,4 @@
-import { AppError } from './errors';
+import { AppError } from "./errors";
 
 export interface ErrorReport {
   error: Error;
@@ -75,7 +75,7 @@ class ErrorHandler {
 
   private logAppError(error: AppError, report: ErrorReport): void {
     console.error({
-      type: 'AppError',
+      type: "AppError",
       name: error.name,
       message: error.message,
       statusCode: error.statusCode,
@@ -88,7 +88,7 @@ class ErrorHandler {
 
   private logUnexpectedError(error: Error, report: ErrorReport): void {
     console.error({
-      type: 'UnexpectedError',
+      type: "UnexpectedError",
       name: error.name,
       message: error.message,
       stack: error.stack,
@@ -102,7 +102,7 @@ class ErrorHandler {
 export const errorHandler = new ErrorHandler();
 
 // Global error handlers for uncaught errors
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   window.onerror = (message, source, lineno, colno, error) => {
     errorHandler.handleError(error || new Error(message as string), {
       path: source,

@@ -1,4 +1,4 @@
-import type { Metric } from 'web-vitals';
+import type { Metric } from "web-vitals";
 
 // Analytics module with dynamic imports for web-vitals
 type AnalyticsEvent = {
@@ -10,8 +10,8 @@ type AnalyticsEvent = {
 };
 
 /**
-* Sends analytics data to Google Analytics
-*/
+ * Sends analytics data to Google Analytics
+ */
 function sendToGoogleAnalytics(metric: Metric): void {
   if (typeof window === "undefined" || !window.gtag) return;
   const event: AnalyticsEvent = {
@@ -31,8 +31,8 @@ function sendToGoogleAnalytics(metric: Metric): void {
 }
 
 /**
-* Sends analytics data to console in development
-*/
+ * Sends analytics data to console in development
+ */
 function logToConsole(metric: Metric): void {
   if (process.env.NODE_ENV === "development") {
     console.log("[Web Vitals]", {
@@ -44,16 +44,16 @@ function logToConsole(metric: Metric): void {
 }
 
 /**
-* Reports Web Vitals metrics
-*/
+ * Reports Web Vitals metrics
+ */
 export function reportWebVitals(metric: Metric): void {
   logToConsole(metric);
   sendToGoogleAnalytics(metric);
 }
 
 /**
-* Initializes Web Vitals tracking
-*/
+ * Initializes Web Vitals tracking
+ */
 export function initWebVitals(): void {
   if (typeof window === "undefined") return;
 
@@ -72,19 +72,16 @@ export function initWebVitals(): void {
 }
 
 /**
-* Custom event tracking
-*/
-export function trackEvent(
-  eventName: string,
-  params?: Record<string, unknown>
-): void {
+ * Custom event tracking
+ */
+export function trackEvent(eventName: string, params?: Record<string, unknown>): void {
   if (typeof window === "undefined" || !window.gtag) return;
   window.gtag("event", eventName, params);
 }
 
 /**
-* Page view tracking
-*/
+ * Page view tracking
+ */
 export function trackPageView(url: string): void {
   if (typeof window === "undefined" || !window.gtag) return;
   window.gtag("config", process.env.NEXT_PUBLIC_GA_ID!, {

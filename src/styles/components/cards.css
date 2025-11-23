@@ -1,0 +1,32 @@
+/* --- Panel Hover Dimming Effect --- */
+.panels-hover-group:hover .group:not(:hover) img {
+  filter: brightness(0.4) blur(2px);
+  transition: filter 0.4s;
+}
+
+.panels-hover-group:hover .group:not(:hover) .absolute.bg-black\/30 {
+  opacity: 0.7 !important;
+  transition: opacity 0.4s;
+}
+
+.panels-hover-group .group img,
+.panels-hover-group .group .absolute.bg-black\/30 {
+  transition: filter 0.4s, opacity 0.4s;
+}
+
+.panels-hover-group .group:hover img {
+  filter: brightness(1) blur(0);
+}
+
+.panels-hover-group .group:hover .absolute.bg-black\/30 {
+  opacity: 0.3 !important;
+}
+
+.panels-hover-group .group {
+  transition: transform 0.4s;
+}
+
+.panels-hover-group .group:hover {
+  transform: translateY(-16px) scale(1.04);
+  z-index: 1;
+}

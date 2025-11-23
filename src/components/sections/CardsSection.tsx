@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
-import './CardsSection.css';
 
-import React, { useState, useEffect, useRef } from 'react';
+import "./CardsSection.css";
+
+import { useEffect, useRef, useState } from "react";
 
 interface CardData {
   id: number;
@@ -22,49 +23,52 @@ function CardsSection() {
   const cardData: CardData[] = [
     {
       id: 1,
-      title: 'Virtual Assistant & Admin Support',
-      description: 'Complete day-to-day operational support: calendar management, inbox organization, client communications, meeting prep, and document control.',
-      image: '/Remote Virtual Assistance.jpg',
-      bgColor: 'bg-gradient-to-br from-blue-400 via-blue-300 to-cyan-200', // Vibrant blue gradient
+      title: "Virtual Assistant & Admin Support",
+      description:
+        "Complete day-to-day operational support: calendar management, inbox organization, client communications, meeting prep, and document control.",
+      image: "/Remote Virtual Assistance.jpg",
+      bgColor: "bg-gradient-to-br from-blue-400 via-blue-300 to-cyan-200", // Vibrant blue gradient
       details: [
-        'Email & Calendar Management',
-        'Client Communication & Follow-ups',
-        'Document Organization',
-        'Meeting Preparation & Support',
-        'Task & Project Management',
-        'Travel & Event Coordination'
-      ]
+        "Email & Calendar Management",
+        "Client Communication & Follow-ups",
+        "Document Organization",
+        "Meeting Preparation & Support",
+        "Task & Project Management",
+        "Travel & Event Coordination",
+      ],
     },
     {
       id: 2,
-      title: 'Data Entry & Management',
-      description: 'Fast, accurate data capture with structured spreadsheets designed for analysis. 200-400+ records monthly with 99%+ accuracy.',
-      image: '/Data Entry.jpg',
-      bgColor: 'bg-gradient-to-br from-emerald-400 via-teal-300 to-green-200', // Vibrant green gradient
+      title: "Data Entry & Management",
+      description:
+        "Fast, accurate data capture with structured spreadsheets designed for analysis. 200-400+ records monthly with 99%+ accuracy.",
+      image: "/Data Entry.jpg",
+      bgColor: "bg-gradient-to-br from-emerald-400 via-teal-300 to-green-200", // Vibrant green gradient
       details: [
-        'High-Volume Data Entry - 200-400+ records monthly',
-        'CRM & Database Management',
-        'Spreadsheet Development',
-        'Financial Data Entry',
-        'Report Generation',
-        'Data Quality & Cleanup'
-      ]
+        "High-Volume Data Entry - 200-400+ records monthly",
+        "CRM & Database Management",
+        "Spreadsheet Development",
+        "Financial Data Entry",
+        "Report Generation",
+        "Data Quality & Cleanup",
+      ],
     },
     {
       id: 3,
-      title: 'IT Support Help Desk L1',
-      description: 'Remote teams integration software tools, manage cloud systems, and resolve technical issues quickly.',
-      image: '/IT Support Help Desk L1.png',
-      bgColor: 'bg-gradient-to-br from-purple-400 via-violet-300 to-indigo-200', // Vibrant purple gradient
+      title: "IT Support Help Desk L1",
+      description:
+        "Remote teams integration software tools, manage cloud systems, and resolve technical issues quickly.",
+      image: "/IT Support Help Desk L1.png",
+      bgColor: "bg-gradient-to-br from-purple-400 via-violet-300 to-indigo-200", // Vibrant purple gradient
       details: [
-        'Software Onboarding',
-        'Basic Troubleshooting',
-        'Cloud System Management',
-        'Tool Integration Support',
-        'Technical Documentation',
-        'Tools: Google Workspace, Office 365, Slack, Zoom, Asana'
-      ]
-    }
+        "Software Onboarding",
+        "Basic Troubleshooting",
+        "Cloud System Management",
+        "Tool Integration Support",
+        "Technical Documentation",
+        "Tools: Google Workspace, Office 365, Slack, Zoom, Asana",
+      ],
+    },
   ];
 
   useEffect(() => {
@@ -88,12 +92,12 @@ function CardsSection() {
     };
 
     handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll, { passive: true });
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
     };
   }, []);
 
@@ -103,46 +107,48 @@ function CardsSection() {
     const card3Progress = Math.min(Math.max((scrollProgress - 0.66) * 3, 0), 1);
 
     const progress = [card1Progress, card2Progress, card3Progress][cardIndex];
-    const scale = 1 - ((progress || 0) * 0.05);
+    const scale = 1 - (progress || 0) * 0.05;
 
     if (cardIndex === 0) {
       return {
         transform: `scale(${scale}) translateY(0)`,
         zIndex: 1,
-        opacity: 1
+        opacity: 1,
       };
     } else if (cardIndex === 1) {
       const translateY = (1 - card2Progress) * 100;
       return {
         transform: `scale(${scale}) translateY(${translateY}%)`,
         zIndex: 2,
-        opacity: 1
+        opacity: 1,
       };
     } else {
       const translateY = (1 - card3Progress) * 100;
       return {
         transform: `scale(1) translateY(${translateY}%)`,
         zIndex: 3,
-        opacity: 1
+        opacity: 1,
       };
     }
   };
 
   return (
     <>
-      <div ref={sectionRef} className="relative bg-gray-50" style={{ height: '400vh' }}>
+      <div ref={sectionRef} className="relative bg-gray-50" style={{ height: "400vh" }}>
         <div className="sticky top-0 h-screen w-full overflow-hidden">
           <div className="relative h-full w-full flex items-center justify-center p-8 md:p-16">
             {cardData.map((card, index) => (
               <div
                 key={card.id}
-                ref={el => { cardRefs.current[index] = el; }}
+                ref={(el) => {
+                  cardRefs.current[index] = el;
+                }}
                 className={`absolute ${card.bgColor} rounded-3xl shadow-2xl transition-all duration-300 ease-out`}
                 style={{
-                  width: 'calc(100% - 2cm)',
-                  height: 'calc(100% - 4cm)',
-                  maxWidth: '1400px',
-                  ...getCardStyle(index)
+                  width: "calc(100% - 2cm)",
+                  height: "calc(100% - 4cm)",
+                  maxWidth: "1400px",
+                  ...getCardStyle(index),
                 }}
               >
                 <div className="h-full flex flex-col lg:flex-row overflow-hidden rounded-3xl">
@@ -158,8 +164,18 @@ function CardsSection() {
                       className="group relative inline-flex items-center gap-2 px-6 py-2 rounded-full bg-black/70 hover:bg-black/80 backdrop-blur-md border border-black/50 hover:border-black/70 transition-all duration-300 text-white text-sm font-medium w-fit"
                     >
                       <span>Detail</span>
-                      <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      <svg
+                        className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
                       </svg>
                     </button>
                   </div>
@@ -169,7 +185,8 @@ function CardsSection() {
                         src={card.image}
                         alt={card.title}
                         className="w-full h-full object-cover rounded-2xl shadow-xl"
-                        loading="lazy"
+                        width={500}
+                        height={500}
                       />
                     </div>
                     <div className="absolute top-4 right-4 lg:top-8 lg:right-8 text-black/10 text-6xl lg:text-9xl font-bold select-none">
@@ -202,7 +219,12 @@ function CardsSection() {
                 className="absolute top-6 right-6 z-20 p-3 rounded-full bg-black/70 hover:bg-black/80 backdrop-blur-lg border border-black/50 transition-all duration-300 text-white hover:scale-110"
               >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
 

@@ -1,8 +1,8 @@
-'use client';
-import Script from 'next/script';
-import { useEffect } from 'react';
-import { initWebVitals, trackPageView } from '@/lib/analytics';
-import { usePathname, useSearchParams } from 'next/navigation';
+"use client";
+import { initWebVitals, trackPageView } from "@/lib/analytics";
+import { usePathname, useSearchParams } from "next/navigation";
+import Script from "next/script";
+import { useEffect } from "react";
 
 export default function GoogleAnalytics({ GA_ID }: { GA_ID: string }) {
   const pathname = usePathname();
@@ -14,7 +14,7 @@ export default function GoogleAnalytics({ GA_ID }: { GA_ID: string }) {
     initWebVitals();
     // Track page views on route change
     if (pathname) {
-      const url = pathname + (searchParams?.toString() ? `?${searchParams}` : '');
+      const url = pathname + (searchParams?.toString() ? `?${searchParams}` : "");
       trackPageView(url);
     }
   }, [pathname, searchParams, GA_ID]);

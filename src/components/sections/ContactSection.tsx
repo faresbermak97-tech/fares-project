@@ -1,6 +1,5 @@
-'use client';
 
-import { useState, useEffect, FormEvent } from 'react';
+import { type FormEvent, useEffect, useState } from "react";
 
 interface FormData {
   name: string;
@@ -9,32 +8,32 @@ interface FormData {
 }
 
 interface FormStatus {
-  type: 'success' | 'error' | 'loading' | null;
+  type: "success" | "error" | "loading" | null;
   message: string;
 }
 
 export default function ContactCurtainSection() {
-  const [currentTime, setCurrentTime] = useState('');
+  const [currentTime, setCurrentTime] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [formData, setFormData] = useState<FormData>({
-    name: '',
-    email: '',
-    message: ''
+    name: "",
+    email: "",
+    message: "",
   });
   const [formStatus, setFormStatus] = useState<FormStatus>({
     type: null,
-    message: ''
+    message: "",
   });
 
   useEffect(() => {
     setIsMounted(true);
 
     const updateTime = () => {
-      const time = new Date().toLocaleTimeString('en-US', {
-        timeZone: 'Africa/Algiers',
-        hour: '2-digit',
-        minute: '2-digit',
+      const time = new Date().toLocaleTimeString("en-US", {
+        timeZone: "Africa/Algiers",
+        hour: "2-digit",
+        minute: "2-digit",
         hour12: true,
       });
       setCurrentTime(time);
@@ -59,30 +58,30 @@ export default function ContactCurtainSection() {
       { threshold: 0.1 }
     );
 
-    const section = document.getElementById('contact-curtain');
+    const section = document.getElementById("contact-curtain");
     if (section) observer.observe(section);
 
     return () => observer.disconnect();
   }, [isMounted]);
 
   const openContactForm = () => {
-    const form = document.getElementById('contact-form');
+    const form = document.getElementById("contact-form");
     if (form) {
-      form.classList.remove('hidden');
-      form.classList.add('flex');
-      document.body.style.overflow = 'hidden';
+      form.classList.remove("hidden");
+      form.classList.add("flex");
+      document.body.style.overflow = "hidden";
       // Reset form state when opening
-      setFormData({ name: '', email: '', message: '' });
-      setFormStatus({ type: null, message: '' });
+      setFormData({ name: "", email: "", message: "" });
+      setFormStatus({ type: null, message: "" });
     }
   };
 
   const closeContactForm = () => {
-    const form = document.getElementById('contact-form');
+    const form = document.getElementById("contact-form");
     if (form) {
-      form.classList.add('hidden');
-      form.classList.remove('flex');
-      document.body.style.overflow = 'auto';
+      form.classList.add("hidden");
+      form.classList.remove("flex");
+      document.body.style.overflow = "auto";
     }
   };
 
@@ -92,31 +91,31 @@ export default function ContactCurtainSection() {
     // Validation
     if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
       setFormStatus({
-        type: 'error',
-        message: 'Please fill in all fields.'
+        type: "error",
+        message: "Please fill in all fields.",
       });
       return;
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       setFormStatus({
-        type: 'error',
-        message: 'Please enter a valid email address.'
+        type: "error",
+        message: "Please enter a valid email address.",
       });
       return;
     }
 
     // Set loading state
     setFormStatus({
-      type: 'loading',
-      message: 'Sending message...'
+      type: "loading",
+      message: "Sending message...",
     });
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
+      const response = await fetch("/api/contact", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
@@ -125,37 +124,37 @@ export default function ContactCurtainSection() {
 
       if (response.ok) {
         setFormStatus({
-          type: 'success',
-          message: data.message || 'Message sent successfully!'
+          type: "success",
+          message: data.message || "Message sent successfully!",
         });
         // Reset form
-        setFormData({ name: '', email: '', message: '' });
+        setFormData({ name: "", email: "", message: "" });
         // Close form after 2 seconds
         setTimeout(() => {
           closeContactForm();
         }, 2000);
       } else {
         setFormStatus({
-          type: 'error',
-          message: data.error || 'Failed to send message. Please try again.'
+          type: "error",
+          message: data.error || "Failed to send message. Please try again.",
         });
       }
-    } catch (error) {
+    } catch {
       setFormStatus({
-        type: 'error',
-        message: 'Network error. Please check your connection and try again.'
+        type: "error",
+        message: "Network error. Please check your connection and try again.",
       });
     }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
     // Clear error when user starts typing
-    if (formStatus.type === 'error') {
-      setFormStatus({ type: null, message: '' });
+    if (formStatus.type === "error") {
+      setFormStatus({ type: null, message: "" });
     }
   };
 
@@ -165,13 +164,14 @@ export default function ContactCurtainSection() {
       <div className="relative h-32 bg-[#F7FAFC] overflow-hidden">
         <div
           className={`absolute inset-0 bg-[#1A202C] transition-all duration-1000 ${
-            isMounted && isVisible ? 'translate-y-0' : '-translate-y-full'
+            isMounted && isVisible ? "translate-y-0" : "-translate-y-full"
           }`}
           style={{
-            transitionTimingFunction: 'cubic-bezier(0.76,0,0.24,1)',
-            clipPath: isMounted && isVisible
-              ? 'ellipse(200% 100% at 50% 100%)'
-              : 'ellipse(200% 100% at 50% 0%)'
+            transitionTimingFunction: "cubic-bezier(0.76,0,0.24,1)",
+            clipPath:
+              isMounted && isVisible
+                ? "ellipse(200% 100% at 50% 100%)"
+                : "ellipse(200% 100% at 50% 0%)",
           }}
           suppressHydrationWarning={true}
         />
@@ -191,15 +191,13 @@ export default function ContactCurtainSection() {
                   src="/Profiel-pic.JPG"
                   alt="Fares Bermak"
                   className="w-full h-full object-cover"
+                  width={128}
+                  height={128}
                 />
               </div>
-              <h1 className="text-6xl md:text-8xl font-bold leading-none">
-                Let's work
-              </h1>
+              <h1 className="text-6xl md:text-8xl font-bold leading-none">Let&apos;s work</h1>
             </div>
-            <h1 className="text-6xl md:text-8xl font-bold leading-none">
-              together
-            </h1>
+            <h1 className="text-6xl md:text-8xl font-bold leading-none">together</h1>
           </div>
 
           {/* Divider with Button */}
@@ -243,19 +241,31 @@ export default function ContactCurtainSection() {
                   <p>2026 © Edition</p>
                 </div>
                 <div>
-                  <h4 className="text-xs uppercase tracking-wider text-gray-500 mb-2">Local time</h4>
+                  <h4 className="text-xs uppercase tracking-wider text-gray-500 mb-2">
+                    Local time
+                  </h4>
                   <p suppressHydrationWarning={true}>
-                    {isMounted ? currentTime : '00:00 AM'} GMT+1
+                    {isMounted ? currentTime : "00:00 AM"} GMT+1
                   </p>
                 </div>
               </div>
               <div>
                 <h4 className="text-xs uppercase tracking-wider text-gray-500 mb-2">Socials</h4>
                 <div className="flex gap-8">
-                  <a href="https://www.instagram.com/bermak_fares/" target="_blank" rel="noopener noreferrer" className="hover:text-[#4D64FF] transition-colors">
+                  <a
+                    href="https://www.instagram.com/bermak_fares/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[#4D64FF] transition-colors"
+                  >
                     Instagram
                   </a>
-                  <a href="https://www.linkedin.com/in/faresbermak-va/" target="_blank" rel="noopener noreferrer" className="hover:text-[#4D64FF] transition-colors">
+                  <a
+                    href="https://www.linkedin.com/in/faresbermak-va/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[#4D64FF] transition-colors"
+                  >
                     LinkedIn
                   </a>
                 </div>
@@ -273,19 +283,20 @@ export default function ContactCurtainSection() {
         <button
           onClick={closeContactForm}
           className="absolute top-12 right-12 text-white hover:opacity-60 transition-opacity text-5xl"
-          disabled={formStatus.type === 'loading'}
+          disabled={formStatus.type === "loading"}
         >
           ×
         </button>
 
         <div className="max-w-4xl w-full">
-          <h3 className="text-6xl font-bold text-white mb-16">
-            Get in touch
-          </h3>
+          <h3 className="text-6xl font-bold text-white mb-16">Get in touch</h3>
 
           <form onSubmit={handleSubmit} className="space-y-8">
             <div>
-              <label htmlFor="name" className="block text-white text-sm mb-3 uppercase tracking-wider">
+              <label
+                htmlFor="name"
+                className="block text-white text-sm mb-3 uppercase tracking-wider"
+              >
                 Name
               </label>
               <input
@@ -295,14 +306,17 @@ export default function ContactCurtainSection() {
                 value={formData.name}
                 onChange={handleInputChange}
                 required
-                disabled={formStatus.type === 'loading'}
+                disabled={formStatus.type === "loading"}
                 className="w-full bg-transparent border-b border-white/30 text-white text-2xl py-3 focus:outline-none focus:border-[#4D64FF] transition-colors disabled:opacity-50"
                 placeholder="Your name"
               />
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-white text-sm mb-3 uppercase tracking-wider">
+              <label
+                htmlFor="email"
+                className="block text-white text-sm mb-3 uppercase tracking-wider"
+              >
                 Email
               </label>
               <input
@@ -312,14 +326,17 @@ export default function ContactCurtainSection() {
                 value={formData.email}
                 onChange={handleInputChange}
                 required
-                disabled={formStatus.type === 'loading'}
+                disabled={formStatus.type === "loading"}
                 className="w-full bg-transparent border-b border-white/30 text-white text-2xl py-3 focus:outline-none focus:border-[#4D64FF] transition-colors disabled:opacity-50"
                 placeholder="your@email.com"
               />
             </div>
 
             <div>
-              <label htmlFor="message" className="block text-white text-sm mb-3 uppercase tracking-wider">
+              <label
+                htmlFor="message"
+                className="block text-white text-sm mb-3 uppercase tracking-wider"
+              >
                 Message
               </label>
               <textarea
@@ -328,7 +345,7 @@ export default function ContactCurtainSection() {
                 value={formData.message}
                 onChange={handleInputChange}
                 required
-                disabled={formStatus.type === 'loading'}
+                disabled={formStatus.type === "loading"}
                 rows={5}
                 className="w-full bg-transparent border-b border-white/30 text-white text-2xl py-3 focus:outline-none focus:border-[#4D64FF] transition-colors resize-none disabled:opacity-50"
                 placeholder="Your message..."
@@ -337,21 +354,25 @@ export default function ContactCurtainSection() {
 
             {/* Status Message */}
             {formStatus.type && (
-              <div className={`p-4 rounded-lg ${
-                formStatus.type === 'success' ? 'bg-green-500/20 text-green-200' :
-                formStatus.type === 'error' ? 'bg-red-500/20 text-red-200' :
-                'bg-blue-500/20 text-blue-200'
-              }`}>
+              <div
+                className={`p-4 rounded-lg ${
+                  formStatus.type === "success"
+                    ? "bg-green-500/20 text-green-200"
+                    : formStatus.type === "error"
+                      ? "bg-red-500/20 text-red-200"
+                      : "bg-blue-500/20 text-blue-200"
+                }`}
+              >
                 {formStatus.message}
               </div>
             )}
 
             <button
               type="submit"
-              disabled={formStatus.type === 'loading'}
+              disabled={formStatus.type === "loading"}
               className="bg-[#4D64FF] hover:bg-[#2B6CB0] text-white px-12 py-4 rounded-full text-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {formStatus.type === 'loading' ? 'Sending...' : 'Send Message'}
+              {formStatus.type === "loading" ? "Sending..." : "Send Message"}
             </button>
           </form>
         </div>

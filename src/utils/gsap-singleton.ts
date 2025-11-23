@@ -1,5 +1,5 @@
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 let isGSAPInitialized = false;
 
@@ -8,7 +8,7 @@ let isGSAPInitialized = false;
  */
 export function initGSAP() {
   // Only initialize on client side
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
 
   if (!isGSAPInitialized) {
     gsap.registerPlugin(ScrollTrigger);
@@ -20,7 +20,7 @@ export function initGSAP() {
  * Clean up all ScrollTrigger instances
  */
 export function cleanupScrollTriggers() {
-  ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+  ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
 }
 
 /**

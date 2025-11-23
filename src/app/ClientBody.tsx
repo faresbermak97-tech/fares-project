@@ -1,11 +1,11 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import dynamic from 'next/dynamic';
 
 // Create a client component wrapper for the Preloader
 const PreloaderWrapper = dynamic(() => import("@/components/PreloaderWrapper"), {
-  loading: () => <div className="fixed inset-0 z-[9999] bg-black" />
+  loading: () => <div className="fixed inset-0 z-[9999] bg-black" />,
 });
 
 export default function ClientBody({
@@ -14,12 +14,11 @@ export default function ClientBody({
   children: React.ReactNode;
 }) {
   const [showPreloader, setShowPreloader] = useState(true);
-  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     // CRITICAL FIX: Manage scroll restoration
-    if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'manual';
+    if ("scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
     }
 
     // Set body class
@@ -34,7 +33,6 @@ export default function ClientBody({
       // CRITICAL FIX: Wait for render before allowing interactions
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          setIsReady(true);
           window.scrollTo(0, 0);
         });
       });
@@ -50,8 +48,8 @@ export default function ClientBody({
         className="antialiased"
         style={{
           opacity: showPreloader ? 0 : 1,
-          transition: 'opacity 0.5s ease-in-out',
-          minHeight: '100vh'
+          transition: "opacity 0.5s ease-in-out",
+          minHeight: "100vh",
         }}
       >
         {children}

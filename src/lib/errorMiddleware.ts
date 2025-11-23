@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import { AppError } from './errors';
-import { errorHandler } from './errorHandler';
+import { NextResponse } from "next/server";
+import { errorHandler } from "./errorHandler";
+import { AppError } from "./errors";
 
 /**
  * Handles errors in API routes
@@ -8,31 +8,35 @@ import { errorHandler } from './errorHandler';
 export function apiErrorHandler(error: Error): NextResponse {
   // Log the error
   errorHandler.handleError(error);
-  
+
   if (error instanceof AppError) {
-    return NextResponse.json({
-      error: {
-        name: error.name,
-        message: error.message,
-        ...(error.context && { context: error.context }),
+    return NextResponse.json(
+      {
+        error: {
+          name: error.name,
+          message: error.message,
+          ...(error.context && { context: error.context }),
+        },
       },
-    }, { status: error.statusCode });
+      { status: error.statusCode }
+    );
   } else {
-    return NextResponse.json({
-      error: {
-        name: 'InternalServerError',
-        message: 'An unexpected error occurred',
+    return NextResponse.json(
+      {
+        error: {
+          name: "InternalServerError",
+          message: "An unexpected error occurred",
+        },
       },
-    }, { status: 500 });
+      { status: 500 }
+    );
   }
 }
 
 /**
  * Wraps async route handlers to catch errors
  */
-export function asyncHandler<T extends (...args: unknown[]) => Promise<NextResponse>>(
-  fn: T
-): T {
+export function asyncHandler<T extends (...args: unknown[]) => Promise<NextResponse>>(fn: T): T {
   return (async (...args: Parameters<T>): Promise<NextResponse> => {
     try {
       return await fn(...args);
@@ -41,7 +45,7 @@ export function asyncHandler<T extends (...args: unknown[]) => Promise<NextRespo
         return apiErrorHandler(error);
       }
       // Handle cases where the thrown value is not an Error object
-      const errorMessage = typeof error === 'string' ? error : 'An unknown error occurred';
+      const errorMessage = typeof error === "string" ? error : "An unknown error occurred";
       return apiErrorHandler(new Error(errorMessage));
     }
   }) as T;
@@ -72,11 +76,11 @@ export function wrapFunction<T extends (...args: unknown[]) => unknown>(
  */
 export function getErrorInfo(error: Error) {
   errorHandler.handleError(error);
-  
+
   return {
     error: {
       name: error.name,
-      message: error.message
-    }
+      message: error.message,
+    },
   };
 }

@@ -11,10 +11,7 @@ export function debounce<T extends (...args: unknown[]) => unknown>(
 ): (...args: Parameters<T>) => void {
   let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
-  return function(this: ThisParameterType<T>, ...args: Parameters<T>): void {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const context = this;
-
+  return function (this: ThisParameterType<T>, ...args: Parameters<T>): void {
     // Clear the previous timeout if it exists
     if (timeoutId !== null) {
       clearTimeout(timeoutId);
@@ -22,7 +19,7 @@ export function debounce<T extends (...args: unknown[]) => unknown>(
 
     // Set a new timeout
     timeoutId = setTimeout(() => {
-      func.apply(context, args);
+      func.apply(this, args);
       timeoutId = null;
     }, wait);
   };

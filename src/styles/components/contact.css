@@ -1,0 +1,14 @@
+/* Professional Contact Link Animation */
+.contact-link {
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-link span:first-child {
+  will-change: transform;
+}
+
+.contact-link:not(:hover) span:first-child {
+  transform-origin: top;
+  transition: transform 0.6s cubic-bezier(0.87, 0, 0.13, 1);
+}

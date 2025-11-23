@@ -5,8 +5,10 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
   let inThrottle: boolean;
   let lastArgs: Parameters<T> | null = null;
 
-  return function(this: ThisParameterType<T>, ...args: Parameters<T>): void {
-    if (!inThrottle) {
+  return function (this: ThisParameterType<T>, ...args: Parameters<T>): void {
+    if (inThrottle) {
+      lastArgs = args;
+    } else {
       func.apply(this, args);
       inThrottle = true;
       setTimeout(() => {
@@ -16,8 +18,6 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
           lastArgs = null;
         }
       }, limit);
-    } else {
-      lastArgs = args;
     }
   };
 }

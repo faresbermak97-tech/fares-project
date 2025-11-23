@@ -4,7 +4,7 @@ export interface Position {
 }
 
 export interface FormStatus {
-  type: 'success' | 'error' | null;
+  type: "success" | "error" | null;
   message: string;
 }
 
@@ -31,7 +31,7 @@ export interface FeatureSlide {
   details: string[];
 }
 
-export type TimeZone = 'Africa/Algiers' | 'UTC' | string;
+export type TimeZone = "Africa/Algiers" | "UTC" | string;
 
 declare global {
   interface Window {

@@ -7,10 +7,10 @@
 export function formatTime(timezone?: string, locale?: string): string {
   const now = new Date();
   const options: Intl.DateTimeFormatOptions = {
-    hour: 'numeric',
-    minute: '2-digit',
+    hour: "numeric",
+    minute: "2-digit",
     hour12: true,
-    timeZone: timezone || Intl.DateTimeFormat().resolvedOptions().timeZone
+    timeZone: timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
   };
 
   return now.toLocaleTimeString(locale || undefined, options);
@@ -25,9 +25,9 @@ export function formatTime(timezone?: string, locale?: string): string {
 export function formatDate(dateString: string, locale?: string): string {
   const date = new Date(dateString);
   const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   };
 
   return date.toLocaleDateString(locale || undefined, options);
@@ -42,11 +42,11 @@ export function formatDate(dateString: string, locale?: string): string {
 export function formatDateTime(dateString: string, locale?: string): string {
   const date = new Date(dateString);
   const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
     hour12: true,
   };
 

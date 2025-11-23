@@ -1,0 +1,12 @@
+/* Custom utility classes */
+/* Screen reader utilities are handled by Tailwind's built-in sr-only class */
+
+/* === Cinematic Section Transition Animation === */
+.animate-section {
+  opacity: 0;
+  animation: sectionFadeUp 1.2s cubic-bezier(.57,.02,.51,.98) forwards;
+}
+
+/* Stagger animation for each section */
+section.animate-section { animation-delay: 0.2s; }
+#contact.animate-section { animation-delay: 0.8s; }

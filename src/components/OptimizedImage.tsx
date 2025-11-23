@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from "next/image";
 
 interface OptimizedImageProps {
   src: string;
@@ -9,7 +9,7 @@ interface OptimizedImageProps {
   priority?: boolean;
   style?: React.CSSProperties;
   objectPosition?: string;
-  placeholder?: 'blur' | 'empty';
+  placeholder?: "blur" | "empty";
 }
 
 // Generate a blur data URL using browser-safe btoa instead of Node.js Buffer
@@ -30,8 +30,8 @@ export default function OptimizedImage({
   className,
   priority = false,
   style,
-  objectPosition = 'center',
-  placeholder = 'blur'
+  objectPosition = "center",
+  placeholder = "blur",
 }: OptimizedImageProps) {
   const blurDataURL = width && height ? generateBlurDataURL(width, height) : undefined;
 
